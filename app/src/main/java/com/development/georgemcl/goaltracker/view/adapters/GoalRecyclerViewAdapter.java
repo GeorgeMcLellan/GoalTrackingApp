@@ -1,6 +1,7 @@
 package com.development.georgemcl.goaltracker.view.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.model.Goal;
+import com.development.georgemcl.goaltracker.view.ViewGoalActivity;
 
 import java.util.ArrayList;
 
@@ -42,6 +44,9 @@ public class GoalRecyclerViewAdapter extends RecyclerView.Adapter<GoalRecyclerVi
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(mContext, ViewGoalActivity.class);
+                intent.putExtra("goalName", goal.getGoalName());
+                mContext.startActivity(intent);
                 Toast.makeText(mContext, "clicked on goal" + goal.getGoalName(), Toast.LENGTH_SHORT).show();
             }
         });

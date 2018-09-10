@@ -36,7 +36,7 @@ public class MainGoalViewFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main_goal_view, container, false);
         ButterKnife.bind(this, view);
-        
+
         mGoals = new ArrayList<>();
         mGoals.add(new Goal("Eat more food", "End of year"));
         mGoals.add(new Goal("Heal UC", "End of year"));

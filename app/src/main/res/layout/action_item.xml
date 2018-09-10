@@ -3,15 +3,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="10dp"
-    android:id="@+id/goal_item_parent_layout"
-    android:background="@drawable/blue_border">
+    android:padding="5dp"
+    android:id="@+id/action_item_parent_layout"
+    android:background="@drawable/green_border">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/goal_item_name_textview"
+        android:id="@+id/action_item_name_textview"
         android:textSize="18sp"
-        android:text="Achieve something"
+        android:text="@string/action"
         android:textAlignment="center"/>
 </LinearLayout>
