@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="5dp"
@@ -8,10 +10,29 @@
     android:background="@drawable/green_border">
 
     <TextView
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_width="match_parent"
         android:id="@+id/action_item_name_textview"
         android:textSize="18sp"
+        android:layout_weight="2"
         android:text="@string/action"
         android:textAlignment="center"/>
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        app:srcCompat="@drawable/baseline_done_24"
+        android:layout_weight="1"
+        android:layout_marginRight="10dp"
+        android:id="@+id/action_item_done_imageview"
+        android:layout_gravity="right"
+        android:contentDescription="@string/done"/>
+    <Button
+        android:id="@+id/action_item_options_button"
+        android:layout_width="10dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@android:color/transparent"
+        android:text="&#8942;"
+        android:textAppearance="?android:textAppearanceLarge" />
 </LinearLayout>

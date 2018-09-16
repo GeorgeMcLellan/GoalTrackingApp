@@ -8,4 +8,21 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="action">Action</string>
+    <string name="subgoal">Sub-Goal</string>
+    <string name="done">done</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="action_name">Action Name</string>
+    <string name="repeat">Repeat</string>
+
+    <array name="repeat_units_of_measurements">
+        <item>time(s)</item>
+        <item>hour(s)</item>
+    </array>
+    <array name="repeat_time_periods">
+        <item>per day</item>
+        <item>per week</item>
+        <item>per month</item>
+        <item>per year</item>
+    </array>
 </resources>

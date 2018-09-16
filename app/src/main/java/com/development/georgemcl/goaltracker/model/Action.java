@@ -4,11 +4,13 @@ public class Action {
     private String id;
     private String actionName;
     private String parentGoalId;
+    private boolean repeated;
 
-    public Action(String id, String actionName, String parentGoalId) {
+    public Action(String id, String actionName, String parentGoalId, boolean repeated) {
         this.id = id;
         this.actionName = actionName;
         this.parentGoalId = parentGoalId;
+        this.repeated = repeated;
     }
 
     public Action(String actionName) {

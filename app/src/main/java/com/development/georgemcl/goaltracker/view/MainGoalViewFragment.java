@@ -38,8 +38,8 @@ public class MainGoalViewFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         mGoals = new ArrayList<>();
-        mGoals.add(new Goal("Eat more food", "End of year"));
-        mGoals.add(new Goal("Heal UC", "End of year"));
+        mGoals.add(new Goal("Stop eating sugar", "End of 2018"));
+        mGoals.add(new Goal("Publish an app to Google Play", "End of 2018"));
 
         mGoalRecyclerView.setAdapter(new GoalRecyclerViewAdapter(getContext(), mGoals));
         mGoalRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

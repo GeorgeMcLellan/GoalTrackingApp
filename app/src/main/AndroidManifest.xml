@@ -18,8 +18,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.ViewGoalActivity" android:parentActivityName=".view.MainActivity">
-        </activity>
+        <activity
+            android:name=".view.ViewGoalActivity"
+            android:parentActivityName=".view.MainActivity" />
+        <activity android:name=".view.AddGoalActivity" />
+        <activity android:name=".view.AddActionActivity"></activity>
     </application>
 
 </manifest>
