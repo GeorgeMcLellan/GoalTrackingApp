@@ -1,11 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".view.AddGoalActivity">
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/add_goal_name_edittext"
+        android:hint="@string/goal_name"
+        android:inputType="text"
+        android:layout_marginTop="10dp"
+        android:textAlignment="center"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/add_goal_description_edittext"
+        android:hint="@string/goal_description"
+        android:inputType="text"
+        android:layout_marginTop="10dp"
+        android:textAlignment="center"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_marginTop="10dp"
+
+        android:layout_gravity="center_horizontal"
+        android:text="To Achieve By"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/add_goal_date_textview"
+        android:hint="Select Date"
+        android:inputType="date"
+        android:textSize="24sp"
+        android:textAlignment="center"/>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/add_goal_add_fab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:layout_gravity="right"
+        android:layout_marginRight="5dp"
+        app:fabSize="mini"
+        app:srcCompat="@drawable/baseline_done_24" />
 
 
-</RelativeLayout>
+</LinearLayout>

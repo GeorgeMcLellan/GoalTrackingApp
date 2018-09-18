@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.model.Goal;
 import com.development.georgemcl.goaltracker.view.ViewGoalActivity;
@@ -45,9 +47,8 @@ public class GoalRecyclerViewAdapter extends RecyclerView.Adapter<GoalRecyclerVi
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, ViewGoalActivity.class);
-                intent.putExtra("goalName", goal.getGoalName());
+                intent.putExtra(Constants.KEY_PARENT_GOAL_ID, goal.getId());
                 mContext.startActivity(intent);
-                Toast.makeText(mContext, "clicked on goal" + goal.getGoalName(), Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -15,6 +15,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.model.Action;
 import com.development.georgemcl.goaltracker.model.Goal;
@@ -64,9 +65,8 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, ViewGoalActivity.class);
-                    intent.putExtra("goalName", goal.getGoalName());
+                    intent.putExtra(Constants.KEY_PARENT_GOAL_ID, goal.getId());
                     mContext.startActivity(intent);
-                    Toast.makeText(mContext, "clicked on goal" + goal.getGoalName(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -116,7 +116,6 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public int getItemViewType(int position) {
-        Log.d("RECYCLER", "getItemViewType: "+ position);
         if (position < mSubGoals.size()) {
             return VIEW_TYPE_SUBGOAL;
         }

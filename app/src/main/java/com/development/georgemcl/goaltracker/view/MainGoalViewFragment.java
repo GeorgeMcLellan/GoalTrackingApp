@@ -1,6 +1,7 @@
 package com.development.georgemcl.goaltracker.view;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -38,12 +39,19 @@ public class MainGoalViewFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         mGoals = new ArrayList<>();
-        mGoals.add(new Goal("Stop eating sugar", "End of 2018"));
-        mGoals.add(new Goal("Publish an app to Google Play", "End of 2018"));
+        mGoals.add(new Goal("333","Stop eating sugar", "End of 2018"));
+        mGoals.add(new Goal("222","Publish an app to Google Play", "End of 2018"));
 
         mGoalRecyclerView.setAdapter(new GoalRecyclerViewAdapter(getContext(), mGoals));
         mGoalRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        mAddGoalFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), AddGoalActivity.class);
+                startActivity(intent);
+            }
+        });
 
         return view;
     }

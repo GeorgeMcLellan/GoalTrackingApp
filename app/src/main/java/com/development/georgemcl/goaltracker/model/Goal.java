@@ -3,6 +3,7 @@ package com.development.georgemcl.goaltracker.model;
 public class Goal {
     private String id;
     private String goalName;
+    private String description;
     private String completionDate;
     private String parentGoalId;
 
@@ -15,6 +16,15 @@ public class Goal {
         this.goalName = goalName;
         this.completionDate = completionDate;
     }
+
+    public Goal(String goalName, String description, String completionDate, String parentGoalId) {
+        this.id = "1234";
+        this.goalName = goalName;
+        this.description = description;
+        this.completionDate = completionDate;
+        this.parentGoalId = parentGoalId;
+    }
+
     public String getGoalName() {
         return goalName;
     }
@@ -37,6 +47,14 @@ public class Goal {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getParentGoalId() {

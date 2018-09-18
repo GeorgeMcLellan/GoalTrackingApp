@@ -14,6 +14,8 @@
     <string name="delete">Delete</string>
     <string name="action_name">Action Name</string>
     <string name="repeat">Repeat</string>
+    <string name="goal_name">Goal Name</string>
+    <string name="goal_description">Goal Description</string>
 
     <array name="repeat_units_of_measurements">
         <item>time(s)</item>
