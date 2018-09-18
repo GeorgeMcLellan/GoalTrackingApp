@@ -5,6 +5,11 @@ public class Goal {
     private String goalName;
     private String description;
     private String completionDate;
+
+    /**
+     * ParentGoalId is null if the goal has no parent.
+     * Otherwise, it links to the parent of which it is a sub-goal
+     */
     private String parentGoalId;
 
     public Goal(String goalName, String completionDate) {
