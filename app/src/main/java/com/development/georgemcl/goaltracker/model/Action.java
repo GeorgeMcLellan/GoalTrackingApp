@@ -4,13 +4,13 @@ public class Action {
     private String id;
     private String actionName;
     private String parentGoalId;
-    private boolean repeated;
+    private String repeatActionId;
 
-    public Action(String id, String actionName, String parentGoalId, boolean repeated) {
+    public Action(String id, String actionName, String parentGoalId, String repeatActionId) {
         this.id = id;
         this.actionName = actionName;
         this.parentGoalId = parentGoalId;
-        this.repeated = repeated;
+        this.repeatActionId = repeatActionId;
     }
 
     public Action(String actionName) {
@@ -41,12 +41,21 @@ public class Action {
         this.parentGoalId = parentGoalId;
     }
 
+    public String getRepeatActionId() {
+        return repeatActionId;
+    }
+
+    public void setRepeatActionId(String repeatActionId) {
+        this.repeatActionId = repeatActionId;
+    }
+
     @Override
     public String toString() {
         return "Action{" +
                 "id='" + id + '\'' +
                 ", actionName='" + actionName + '\'' +
                 ", parentGoalId='" + parentGoalId + '\'' +
+                ", repeatActionId='" + repeatActionId + '\'' +
                 '}';
     }
 }

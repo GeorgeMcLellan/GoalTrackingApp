@@ -4,14 +4,14 @@ package com.development.georgemcl.goaltracker.model;
  * Created by george on 18/09/18.
  */
 
-public class RepeatAction {
+public class ActionTarget {
     private String id;
     private int repeatAmount;
     private String timePeriod;
     private String unitOfMeasurement;
     private String actionId;
 
-    public RepeatAction(String id, int repeatAmount, String timePeriod, String unitOfMeasurement, String actionId) {
+    public ActionTarget(String id, int repeatAmount, String timePeriod, String unitOfMeasurement, String actionId) {
         this.id = id;
         this.repeatAmount = repeatAmount;
         this.timePeriod = timePeriod;
@@ -61,7 +61,7 @@ public class RepeatAction {
 
     @Override
     public String toString() {
-        return "RepeatAction{" +
+        return "ActionTarget{" +
                 "id='" + id + '\'' +
                 ", repeatAmount=" + repeatAmount +
                 ", timePeriod='" + timePeriod + '\'' +

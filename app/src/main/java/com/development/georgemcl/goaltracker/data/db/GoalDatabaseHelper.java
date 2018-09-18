@@ -23,8 +23,27 @@ public class GoalDatabaseHelper extends SQLiteOpenHelper {
 
 
     private static final String TABLE_ACITON = "action";
+
+    //Action table column names
+    private static final String KEY_ACTION_ID = "_id";
     private static final String KEY_ACITON_NAME = "name";
     private static final String KEY_ACTION_PARENT_GOAL_ID = "parent_goal_id";
+    private static final String KEY_ACTION_REPEAT_ID = "repeat_action_id";
+
+
+    private static final String TABLE_REPEAT_ACTION = "repeat_action";
+
+    //Action table column names
+    private static final String KEY_REPEAT_ACTION_ID = "_id";
+    private static final String KEY_REPEAT_ACTION_AMOUNT= "amount";
+    private static final String KEY_REPEAT_ACTION_TIME_PERIOD= "time_period";
+    private static final String KEY_REPEAT_ACTION_UNIT_OF_MEASUREMENT= "unit_of_measurement";
+    private static final String KEY_REPEAT_ACTION_ACTION_ID= "action_id";
+
+
+
+
+
 
     /**
      * Singleton Pattern implementation.

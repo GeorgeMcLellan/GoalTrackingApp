@@ -75,6 +75,7 @@ public class Goal {
         return "Goal{" +
                 "id='" + id + '\'' +
                 ", goalName='" + goalName + '\'' +
+                ", description='" + description + '\'' +
                 ", completionDate='" + completionDate + '\'' +
                 ", parentGoalId='" + parentGoalId + '\'' +
                 '}';
