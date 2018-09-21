@@ -12,9 +12,8 @@ import android.widget.TextView;
 import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.model.Goal;
-import com.development.georgemcl.goaltracker.view.ViewGoalActivity;
+import com.development.georgemcl.goaltracker.view.ViewGoal.ViewGoalActivity;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 

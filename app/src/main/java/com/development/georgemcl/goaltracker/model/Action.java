@@ -2,6 +2,7 @@ package com.development.georgemcl.goaltracker.model;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
@@ -13,7 +14,7 @@ public class Action implements Serializable{
     @PrimaryKey(autoGenerate = true)
     @NonNull
     @ColumnInfo(name = "id")
-    private String id;
+    private int id;
 
     @ColumnInfo(name = "actionName")
     private String actionName;
@@ -33,6 +34,7 @@ public class Action implements Serializable{
     @ColumnInfo(name = "repeatUnitOfMeasurement")
     private String repeatUnitOfMeasurement;
 
+    @Ignore
     public Action(String actionName, int parentGoalId) {
         this.actionName = actionName;
         this.parentGoalId = parentGoalId;
@@ -43,19 +45,17 @@ public class Action implements Serializable{
         this.actionName = actionName;
         this.parentGoalId = parentGoalId;
         this.repeatAction = true;
+        this.repeatAmount = repeatAmount;
         this.repeatTimePeriod = repeatTimePeriod;
         this.repeatUnitOfMeasurement = repeatUnitOfMeasurement;
     }
 
-    public Action(String actionName) {
-        this.actionName = actionName;
-    }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

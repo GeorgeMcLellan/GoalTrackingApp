@@ -18,9 +18,11 @@ import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.model.Action;
 import com.development.georgemcl.goaltracker.model.Goal;
-import com.development.georgemcl.goaltracker.view.ViewGoalActivity;
+import com.development.georgemcl.goaltracker.view.ViewGoal.ViewGoalActivity;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,13 +33,11 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     private static final int VIEW_TYPE_ACTION = 20;
 
     private Context mContext;
-    private ArrayList<Goal> mSubGoals;
-    private ArrayList<Action> mActions;
+    private List<Goal> mSubGoals = Collections.emptyList();
+    private List<Action> mActions = Collections.emptyList();
 
-    public ViewGoalRecyclerViewAdapter(Context context, ArrayList<Goal> goals, ArrayList<Action> actions) {
+    public ViewGoalRecyclerViewAdapter(Context context) {
         mContext = context;
-        mSubGoals = goals;
-        mActions = actions;
     }
 
     @Override
@@ -106,6 +106,16 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             });
         }
 
+    }
+
+    public void setSubGoals(List<Goal> goals) {
+        mSubGoals = goals;
+        notifyDataSetChanged();
+    }
+
+    public void setActions(List<Action> actions) {
+        mActions = actions;
+        notifyDataSetChanged();
     }
 
     @Override

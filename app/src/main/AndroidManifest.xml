@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.ViewGoalActivity"
+            android:name=".view.ViewGoal.ViewGoalActivity"
             android:parentActivityName=".view.MainActivity" />
         <activity android:name=".view.AddGoalActivity" />
         <activity android:name=".view.AddActionActivity"></activity>

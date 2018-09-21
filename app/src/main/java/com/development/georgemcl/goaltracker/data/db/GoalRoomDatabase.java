@@ -8,12 +8,15 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
+import com.development.georgemcl.goaltracker.model.Action;
 import com.development.georgemcl.goaltracker.model.Goal;
 
-@Database(entities = {Goal.class}, version = 1, exportSchema = false)
+@Database(entities = {Goal.class, Action.class}, version = 2, exportSchema = false)
 public abstract class GoalRoomDatabase extends RoomDatabase{
 
     public abstract GoalDao goalDao();
+
+    public abstract ActionDao actionDao();
 
     private static volatile GoalRoomDatabase INSTANCE;
 
@@ -23,6 +26,7 @@ public abstract class GoalRoomDatabase extends RoomDatabase{
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(), GoalRoomDatabase.class, "goal_database")
 //                            .addCallback(sRoomDatabaseCallback)
+                            .fallbackToDestructiveMigration()
                             .build();
                 }
             }
@@ -31,33 +35,32 @@ public abstract class GoalRoomDatabase extends RoomDatabase{
         return INSTANCE;
     }
 
-//    private static RoomDatabase.Callback sRoomDatabaseCallback =
-//            new RoomDatabase.Callback(){
-//
-//                @Override
-//                public void onOpen (@NonNull SupportSQLiteDatabase db){
-//                    super.onOpen(db);
-//                    new PopulateDbAsync(INSTANCE).execute();
-//                }
-//            };
-//
-//    private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
-//
-//        private final GoalDao mDao;
-//
-//        PopulateDbAsync(GoalRoomDatabase db) {
-//            mDao = db.goalDao();
-//        }
-//
-//        @Override
-//        protected Void doInBackground(final Void... params) {
-//            mDao.deleteAll();
-//            Goal goal = new Goal("goal 1", "1/1/1");
-//            mDao.insert(goal);
-//            goal = new Goal("goal 2", "2/2/2");
-//            mDao.insert(goal);
-//            return null;
-//        }
-//    }
+    private static RoomDatabase.Callback sRoomDatabaseCallback =
+            new RoomDatabase.Callback(){
+
+                @Override
+                public void onOpen (@NonNull SupportSQLiteDatabase db){
+                    super.onOpen(db);
+                    new DeleteDbAsync(INSTANCE).execute();
+                }
+            };
+
+    private static class DeleteDbAsync extends AsyncTask<Void, Void, Void> {
+
+        private final GoalDao mGoalDao;
+        private final ActionDao mActionDao;
+
+        DeleteDbAsync(GoalRoomDatabase db) {
+            mGoalDao = db.goalDao();
+            mActionDao = db.actionDao();
+        }
+
+        @Override
+        protected Void doInBackground(final Void... params) {
+            mGoalDao.deleteAll();
+            mActionDao.deleteAll();
+            return null;
+        }
+    }
 
 }
