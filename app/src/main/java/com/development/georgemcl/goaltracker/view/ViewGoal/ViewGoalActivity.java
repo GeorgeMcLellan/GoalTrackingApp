@@ -1,8 +1,10 @@
-package com.development.georgemcl.goaltracker.view;
+package com.development.georgemcl.goaltracker.view.ViewGoal;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.design.internal.NavigationMenu;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,10 +16,13 @@ import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.model.Action;
 import com.development.georgemcl.goaltracker.model.Goal;
-import com.development.georgemcl.goaltracker.view.adapters.GoalRecyclerViewAdapter;
+import com.development.georgemcl.goaltracker.view.AddActionActivity;
+import com.development.georgemcl.goaltracker.view.AddGoalActivity;
+import com.development.georgemcl.goaltracker.view.MainGoalView.MainGoalViewModel;
 import com.development.georgemcl.goaltracker.view.adapters.ViewGoalRecyclerViewAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,10 +38,11 @@ public class ViewGoalActivity extends AppCompatActivity {
     private static final int ADD_ACTION_REQUEST_CODE = 204;
     private static final int ADD_SUBGOAL_REQUEST_CODE = 689;
 
-    private ArrayList<Goal> mSubGoals;
-    private ArrayList<Action> mActions;
+    private ViewGoalRecyclerViewAdapter mRecyclerViewAdapter;
 
-    private String parentGoalId;
+    private ViewGoalViewModel mViewGoalViewModel;
+
+    private int parentGoalId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,24 +50,43 @@ public class ViewGoalActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_goal);
         ButterKnife.bind(this);
 
-        if (parentGoalId == null && getIntent().hasExtra(Constants.KEY_PARENT_GOAL_ID)){
-            parentGoalId = getIntent().getStringExtra(Constants.KEY_PARENT_GOAL_ID);
+        if (getIntent().hasExtra(Constants.KEY_PARENT_GOAL_ID)){
+            parentGoalId = getIntent().getIntExtra(Constants.KEY_PARENT_GOAL_ID, -1);
             Log.i(TAG, "onCreate: parent goal id = " + parentGoalId);
         }
 
-        mSubGoals = new ArrayList<>();
-        mSubGoals.add(new Goal("999","Improve Android knowledge", "October 30 2018"));
-        mSubGoals.add(new Goal("888","Complete a mockup of app", "September 30 2018"));
+        mViewGoalViewModel = ViewModelProviders.of(this).get(ViewGoalViewModel.class);
 
-        mActions = new ArrayList<>();
-        mActions.add(new Action("Research other apps"));
-        mActions.add(new Action("Read 30 mins a day"));
+        mViewGoalViewModel.populateLists(parentGoalId);
+
+//        mSubGoals = new ArrayList<>();
+////        mSubGoals.add(new Goal("Improve Android knowledge", "October 30 2018"));
+////        mSubGoals.add(new Goal("Complete a mockup of app", "September 30 2018"));
+//
+//        mActions = new ArrayList<>();
+//        mActions.add(new Action("Research other apps"));
+//        mActions.add(new Action("Read 30 mins a day"));
 
 
 
-        mRecyclerView.setAdapter(new ViewGoalRecyclerViewAdapter(this, mSubGoals, mActions));
+        mRecyclerViewAdapter = new ViewGoalRecyclerViewAdapter(this);
+        mRecyclerView.setAdapter(mRecyclerViewAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+
+        mViewGoalViewModel.getActions().observe(this, new Observer<List<Action>>() {
+            @Override
+            public void onChanged(@Nullable List<Action> actions) {
+                mRecyclerViewAdapter.setActions(actions);
+            }
+        });
+
+        mViewGoalViewModel.getSubGoals().observe(this, new Observer<List<Goal>>() {
+            @Override
+            public void onChanged(@Nullable List<Goal> goals) {
+                mRecyclerViewAdapter.setSubGoals(goals);
+            }
+        });
 
         mAddFab.setMenuListener(new FabSpeedDial.MenuListener() {
             @Override
@@ -92,5 +117,22 @@ public class ViewGoalActivity extends AppCompatActivity {
             @Override
             public void onMenuClosed() {}
         });
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == ADD_ACTION_REQUEST_CODE && resultCode == RESULT_OK){
+            Action action = (Action) data.getSerializableExtra(AddActionActivity.EXTRA_ACTION_TO_ADD);
+            Log.d(TAG, "onActivityResult: action: " +action.toString());
+            mViewGoalViewModel.insertAction(action);
+        }
+        else if (requestCode == ADD_SUBGOAL_REQUEST_CODE && resultCode == RESULT_OK) {
+            Goal goal = (Goal) data.getSerializableExtra(AddGoalActivity.EXTRA_GOAL_TO_ADD);
+            Log.d(TAG, "onActivityResult: goal: " +goal.toString());
+            mViewGoalViewModel.insertSubGoal(goal);
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.development.georgemcl.goaltracker.view;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,6 +27,8 @@ import butterknife.ButterKnife;
 public class AddGoalActivity extends AppCompatActivity {
 
     private static final String TAG = "AddGoalActivity";
+    public static final String EXTRA_GOAL_TO_ADD  = "GOAL_TO_ADD";
+
 
     @BindView(R.id.add_goal_name_edittext)
     EditText mGoalNameEt;
@@ -34,7 +37,7 @@ public class AddGoalActivity extends AppCompatActivity {
     TextView mGoalDateTxt;
     @BindView(R.id.add_goal_add_fab)
     FloatingActionButton mAddGoalFab;
-    String parentGoalId = null;
+    int parentGoalId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +45,8 @@ public class AddGoalActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_goal);
         ButterKnife.bind(this);
 
-        if (parentGoalId == null && getIntent().hasExtra(Constants.KEY_PARENT_GOAL_ID)){
-            parentGoalId = getIntent().getStringExtra(Constants.KEY_PARENT_GOAL_ID);
+        if (getIntent().hasExtra(Constants.KEY_PARENT_GOAL_ID)){
+            parentGoalId = getIntent().getIntExtra(Constants.KEY_PARENT_GOAL_ID, -1);
             Log.i(TAG, "onCreate: parent goal id = " + parentGoalId);
         }
 
@@ -78,6 +81,9 @@ public class AddGoalActivity extends AppCompatActivity {
                     if (!dateToAchieve.isEmpty()){
                         Goal goal = new Goal(goalName, description, dateToAchieve, parentGoalId);
                         Toast.makeText(AddGoalActivity.this, "Adding goal", Toast.LENGTH_SHORT).show();
+                        Intent replyIntent = new Intent();
+                        replyIntent.putExtra(EXTRA_GOAL_TO_ADD, goal);
+                        setResult(RESULT_OK,replyIntent);
                         finish();
                     } else {
                         Toast.makeText(AddGoalActivity.this, "Date Required", Toast.LENGTH_SHORT).show();
