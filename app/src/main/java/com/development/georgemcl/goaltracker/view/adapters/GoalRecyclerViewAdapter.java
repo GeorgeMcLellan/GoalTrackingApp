@@ -4,12 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
@@ -17,6 +15,7 @@ import com.development.georgemcl.goaltracker.model.Goal;
 import com.development.georgemcl.goaltracker.view.ViewGoalActivity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,9 +23,9 @@ import butterknife.ButterKnife;
 public class GoalRecyclerViewAdapter extends RecyclerView.Adapter<GoalRecyclerViewAdapter.ViewHolder> {
 
     private Context mContext;
-    private ArrayList<Goal> mGoals;
+    private List<Goal> mGoals;
 
-    public GoalRecyclerViewAdapter(Context context, ArrayList<Goal> goals) {
+    public GoalRecyclerViewAdapter(Context context, List<Goal> goals) {
         mContext = context;
         mGoals = goals;
     }
@@ -51,6 +50,11 @@ public class GoalRecyclerViewAdapter extends RecyclerView.Adapter<GoalRecyclerVi
                 mContext.startActivity(intent);
             }
         });
+    }
+
+    public void setGoals(List<Goal> goals) {
+        mGoals = goals;
+        notifyDataSetChanged();
     }
 
     @Override

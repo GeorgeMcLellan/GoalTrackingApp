@@ -32,7 +32,7 @@ public class AddActionActivity extends AppCompatActivity {
     @BindView(R.id.add_action_repeat_unit_of_measurement_spinner) Spinner mRepeatUnitOfMeasurementSpn;
     @BindView(R.id.add_action_repeat_measurement_edittext) EditText mRepeatMeasurementEt;
 
-    private String parentGoalId;
+    private int parentGoalId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,21 +40,21 @@ public class AddActionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_action);
         ButterKnife.bind(this);
 
-        if (parentGoalId == null && getIntent().hasExtra(Constants.KEY_PARENT_GOAL_ID)){
-            parentGoalId = getIntent().getStringExtra(Constants.KEY_PARENT_GOAL_ID);
+        if (getIntent().hasExtra(Constants.KEY_PARENT_GOAL_ID)){
+            parentGoalId = getIntent().getIntExtra(Constants.KEY_PARENT_GOAL_ID, -1);
             Log.i(TAG, "onCreate: parent goal id = " + parentGoalId);
         }
 
-        mRepeatSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
-                    mRepeatLayout.setVisibility(View.VISIBLE);
-                }else {
-                    mRepeatLayout.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
+//        mRepeatSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if (isChecked){
+//                    mRepeatLayout.setVisibility(View.VISIBLE);
+//                }else {
+//                    mRepeatLayout.setVisibility(View.INVISIBLE);
+//                }
+//            }
+//        });
 
         ArrayAdapter<String> repeatPerTimePeriodAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_spinner_dropdown_item,

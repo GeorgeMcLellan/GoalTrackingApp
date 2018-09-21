@@ -36,7 +36,7 @@ public class ViewGoalActivity extends AppCompatActivity {
     private ArrayList<Goal> mSubGoals;
     private ArrayList<Action> mActions;
 
-    private String parentGoalId;
+    private int parentGoalId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +44,14 @@ public class ViewGoalActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_goal);
         ButterKnife.bind(this);
 
-        if (parentGoalId == null && getIntent().hasExtra(Constants.KEY_PARENT_GOAL_ID)){
-            parentGoalId = getIntent().getStringExtra(Constants.KEY_PARENT_GOAL_ID);
+        if (getIntent().hasExtra(Constants.KEY_PARENT_GOAL_ID)){
+            parentGoalId = getIntent().getIntExtra(Constants.KEY_PARENT_GOAL_ID, -1);
             Log.i(TAG, "onCreate: parent goal id = " + parentGoalId);
         }
 
         mSubGoals = new ArrayList<>();
-        mSubGoals.add(new Goal("999","Improve Android knowledge", "October 30 2018"));
-        mSubGoals.add(new Goal("888","Complete a mockup of app", "September 30 2018"));
+        mSubGoals.add(new Goal("Improve Android knowledge", "October 30 2018"));
+        mSubGoals.add(new Goal("Complete a mockup of app", "September 30 2018"));
 
         mActions = new ArrayList<>();
         mActions.add(new Action("Research other apps"));

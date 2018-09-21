@@ -1,29 +1,45 @@
 package com.development.georgemcl.goaltracker.model;
 
-public class Goal {
-    private String id;
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
+import java.io.Serializable;
+
+@Entity(tableName = "goal_table")
+public class Goal implements Serializable{
+
+    @PrimaryKey(autoGenerate = true)
+    @NonNull
+    @ColumnInfo(name = "id")
+    private int id;
+
+    @NonNull
+    @ColumnInfo(name = "goalName")
     private String goalName;
+
+    @ColumnInfo(name = "description")
     private String description;
+
+    @ColumnInfo(name = "completionDate")
     private String completionDate;
 
     /**
      * ParentGoalId is null if the goal has no parent.
      * Otherwise, it links to the parent of which it is a sub-goal
      */
-    private String parentGoalId;
+    @ColumnInfo(name = "parentGoalId")
+    private int parentGoalId;
 
     public Goal(String goalName, String completionDate) {
         this.goalName = goalName;
         this.completionDate = completionDate;
     }
-    public Goal(String id, String goalName, String completionDate) {
-        this.id = id;
-        this.goalName = goalName;
-        this.completionDate = completionDate;
-    }
 
-    public Goal(String goalName, String description, String completionDate, String parentGoalId) {
-        this.id = "1234";
+    @Ignore
+    public Goal(String goalName, String description, String completionDate, int parentGoalId) {
         this.goalName = goalName;
         this.description = description;
         this.completionDate = completionDate;
@@ -46,11 +62,11 @@ public class Goal {
         this.completionDate = completionDate;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -62,11 +78,11 @@ public class Goal {
         this.description = description;
     }
 
-    public String getParentGoalId() {
+    public int getParentGoalId() {
         return parentGoalId;
     }
 
-    public void setParentGoalId(String parentGoalId) {
+    public void setParentGoalId(int parentGoalId) {
         this.parentGoalId = parentGoalId;
     }
 
