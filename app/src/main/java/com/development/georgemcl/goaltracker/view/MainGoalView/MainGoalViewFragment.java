@@ -40,7 +40,6 @@ public class MainGoalViewFragment extends Fragment {
     @BindView(R.id.main_goal_add_goal_fab) FloatingActionButton mAddGoalFab;
     @BindView(R.id.main_goal_recycler_view) RecyclerView mGoalRecyclerView;
 
-    private ArrayList<Goal> mGoals;
     private GoalRecyclerViewAdapter mRecyclerViewAdapter;
     private MainGoalViewModel mMainGoalViewModel;
 
@@ -53,11 +52,9 @@ public class MainGoalViewFragment extends Fragment {
 
         mMainGoalViewModel = ViewModelProviders.of(this).get(MainGoalViewModel.class);
 
-        mGoals = new ArrayList<>();
-        mGoals.add(new Goal("Stop eating sugar", "End of 2018"));
-        mGoals.add(new Goal("Publish an app to Google Play", "End of 2018"));
 
-        mRecyclerViewAdapter = new GoalRecyclerViewAdapter(getContext(), mGoals);
+
+        mRecyclerViewAdapter = new GoalRecyclerViewAdapter(getContext());
         mGoalRecyclerView.setAdapter(mRecyclerViewAdapter);
         mGoalRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -69,11 +66,14 @@ public class MainGoalViewFragment extends Fragment {
             }
         });
 
-        mMainGoalViewModel.getAllGoals().observe(this, new Observer<List<Goal>>() {
+        mMainGoalViewModel.getMainGoals().observe(this, new Observer<List<Goal>>() {
             @Override
             public void onChanged(@Nullable List<Goal> goals) {
                 mRecyclerViewAdapter.setGoals(goals);
-                Log.d(TAG, "onChanged: goals size = "+ goals.size());
+                Log.d(TAG, "onChanged: Goals changed, new goals...");
+                for(int i = 0; i < goals.size(); i++) {
+                    Log.d(TAG, "goal "+ i + " : "+ goals.get(i).toString());
+                }
             }
         });
 
@@ -89,7 +89,6 @@ public class MainGoalViewFragment extends Fragment {
 
         if (requestCode == ADD_GOAL_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK){
             Goal goal = (Goal) data.getSerializableExtra(AddGoalActivity.EXTRA_GOAL_TO_ADD);
-            Log.d(TAG, "onActivityResult: Recieved goal : " + goal.toString());
             mMainGoalViewModel.insert(goal);
         }
     }

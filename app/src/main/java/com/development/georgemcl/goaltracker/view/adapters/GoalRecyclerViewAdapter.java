@@ -15,6 +15,7 @@ import com.development.georgemcl.goaltracker.model.Goal;
 import com.development.georgemcl.goaltracker.view.ViewGoalActivity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -23,11 +24,10 @@ import butterknife.ButterKnife;
 public class GoalRecyclerViewAdapter extends RecyclerView.Adapter<GoalRecyclerViewAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<Goal> mGoals;
+    private List<Goal> mGoals = Collections.emptyList();
 
-    public GoalRecyclerViewAdapter(Context context, List<Goal> goals) {
+    public GoalRecyclerViewAdapter(Context context) {
         mContext = context;
-        mGoals = goals;
     }
 
     @NonNull

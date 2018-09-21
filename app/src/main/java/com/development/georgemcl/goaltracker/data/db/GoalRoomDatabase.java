@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
 
 import com.development.georgemcl.goaltracker.model.Goal;
 
-@Database(entities = {Goal.class}, version = 1)
+@Database(entities = {Goal.class}, version = 1, exportSchema = false)
 public abstract class GoalRoomDatabase extends RoomDatabase{
 
     public abstract GoalDao goalDao();
@@ -22,7 +22,7 @@ public abstract class GoalRoomDatabase extends RoomDatabase{
             synchronized (GoalRoomDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(), GoalRoomDatabase.class, "goal_database")
-                            .addCallback(sRoomDatabaseCallback)
+//                            .addCallback(sRoomDatabaseCallback)
                             .build();
                 }
             }
@@ -31,33 +31,33 @@ public abstract class GoalRoomDatabase extends RoomDatabase{
         return INSTANCE;
     }
 
-    private static RoomDatabase.Callback sRoomDatabaseCallback =
-            new RoomDatabase.Callback(){
-
-                @Override
-                public void onOpen (@NonNull SupportSQLiteDatabase db){
-                    super.onOpen(db);
-                    new PopulateDbAsync(INSTANCE).execute();
-                }
-            };
-
-    private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
-
-        private final GoalDao mDao;
-
-        PopulateDbAsync(GoalRoomDatabase db) {
-            mDao = db.goalDao();
-        }
-
-        @Override
-        protected Void doInBackground(final Void... params) {
-            mDao.deleteAll();
-            Goal goal = new Goal("goal 1", "1/1/1");
-            mDao.insert(goal);
-            goal = new Goal("goal 2", "2/2/2");
-            mDao.insert(goal);
-            return null;
-        }
-    }
+//    private static RoomDatabase.Callback sRoomDatabaseCallback =
+//            new RoomDatabase.Callback(){
+//
+//                @Override
+//                public void onOpen (@NonNull SupportSQLiteDatabase db){
+//                    super.onOpen(db);
+//                    new PopulateDbAsync(INSTANCE).execute();
+//                }
+//            };
+//
+//    private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
+//
+//        private final GoalDao mDao;
+//
+//        PopulateDbAsync(GoalRoomDatabase db) {
+//            mDao = db.goalDao();
+//        }
+//
+//        @Override
+//        protected Void doInBackground(final Void... params) {
+//            mDao.deleteAll();
+//            Goal goal = new Goal("goal 1", "1/1/1");
+//            mDao.insert(goal);
+//            goal = new Goal("goal 2", "2/2/2");
+//            mDao.insert(goal);
+//            return null;
+//        }
+//    }
 
 }

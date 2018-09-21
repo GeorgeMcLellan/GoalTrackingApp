@@ -12,16 +12,16 @@ import java.util.List;
 public class MainGoalViewModel extends AndroidViewModel {
 
     private GoalRepository mRepository;
-    private LiveData<List<Goal>> mAllGoals;
+    private LiveData<List<Goal>> mMainGoals;
 
     public MainGoalViewModel (Application application) {
         super(application);
         mRepository = new GoalRepository(application);
-        mAllGoals = mRepository.getAllGoals();
+        mMainGoals = mRepository.getMainGoals();
     }
 
-    public LiveData<List<Goal>> getAllGoals() {
-        return mAllGoals;
+    public LiveData<List<Goal>> getMainGoals() {
+        return mMainGoals;
     }
 
     public void insert(Goal goal) {

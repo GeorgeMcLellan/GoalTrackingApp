@@ -33,12 +33,7 @@ public class Goal implements Serializable{
     @ColumnInfo(name = "parentGoalId")
     private int parentGoalId;
 
-    public Goal(String goalName, String completionDate) {
-        this.goalName = goalName;
-        this.completionDate = completionDate;
-    }
 
-    @Ignore
     public Goal(String goalName, String description, String completionDate, int parentGoalId) {
         this.goalName = goalName;
         this.description = description;

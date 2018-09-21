@@ -13,15 +13,23 @@ import java.util.List;
 public class GoalRepository {
     private GoalDao mGoalDao;
     private LiveData<List<Goal>> mAllGoals;
+    private LiveData<List<Goal>> mMainGoals;
 
     public GoalRepository(Application application) {
         GoalRoomDatabase db = GoalRoomDatabase.getDatabase(application);
         mGoalDao = db.goalDao();
         mAllGoals = mGoalDao.getAllGoals();
+        mMainGoals = mGoalDao.getMainGoals();
     }
 
     public LiveData<List<Goal>> getAllGoals() {
         return mAllGoals;
+    }
+
+    public LiveData<List<Goal>> getMainGoals() { return mMainGoals;}
+
+    public LiveData<List<Goal>> getSubGoals(int parentGoalId) {
+        return mGoalDao.getSubGoals(parentGoalId);
     }
 
     public void insert(Goal goal) {

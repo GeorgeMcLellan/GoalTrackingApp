@@ -50,8 +50,8 @@ public class ViewGoalActivity extends AppCompatActivity {
         }
 
         mSubGoals = new ArrayList<>();
-        mSubGoals.add(new Goal("Improve Android knowledge", "October 30 2018"));
-        mSubGoals.add(new Goal("Complete a mockup of app", "September 30 2018"));
+//        mSubGoals.add(new Goal("Improve Android knowledge", "October 30 2018"));
+//        mSubGoals.add(new Goal("Complete a mockup of app", "September 30 2018"));
 
         mActions = new ArrayList<>();
         mActions.add(new Action("Research other apps"));
@@ -92,5 +92,22 @@ public class ViewGoalActivity extends AppCompatActivity {
             @Override
             public void onMenuClosed() {}
         });
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == ADD_ACTION_REQUEST_CODE && resultCode == RESULT_OK){
+            Action action = (Action) data.getSerializableExtra(AddActionActivity.EXTRA_ACTION_TO_ADD);
+            Log.d(TAG, "onActivityResult: action: " +action.toString());
+//            mMainGoalViewModel.insert(goal);
+        }
+        else if (requestCode == ADD_SUBGOAL_REQUEST_CODE && resultCode == RESULT_OK) {
+            Goal goal = (Goal) data.getSerializableExtra(AddGoalActivity.EXTRA_GOAL_TO_ADD);
+            Log.d(TAG, "onActivityResult: goal: " +goal.toString());
+
+        }
     }
 }
