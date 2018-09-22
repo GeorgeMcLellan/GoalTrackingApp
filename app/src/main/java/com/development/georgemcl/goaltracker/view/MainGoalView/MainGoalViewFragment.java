@@ -20,9 +20,9 @@ import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.model.Goal;
 import com.development.georgemcl.goaltracker.view.AddGoalActivity;
+import com.development.georgemcl.goaltracker.view.ViewGoal.ViewGoalFragment;
 import com.development.georgemcl.goaltracker.view.adapters.GoalRecyclerViewAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
 import static android.app.Activity.RESULT_OK;
 
 
-public class MainGoalViewFragment extends Fragment {
+public class MainGoalViewFragment extends Fragment implements GoalRecyclerViewAdapter.OnGoalSelectedListener{
 
     private static final String TAG = "MainGoalViewFragment";
 
@@ -54,7 +54,7 @@ public class MainGoalViewFragment extends Fragment {
 
 
 
-        mRecyclerViewAdapter = new GoalRecyclerViewAdapter(getContext());
+        mRecyclerViewAdapter = new GoalRecyclerViewAdapter(getContext(), this);
         mGoalRecyclerView.setAdapter(mRecyclerViewAdapter);
         mGoalRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -81,8 +81,6 @@ public class MainGoalViewFragment extends Fragment {
     }
 
 
-
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -91,5 +89,14 @@ public class MainGoalViewFragment extends Fragment {
             Goal goal = (Goal) data.getSerializableExtra(AddGoalActivity.EXTRA_GOAL_TO_ADD);
             mMainGoalViewModel.insert(goal);
         }
+    }
+
+    @Override
+    public void onGoalSelected(int goalId) {
+        Fragment fragment = new ViewGoalFragment();
+        Bundle args = new Bundle();
+        args.putInt(Constants.KEY_PARENT_GOAL_ID, goalId);
+        fragment.setArguments(args);
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_activity_fragment_container, fragment).addToBackStack(null).commit();
     }
 }

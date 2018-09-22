@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.model.Goal;
+import com.development.georgemcl.goaltracker.view.MainGoalView.MainGoalViewFragment;
 import com.development.georgemcl.goaltracker.view.ViewGoal.ViewGoalActivity;
 
 import java.util.Collections;
@@ -24,9 +25,11 @@ public class GoalRecyclerViewAdapter extends RecyclerView.Adapter<GoalRecyclerVi
 
     private Context mContext;
     private List<Goal> mGoals = Collections.emptyList();
+    private OnGoalSelectedListener mGoalSelectedListener;
 
-    public GoalRecyclerViewAdapter(Context context) {
+    public GoalRecyclerViewAdapter(Context context, OnGoalSelectedListener listener) {
         mContext = context;
+        mGoalSelectedListener = listener;
     }
 
     @NonNull
@@ -44,9 +47,11 @@ public class GoalRecyclerViewAdapter extends RecyclerView.Adapter<GoalRecyclerVi
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, ViewGoalActivity.class);
-                intent.putExtra(Constants.KEY_PARENT_GOAL_ID, goal.getId());
-                mContext.startActivity(intent);
+
+                mGoalSelectedListener.onGoalSelected(goal.getId());
+//                Intent intent = new Intent(mContext, ViewGoalActivity.class);
+//                intent.putExtra(Constants.KEY_PARENT_GOAL_ID, goal.getId());
+//                mContext.startActivity(intent);
             }
         });
     }
@@ -54,6 +59,10 @@ public class GoalRecyclerViewAdapter extends RecyclerView.Adapter<GoalRecyclerVi
     public void setGoals(List<Goal> goals) {
         mGoals = goals;
         notifyDataSetChanged();
+    }
+
+    public void setOnGoalSelectedListener(OnGoalSelectedListener listener) {
+        mGoalSelectedListener = listener;
     }
 
     @Override
@@ -69,5 +78,9 @@ public class GoalRecyclerViewAdapter extends RecyclerView.Adapter<GoalRecyclerVi
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    public interface OnGoalSelectedListener {
+        void onGoalSelected(int goalId);
     }
 }

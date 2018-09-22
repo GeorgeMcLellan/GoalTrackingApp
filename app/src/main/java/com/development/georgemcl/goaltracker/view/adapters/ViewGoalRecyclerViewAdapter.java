@@ -63,9 +63,9 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             ((GoalViewHolder) holder).parentLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mContext, ViewGoalActivity.class);
-                    intent.putExtra(Constants.KEY_PARENT_GOAL_ID, goal.getId());
-                    mContext.startActivity(intent);
+//                    Intent intent = new Intent(mContext, ViewGoalActivity.class);
+//                    intent.putExtra(Constants.KEY_PARENT_GOAL_ID, goal.getId());
+//                    mContext.startActivity(intent);
                 }
             });
         }
