@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
@@ -15,7 +16,9 @@ import com.development.georgemcl.goaltracker.view.MainGoalView.MainGoalViewFragm
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG="MainActivity";
 
 
     @BindView(R.id.navigation) BottomNavigationView mNavigation;
@@ -41,16 +44,31 @@ public class MainActivity extends AppCompatActivity {
     };
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         mNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        //start the MainGoalViewFragment by default
         replaceFragment(new MainGoalViewFragment());
+
+        //Show the back button
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
 
-    private void replaceFragment(Fragment fragment){
+    public void replaceFragment(Fragment fragment){
         getSupportFragmentManager().beginTransaction().replace(R.id.main_activity_fragment_container, fragment).commit();
     }
 }

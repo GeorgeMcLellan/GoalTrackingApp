@@ -34,4 +34,7 @@ public interface GoalDao {
 
     @Query("SELECT * FROM goal_table WHERE parentGoalId IS :parentGoalId")
     LiveData<List<Goal>> getSubGoals(int parentGoalId);
+
+    @Query("SELECT * FROM goal_table WHERE id IS :id")
+    LiveData<Goal> getGoalById(int id);
 }

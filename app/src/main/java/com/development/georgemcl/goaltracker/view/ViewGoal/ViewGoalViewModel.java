@@ -40,6 +40,8 @@ public class ViewGoalViewModel extends AndroidViewModel {
         return mActions;
     }
 
+    public LiveData<Goal> getGoalById(int id) { return mGoalRepository.getGoalById(id);}
+
     public void insertSubGoal(Goal goal) {
         mGoalRepository.insert(goal);
     }

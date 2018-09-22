@@ -1,7 +1,6 @@
 package com.development.georgemcl.goaltracker.view.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,13 +13,10 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.model.Action;
 import com.development.georgemcl.goaltracker.model.Goal;
-import com.development.georgemcl.goaltracker.view.ViewGoal.ViewGoalActivity;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,11 +29,13 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     private static final int VIEW_TYPE_ACTION = 20;
 
     private Context mContext;
+    private OnItemSelectedListener mOnItemSelectedListener;
     private List<Goal> mSubGoals = Collections.emptyList();
     private List<Action> mActions = Collections.emptyList();
 
-    public ViewGoalRecyclerViewAdapter(Context context) {
+    public ViewGoalRecyclerViewAdapter(Context context, OnItemSelectedListener listener) {
         mContext = context;
+        mOnItemSelectedListener = listener;
     }
 
     @Override
@@ -63,14 +61,15 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             ((GoalViewHolder) holder).parentLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mContext, ViewGoalActivity.class);
-                    intent.putExtra(Constants.KEY_PARENT_GOAL_ID, goal.getId());
-                    mContext.startActivity(intent);
+                    mOnItemSelectedListener.onSubGoalSelected(goal.getId());
+//                    Intent intent = new Intent(mContext, ViewGoalActivity.class);
+//                    intent.putExtra(Constants.KEY_PARENT_GOAL_ID, goal.getId());
+//                    mContext.startActivity(intent);
                 }
             });
         }
         if (holder instanceof ActionViewHolder) {
-            Action action = mActions.get(position - mSubGoals.size());
+            final Action action = mActions.get(position - mSubGoals.size());
             final ActionViewHolder actionViewHolder = (ActionViewHolder) holder;
             actionViewHolder.populateFields(action);
 
@@ -78,6 +77,13 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(mContext, "Action completed", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            actionViewHolder.parentLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnItemSelectedListener.onActionSelected(action.getId());
                 }
             });
 
@@ -154,6 +160,7 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
     public class GoalViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.goal_item_name_textview) TextView nameTxt;
+        @BindView(R.id.goal_item_completion_date_textview) TextView completionDateTxt;
         @BindView(R.id.goal_item_parent_layout) View parentLayout;
 
         public GoalViewHolder(View itemView) {
@@ -163,7 +170,22 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
         public void populateFields(Goal goal) {
             nameTxt.setText(goal.getGoalName());
+            completionDateTxt.setText(goal.getCompletionDate());
         }
+    }
+
+    public interface OnItemSelectedListener {
+        /**
+         * Called when a sub goal is selected
+         * @param goalId
+         */
+        void onSubGoalSelected(int goalId);
+
+        /**
+         * Called when an action is selected
+         * @param actionId
+         */
+        void onActionSelected(int actionId);
     }
 
 }
