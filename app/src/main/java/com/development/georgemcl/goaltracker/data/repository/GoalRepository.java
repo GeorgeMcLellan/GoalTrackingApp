@@ -32,6 +32,10 @@ public class GoalRepository {
         return mGoalDao.getSubGoals(parentGoalId);
     }
 
+    public LiveData<Goal> getGoalById(int id) {
+        return mGoalDao.getGoalById(id);
+    }
+
     public void insert(Goal goal) {
         new insertAsyncTask(mGoalDao).execute(goal);
     }

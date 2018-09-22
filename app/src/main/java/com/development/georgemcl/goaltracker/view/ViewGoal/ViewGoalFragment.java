@@ -1,5 +1,6 @@
 package com.development.georgemcl.goaltracker.view.ViewGoal;
 
+import android.app.ActionBar;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
@@ -32,12 +34,13 @@ import io.github.yavski.fabspeeddial.FabSpeedDial;
 
 import static android.app.Activity.RESULT_OK;
 
-public class ViewGoalFragment extends Fragment {
+public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAdapter.OnItemSelectedListener{
     private static final String TAG = "ViewGoalFragment";
-    @BindView(R.id.view_goal_add_fab)
-    FabSpeedDial mAddFab;
-    @BindView(R.id.view_goal_recycler_view)
-    RecyclerView mRecyclerView;
+    @BindView(R.id.view_goal_add_fab) FabSpeedDial mAddFab;
+    @BindView(R.id.view_goal_recycler_view) RecyclerView mRecyclerView;
+    @BindView(R.id.view_goal_name_textview) TextView mGoalNameTxt;
+    @BindView(R.id.view_goal_description_textview) TextView mGoalDescriptionTxt;
+    @BindView(R.id.view_goal_completion_date_textview) TextView mGoalCompletionDateTxt;
 
     private static final int ADD_ACTION_REQUEST_CODE = 204;
     private static final int ADD_SUBGOAL_REQUEST_CODE = 689;
@@ -51,18 +54,19 @@ public class ViewGoalFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_view_goal, container, false);
+        View view = inflater.inflate(R.layout.fragment_view_goal, container, false);
         ButterKnife.bind(this, view);
 //        if (getIntent().hasExtra(Constants.KEY_PARENT_GOAL_ID)){
 //            parentGoalId = getIntent().getIntExtra(Constants.KEY_PARENT_GOAL_ID, -1);
 //            Log.i(TAG, "onCreate: parent goal id = " + parentGoalId);
 //        }
-
+        
         parentGoalId = getArguments().getInt(Constants.KEY_PARENT_GOAL_ID);
 
         mViewGoalViewModel = ViewModelProviders.of(this).get(ViewGoalViewModel.class);
 
         mViewGoalViewModel.populateLists(parentGoalId);
+
 
 //        mSubGoals = new ArrayList<>();
 ////        mSubGoals.add(new Goal("Improve Android knowledge", "October 30 2018"));
@@ -74,7 +78,7 @@ public class ViewGoalFragment extends Fragment {
 
 
 
-        mRecyclerViewAdapter = new ViewGoalRecyclerViewAdapter(getContext());
+        mRecyclerViewAdapter = new ViewGoalRecyclerViewAdapter(getContext(), this);
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -92,6 +96,16 @@ public class ViewGoalFragment extends Fragment {
                 mRecyclerViewAdapter.setSubGoals(goals);
             }
         });
+
+        mViewGoalViewModel.getGoalById(parentGoalId).observe(this, new Observer<Goal>() {
+            @Override
+            public void onChanged(@Nullable Goal goal) {
+                mGoalNameTxt.setText(goal.getGoalName());
+                mGoalDescriptionTxt.setText(goal.getDescription());
+                mGoalCompletionDateTxt.setText(goal.getCompletionDate());
+            }
+        });
+
 
         mAddFab.setMenuListener(new FabSpeedDial.MenuListener() {
             @Override
@@ -140,5 +154,19 @@ public class ViewGoalFragment extends Fragment {
             Log.d(TAG, "onActivityResult: goal: " +goal.toString());
             mViewGoalViewModel.insertSubGoal(goal);
         }
+    }
+
+    @Override
+    public void onSubGoalSelected(int goalId) {
+        Fragment fragment = new ViewGoalFragment();
+        Bundle args = new Bundle();
+        args.putInt(Constants.KEY_PARENT_GOAL_ID, goalId);
+        fragment.setArguments(args);
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_activity_fragment_container, fragment).addToBackStack(null).commit();
+    }
+
+    @Override
+    public void onActionSelected(int actionId) {
+
     }
 }

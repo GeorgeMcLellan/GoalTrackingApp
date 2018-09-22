@@ -53,7 +53,6 @@ public class MainGoalViewFragment extends Fragment implements GoalRecyclerViewAd
         mMainGoalViewModel = ViewModelProviders.of(this).get(MainGoalViewModel.class);
 
 
-
         mRecyclerViewAdapter = new GoalRecyclerViewAdapter(getContext(), this);
         mGoalRecyclerView.setAdapter(mRecyclerViewAdapter);
         mGoalRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

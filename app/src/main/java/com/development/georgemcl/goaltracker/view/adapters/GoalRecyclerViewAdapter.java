@@ -1,7 +1,6 @@
 package com.development.georgemcl.goaltracker.view.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,11 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.model.Goal;
-import com.development.georgemcl.goaltracker.view.MainGoalView.MainGoalViewFragment;
-import com.development.georgemcl.goaltracker.view.ViewGoal.ViewGoalActivity;
 
 import java.util.Collections;
 import java.util.List;
@@ -44,6 +40,7 @@ public class GoalRecyclerViewAdapter extends RecyclerView.Adapter<GoalRecyclerVi
 
         final Goal goal = mGoals.get(position);
         holder.nameTxt.setText(goal.getGoalName());
+        holder.completionDateTxt.setText(goal.getCompletionDate());
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,6 +69,7 @@ public class GoalRecyclerViewAdapter extends RecyclerView.Adapter<GoalRecyclerVi
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.goal_item_name_textview) TextView nameTxt;
+        @BindView(R.id.goal_item_completion_date_textview) TextView completionDateTxt;
         @BindView(R.id.goal_item_parent_layout) View parentLayout;
 
         public ViewHolder(View itemView) {
@@ -80,7 +78,14 @@ public class GoalRecyclerViewAdapter extends RecyclerView.Adapter<GoalRecyclerVi
         }
     }
 
+    /**
+     * Communicates to parent view when a goal has been selected
+     */
     public interface OnGoalSelectedListener {
+        /**
+         * Called when a goal is selected
+         * @param goalId
+         */
         void onGoalSelected(int goalId);
     }
 }
