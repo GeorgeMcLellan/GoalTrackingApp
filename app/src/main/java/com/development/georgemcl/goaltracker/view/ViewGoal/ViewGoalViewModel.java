@@ -49,4 +49,6 @@ public class ViewGoalViewModel extends AndroidViewModel {
     public void insertAction(Action action) {
         mActionRepository.insert(action);
     }
+
+    public void editAction(Action action) { mActionRepository.edit(action); }
 }

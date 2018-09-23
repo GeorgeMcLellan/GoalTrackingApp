@@ -54,7 +54,7 @@
         </LinearLayout>
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/add_action_add_fab"
+            android:id="@+id/add_action_submit_fab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"

@@ -1,6 +1,7 @@
-package com.development.georgemcl.goaltracker.view.adapters;
+package com.development.georgemcl.goaltracker.view.ViewGoal;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,9 +14,11 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.model.Action;
 import com.development.georgemcl.goaltracker.model.Goal;
+import com.development.georgemcl.goaltracker.view.AddActionActivity;
 
 import java.util.Collections;
 import java.util.List;
@@ -97,6 +100,7 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                         public boolean onMenuItemClick(MenuItem item) {
                             switch (item.getItemId()){
                                 case R.id.action_edit_action : {
+                                    mOnItemSelectedListener.onActionEdit(action);
                                     return true;
                                 }
                                 case R.id.action_delete_action : {
@@ -186,6 +190,8 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
          * @param actionId
          */
         void onActionSelected(int actionId);
+
+        void onActionEdit(Action action);
     }
 
 }

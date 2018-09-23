@@ -30,20 +30,37 @@ public class ActionRepository {
     }
 
     public void insert(Action action) {
-        new insertAsyncTask(mActionDao).execute(action);
+        new InsertAsyncTask(mActionDao).execute(action);
     }
 
-    private static class insertAsyncTask extends AsyncTask<Action, Void, Void> {
+    public void edit(Action action) { new EditAsyncTask(mActionDao).execute(action);}
+
+    private static class InsertAsyncTask extends AsyncTask<Action, Void, Void> {
 
         private ActionDao mAsyncTaskDao;
 
-        insertAsyncTask(ActionDao dao) {
+        InsertAsyncTask(ActionDao dao) {
             mAsyncTaskDao = dao;
         }
 
         @Override
         protected Void doInBackground(final Action... params) {
             mAsyncTaskDao.insert(params[0]);
+            return null;
+        }
+    }
+
+    private static class EditAsyncTask extends AsyncTask<Action, Void, Void> {
+
+        private ActionDao mAsyncTaskDao;
+
+        EditAsyncTask(ActionDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final Action... params) {
+            mAsyncTaskDao.updateActions(params[0]);
             return null;
         }
     }

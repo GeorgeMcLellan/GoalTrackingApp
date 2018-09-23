@@ -8,20 +8,20 @@
     tools:context=".view.AddGoalActivity">
 
     <EditText
+        android:id="@+id/add_goal_name_edittext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/add_goal_name_edittext"
-        android:hint="@string/goal_name"
-        android:inputType="text"
         android:layout_marginTop="10dp"
-        android:textAlignment="center"/>
+        android:hint="@string/goal_name"
+        android:inputType="textCapSentences"
+        android:textAlignment="center" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/add_goal_description_edittext"
         android:hint="@string/goal_description"
-        android:inputType="text"
+        android:inputType="textCapSentences"
         android:layout_marginTop="10dp"
         android:textAlignment="center"/>
 

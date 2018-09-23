@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -18,7 +17,6 @@ import android.widget.Toast;
 import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.model.Action;
-import com.development.georgemcl.goaltracker.model.Goal;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,6 +25,8 @@ public class AddActionActivity extends AppCompatActivity {
     private static final String TAG = "AddActionActivity";
 
     public static final String EXTRA_ACTION_TO_ADD = "ACTION_TO_ADD";
+    public static final String EXTRA_ACTION_TO_EDIT = "ACTION_TO_EDIT";
+
 
     @BindView(R.id.add_action_name_edittext) EditText mActionNameEt;
     @BindView(R.id.add_action_repeat_switch) Switch mRepeatSwitch;
@@ -34,9 +34,12 @@ public class AddActionActivity extends AppCompatActivity {
     @BindView(R.id.add_action_repeat_per_time_period_spinner) Spinner mRepeatPerTimePeriodSpn;
     @BindView(R.id.add_action_repeat_unit_of_measurement_spinner) Spinner mRepeatUnitOfMeasurementSpn;
     @BindView(R.id.add_action_repeat_measurement_edittext) EditText mRepeatMeasurementEt;
-    @BindView(R.id.add_action_add_fab) FloatingActionButton mAddFab;
+    @BindView(R.id.add_action_submit_fab) FloatingActionButton mSubmitFab;
 
     private int parentGoalId;
+    private int actionToEditId;
+    private ArrayAdapter<String> mRepeatPerTimePeriodAdapter;
+    private ArrayAdapter<String> mRepeatUnitOfMeasurementAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,7 @@ public class AddActionActivity extends AppCompatActivity {
             Log.i(TAG, "onCreate: parent goal id = " + parentGoalId);
         }
 
+
         mRepeatSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -60,18 +64,23 @@ public class AddActionActivity extends AppCompatActivity {
             }
         });
 
-        final ArrayAdapter<String> repeatPerTimePeriodAdapter = new ArrayAdapter<>(
+        mRepeatPerTimePeriodAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_spinner_dropdown_item,
                 getResources().getStringArray(R.array.repeat_time_periods));
-        mRepeatPerTimePeriodSpn.setAdapter(repeatPerTimePeriodAdapter);
+        mRepeatPerTimePeriodSpn.setAdapter(mRepeatPerTimePeriodAdapter);
 
-        ArrayAdapter<String> repeatUnitOfMeasurementAdapter = new ArrayAdapter<>(
+        mRepeatUnitOfMeasurementAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_spinner_dropdown_item,
                 getResources().getStringArray(R.array.repeat_units_of_measurements));
-        mRepeatUnitOfMeasurementSpn.setAdapter(repeatUnitOfMeasurementAdapter);
+        mRepeatUnitOfMeasurementSpn.setAdapter(mRepeatUnitOfMeasurementAdapter);
+
+        if (getIntent().hasExtra(Constants.KEY_ACTION_TO_EDIT)) {
+            populateFields((Action) getIntent().getSerializableExtra(Constants.KEY_ACTION_TO_EDIT));
+        }
 
 
-        mAddFab.setOnClickListener(new View.OnClickListener() {
+
+        mSubmitFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String actionName = mActionNameEt.getText().toString();
@@ -86,8 +95,14 @@ public class AddActionActivity extends AppCompatActivity {
                         action = new Action(actionName, parentGoalId);
                     }
                     Intent replyIntent = new Intent();
-                    replyIntent.putExtra(EXTRA_ACTION_TO_ADD, action);
-                    setResult(RESULT_OK,replyIntent);
+                    if (getIntent().hasExtra(Constants.KEY_ACTION_TO_EDIT)){
+                        action.setId(actionToEditId);
+                        replyIntent.putExtra(EXTRA_ACTION_TO_EDIT, action);
+                    } else {
+                        replyIntent.putExtra(EXTRA_ACTION_TO_ADD, action);
+                    }
+                    Log.d(TAG, "onClick: " + action);
+                    setResult(RESULT_OK, replyIntent);
                     finish();
                 }
                 else {
@@ -96,5 +111,19 @@ public class AddActionActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    /**
+     * If editing an action - populates fields with existing action data
+     */
+    private void populateFields(Action action) {
+        mActionNameEt.setText(action.getActionName());
+        actionToEditId = action.getId();
+        if (action.isRepeatAction()) {
+            mRepeatSwitch.setChecked(true);
+            mRepeatMeasurementEt.setText(String.valueOf(action.getRepeatAmount()));
+            mRepeatPerTimePeriodSpn.setSelection(mRepeatPerTimePeriodAdapter.getPosition(action.getRepeatTimePeriod()));
+            mRepeatUnitOfMeasurementSpn.setSelection(mRepeatUnitOfMeasurementAdapter.getPosition(action.getRepeatUnitOfMeasurement()));
+        }
     }
 }

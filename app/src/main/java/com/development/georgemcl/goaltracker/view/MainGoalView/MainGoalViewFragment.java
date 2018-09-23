@@ -2,7 +2,6 @@ package com.development.georgemcl.goaltracker.view.MainGoalView;
 
 
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,7 +20,6 @@ import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.model.Goal;
 import com.development.georgemcl.goaltracker.view.AddGoalActivity;
 import com.development.georgemcl.goaltracker.view.ViewGoal.ViewGoalFragment;
-import com.development.georgemcl.goaltracker.view.adapters.GoalRecyclerViewAdapter;
 
 import java.util.List;
 

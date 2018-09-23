@@ -1,4 +1,4 @@
-package com.development.georgemcl.goaltracker.view.adapters;
+package com.development.georgemcl.goaltracker.view.MainGoalView;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

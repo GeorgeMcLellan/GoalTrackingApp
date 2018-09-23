@@ -1,6 +1,5 @@
 package com.development.georgemcl.goaltracker.view.ViewGoal;
 
-import android.app.ActionBar;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -24,7 +23,6 @@ import com.development.georgemcl.goaltracker.model.Action;
 import com.development.georgemcl.goaltracker.model.Goal;
 import com.development.georgemcl.goaltracker.view.AddActionActivity;
 import com.development.georgemcl.goaltracker.view.AddGoalActivity;
-import com.development.georgemcl.goaltracker.view.adapters.ViewGoalRecyclerViewAdapter;
 
 import java.util.List;
 
@@ -43,6 +41,7 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
     @BindView(R.id.view_goal_completion_date_textview) TextView mGoalCompletionDateTxt;
 
     private static final int ADD_ACTION_REQUEST_CODE = 204;
+    private static final int EDIT_ACTION_REQUEST_CODE = 689;
     private static final int ADD_SUBGOAL_REQUEST_CODE = 689;
 
     private ViewGoalRecyclerViewAdapter mRecyclerViewAdapter;
@@ -56,25 +55,13 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_view_goal, container, false);
         ButterKnife.bind(this, view);
-//        if (getIntent().hasExtra(Constants.KEY_PARENT_GOAL_ID)){
-//            parentGoalId = getIntent().getIntExtra(Constants.KEY_PARENT_GOAL_ID, -1);
-//            Log.i(TAG, "onCreate: parent goal id = " + parentGoalId);
-//        }
-        
+
         parentGoalId = getArguments().getInt(Constants.KEY_PARENT_GOAL_ID);
 
         mViewGoalViewModel = ViewModelProviders.of(this).get(ViewGoalViewModel.class);
 
         mViewGoalViewModel.populateLists(parentGoalId);
 
-
-//        mSubGoals = new ArrayList<>();
-////        mSubGoals.add(new Goal("Improve Android knowledge", "October 30 2018"));
-////        mSubGoals.add(new Goal("Complete a mockup of app", "September 30 2018"));
-//
-//        mActions = new ArrayList<>();
-//        mActions.add(new Action("Research other apps"));
-//        mActions.add(new Action("Read 30 mins a day"));
 
 
 
@@ -145,14 +132,20 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == ADD_ACTION_REQUEST_CODE && resultCode == RESULT_OK){
+            Log.d(TAG, "onActivityResult: add");
             Action action = (Action) data.getSerializableExtra(AddActionActivity.EXTRA_ACTION_TO_ADD);
             Log.d(TAG, "onActivityResult: action: " +action.toString());
             mViewGoalViewModel.insertAction(action);
         }
-        else if (requestCode == ADD_SUBGOAL_REQUEST_CODE && resultCode == RESULT_OK) {
-            Goal goal = (Goal) data.getSerializableExtra(AddGoalActivity.EXTRA_GOAL_TO_ADD);
-            Log.d(TAG, "onActivityResult: goal: " +goal.toString());
-            mViewGoalViewModel.insertSubGoal(goal);
+//        else if (requestCode == ADD_SUBGOAL_REQUEST_CODE && resultCode == RESULT_OK) {
+//            Goal goal = (Goal) data.getSerializableExtra(AddGoalActivity.EXTRA_GOAL_TO_ADD);
+//            Log.d(TAG, "onActivityResult: goal: " + goal.toString());
+//            mViewGoalViewModel.insertSubGoal(goal);
+//        }
+        else if (requestCode == EDIT_ACTION_REQUEST_CODE && resultCode == RESULT_OK) {
+            Log.d(TAG, "onActivityResult: edit");
+            Action action = (Action) data.getSerializableExtra(AddActionActivity.EXTRA_ACTION_TO_EDIT);
+            mViewGoalViewModel.editAction(action);
         }
     }
 
@@ -168,5 +161,13 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
     @Override
     public void onActionSelected(int actionId) {
 
+    }
+
+    @Override
+    public void onActionEdit(Action action) {
+        Intent intent = new Intent(getContext(), AddActionActivity.class);
+        intent.putExtra(Constants.KEY_PARENT_GOAL_ID, parentGoalId);
+        intent.putExtra(Constants.KEY_ACTION_TO_EDIT, action);
+        startActivityForResult(intent, EDIT_ACTION_REQUEST_CODE);
     }
 }
