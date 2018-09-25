@@ -39,6 +39,14 @@
                 android:textAlignment="center"
                 android:id="@+id/view_goal_description_textview"/>
         </LinearLayout>
+        <ImageView
+        android:layout_width="30dp"
+        android:layout_height="50dp"
+        app:srcCompat="@drawable/baseline_done_24"
+        android:layout_marginRight="10dp"
+        android:id="@+id/view_goal_compelete_imageview"
+        android:layout_gravity="right"
+        android:contentDescription="@string/done"/>
         <Button
             android:id="@+id/view_goal_options_button"
             android:layout_width="10dp"

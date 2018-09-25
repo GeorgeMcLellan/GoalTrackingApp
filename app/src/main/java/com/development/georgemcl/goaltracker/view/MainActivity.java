@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import com.development.georgemcl.goaltracker.R;
+import com.development.georgemcl.goaltracker.view.MainActionsView.MainActionsViewFragment;
 import com.development.georgemcl.goaltracker.view.MainGoalView.MainGoalViewFragment;
 
 import butterknife.BindView;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
                     replaceFragment(new MainGoalViewFragment());
                     return true;
                 case R.id.navigation_dashboard:
+                    replaceFragment(new MainActionsViewFragment());
                     return true;
                 case R.id.navigation_notifications:
                     return true;

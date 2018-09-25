@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="5dp"
     android:id="@+id/action_item_parent_layout"
     android:background="@drawable/green_border">
 
@@ -25,7 +24,8 @@
         android:layout_marginRight="10dp"
         android:id="@+id/action_item_done_imageview"
         android:layout_gravity="right"
-        android:contentDescription="@string/done"/>
+        android:contentDescription="@string/done"
+        android:layout_marginEnd="10dp" />
     <Button
         android:id="@+id/action_item_options_button"
         android:layout_width="10dp"

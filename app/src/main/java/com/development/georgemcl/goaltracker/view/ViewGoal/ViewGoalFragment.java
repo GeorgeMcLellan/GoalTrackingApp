@@ -172,21 +172,25 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
                     Action action = (Action) data.getSerializableExtra(AddActionActivity.EXTRA_ACTION_TO_ADD);
                     Log.d(TAG, "onActivityResult: action: " +action.toString());
                     mViewGoalViewModel.insertAction(action);
+                    break;
                 }
                 case ADD_SUBGOAL_REQUEST_CODE : {
                     Goal goal = (Goal) data.getSerializableExtra(AddGoalActivity.EXTRA_GOAL_TO_ADD);
                     Log.d(TAG, "onActivityResult: goal: " + goal.toString());
                     mViewGoalViewModel.insertSubGoal(goal);
+                    break;
                 }
                 case EDIT_ACTION_REQUEST_CODE : {
                     Log.d(TAG, "onActivityResult: edit");
                     Action action = (Action) data.getSerializableExtra(AddActionActivity.EXTRA_ACTION_TO_EDIT);
                     mViewGoalViewModel.editAction(action);
+                    break;
                 }
                 case EDIT_GOAL_REQUEST_CODE : {
                     Goal goal = (Goal) data.getSerializableExtra(AddGoalActivity.EXTRA_GOAL_TO_EDIT);
                     Log.d(TAG, "onActivityResult: new edited goal : " + goal);
                     mViewGoalViewModel.editGoal(goal);
+                    break;
                 }
 
             }

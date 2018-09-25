@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/add_action_name_edittext"
             android:hint="@string/action_name"
-            android:inputType="text"
+            android:inputType="textCapSentences"
             android:textAlignment="center"/>
 
         <Switch
