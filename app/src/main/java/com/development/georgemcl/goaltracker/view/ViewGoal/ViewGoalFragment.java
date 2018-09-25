@@ -15,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.development.georgemcl.goaltracker.Constants;
@@ -39,16 +41,21 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
     @BindView(R.id.view_goal_name_textview) TextView mGoalNameTxt;
     @BindView(R.id.view_goal_description_textview) TextView mGoalDescriptionTxt;
     @BindView(R.id.view_goal_completion_date_textview) TextView mGoalCompletionDateTxt;
+    @BindView(R.id.view_goal_options_button) Button mOptionsBtn;
 
     private static final int ADD_ACTION_REQUEST_CODE = 204;
     private static final int EDIT_ACTION_REQUEST_CODE = 689;
-    private static final int ADD_SUBGOAL_REQUEST_CODE = 689;
+    private static final int ADD_SUBGOAL_REQUEST_CODE = 23;
+    private static final int EDIT_GOAL_REQUEST_CODE = 231;
+
 
     private ViewGoalRecyclerViewAdapter mRecyclerViewAdapter;
 
     private ViewGoalViewModel mViewGoalViewModel;
 
     private int parentGoalId;
+
+    private Goal mGoalInView;
 
     @Nullable
     @Override
@@ -87,6 +94,7 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
         mViewGoalViewModel.getGoalById(parentGoalId).observe(this, new Observer<Goal>() {
             @Override
             public void onChanged(@Nullable Goal goal) {
+                mGoalInView = goal;
                 mGoalNameTxt.setText(goal.getGoalName());
                 mGoalDescriptionTxt.setText(goal.getDescription());
                 mGoalCompletionDateTxt.setText(goal.getCompletionDate());
@@ -123,6 +131,32 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
             @Override
             public void onMenuClosed() {}
         });
+
+
+        mOptionsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popupMenu = new PopupMenu(getContext(), mOptionsBtn);
+                popupMenu.inflate(R.menu.menu_goal_options);
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()){
+                            case R.id.goal_edit_action : {
+                                Intent intent = new Intent(getContext(), AddGoalActivity.class);
+                                intent.putExtra(Constants.KEY_PARENT_GOAL_ID, mGoalInView.getParentGoalId());
+                                intent.putExtra(Constants.KEY_GOAL_TO_EDIT, mGoalInView);
+                                startActivityForResult(intent, EDIT_GOAL_REQUEST_CODE);
+                                return true;
+                            }
+                            default:
+                                return false;
+                        }
+                    }
+                });
+                popupMenu.show();
+            }
+        });
         return view;
     }
 
@@ -131,22 +165,33 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == ADD_ACTION_REQUEST_CODE && resultCode == RESULT_OK){
-            Log.d(TAG, "onActivityResult: add");
-            Action action = (Action) data.getSerializableExtra(AddActionActivity.EXTRA_ACTION_TO_ADD);
-            Log.d(TAG, "onActivityResult: action: " +action.toString());
-            mViewGoalViewModel.insertAction(action);
+        if (resultCode == RESULT_OK){
+            switch (requestCode){
+                case ADD_ACTION_REQUEST_CODE : {
+                    Log.d(TAG, "onActivityResult: add");
+                    Action action = (Action) data.getSerializableExtra(AddActionActivity.EXTRA_ACTION_TO_ADD);
+                    Log.d(TAG, "onActivityResult: action: " +action.toString());
+                    mViewGoalViewModel.insertAction(action);
+                }
+                case ADD_SUBGOAL_REQUEST_CODE : {
+                    Goal goal = (Goal) data.getSerializableExtra(AddGoalActivity.EXTRA_GOAL_TO_ADD);
+                    Log.d(TAG, "onActivityResult: goal: " + goal.toString());
+                    mViewGoalViewModel.insertSubGoal(goal);
+                }
+                case EDIT_ACTION_REQUEST_CODE : {
+                    Log.d(TAG, "onActivityResult: edit");
+                    Action action = (Action) data.getSerializableExtra(AddActionActivity.EXTRA_ACTION_TO_EDIT);
+                    mViewGoalViewModel.editAction(action);
+                }
+                case EDIT_GOAL_REQUEST_CODE : {
+                    Goal goal = (Goal) data.getSerializableExtra(AddGoalActivity.EXTRA_GOAL_TO_EDIT);
+                    Log.d(TAG, "onActivityResult: new edited goal : " + goal);
+                    mViewGoalViewModel.editGoal(goal);
+                }
+
+            }
         }
-//        else if (requestCode == ADD_SUBGOAL_REQUEST_CODE && resultCode == RESULT_OK) {
-//            Goal goal = (Goal) data.getSerializableExtra(AddGoalActivity.EXTRA_GOAL_TO_ADD);
-//            Log.d(TAG, "onActivityResult: goal: " + goal.toString());
-//            mViewGoalViewModel.insertSubGoal(goal);
-//        }
-        else if (requestCode == EDIT_ACTION_REQUEST_CODE && resultCode == RESULT_OK) {
-            Log.d(TAG, "onActivityResult: edit");
-            Action action = (Action) data.getSerializableExtra(AddActionActivity.EXTRA_ACTION_TO_EDIT);
-            mViewGoalViewModel.editAction(action);
-        }
+
     }
 
     @Override

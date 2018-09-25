@@ -17,13 +17,13 @@
         android:textAlignment="center" />
 
     <EditText
+        android:id="@+id/add_goal_description_edittext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/add_goal_description_edittext"
-        android:hint="@string/goal_description"
-        android:inputType="textCapSentences"
         android:layout_marginTop="10dp"
-        android:textAlignment="center"/>
+        android:hint="@string/goal_description"
+        android:inputType="textCapSentences|textMultiLine"
+        android:textAlignment="center" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -42,7 +42,7 @@
         android:textSize="24sp"
         android:textAlignment="center"/>
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/add_goal_add_fab"
+        android:id="@+id/add_goal_submit_fab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"

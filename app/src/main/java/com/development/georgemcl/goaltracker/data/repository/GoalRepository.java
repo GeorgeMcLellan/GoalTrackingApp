@@ -40,6 +40,9 @@ public class GoalRepository {
         new insertAsyncTask(mGoalDao).execute(goal);
     }
 
+    public void edit(Goal goal) { new EditAsyncTask(mGoalDao).execute(goal);}
+
+
     private static class insertAsyncTask extends AsyncTask<Goal, Void, Void> {
 
         private GoalDao mAsyncTaskDao;
@@ -51,6 +54,21 @@ public class GoalRepository {
         @Override
         protected Void doInBackground(final Goal... params) {
             mAsyncTaskDao.insert(params[0]);
+            return null;
+        }
+    }
+
+    private static class EditAsyncTask extends AsyncTask<Goal, Void, Void> {
+
+        private GoalDao mAsyncTaskDao;
+
+        EditAsyncTask(GoalDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final Goal... params) {
+            mAsyncTaskDao.updateGoals(params[0]);
             return null;
         }
     }

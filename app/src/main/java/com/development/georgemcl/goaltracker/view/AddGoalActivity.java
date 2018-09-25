@@ -16,7 +16,6 @@ import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.model.Goal;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -28,6 +27,8 @@ public class AddGoalActivity extends AppCompatActivity {
 
     private static final String TAG = "AddGoalActivity";
     public static final String EXTRA_GOAL_TO_ADD  = "GOAL_TO_ADD";
+    public static final String EXTRA_GOAL_TO_EDIT  = "GOAL_TO_EDIT";
+
 
 
     @BindView(R.id.add_goal_name_edittext)
@@ -35,9 +36,10 @@ public class AddGoalActivity extends AppCompatActivity {
     @BindView(R.id.add_goal_description_edittext) EditText mGoalDescriptionEt;
     @BindView(R.id.add_goal_date_textview)
     TextView mGoalDateTxt;
-    @BindView(R.id.add_goal_add_fab)
-    FloatingActionButton mAddGoalFab;
-    int parentGoalId;
+    @BindView(R.id.add_goal_submit_fab)
+    FloatingActionButton mSubmitFab;
+    private int parentGoalId;
+    private int mGoalToEditId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,10 @@ public class AddGoalActivity extends AppCompatActivity {
         if (getIntent().hasExtra(Constants.KEY_PARENT_GOAL_ID)){
             parentGoalId = getIntent().getIntExtra(Constants.KEY_PARENT_GOAL_ID, -1);
             Log.i(TAG, "onCreate: parent goal id = " + parentGoalId);
+        }
+
+        if (getIntent().hasExtra(Constants.KEY_GOAL_TO_EDIT)) {
+            populateFields((Goal) getIntent().getSerializableExtra(Constants.KEY_GOAL_TO_EDIT));
         }
 
         mGoalDateTxt.setOnClickListener(new View.OnClickListener() {
@@ -71,7 +77,7 @@ public class AddGoalActivity extends AppCompatActivity {
 
         });
 
-        mAddGoalFab.setOnClickListener(new View.OnClickListener() {
+        mSubmitFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String goalName = mGoalNameEt.getText().toString();
@@ -80,10 +86,17 @@ public class AddGoalActivity extends AppCompatActivity {
                 if (!goalName.isEmpty()) {
                     if (!dateToAchieve.isEmpty()){
                         Goal goal = new Goal(goalName, description, dateToAchieve, parentGoalId);
-                        Toast.makeText(AddGoalActivity.this, "Adding goal", Toast.LENGTH_SHORT).show();
+
                         Intent replyIntent = new Intent();
+                        if (getIntent().hasExtra(Constants.KEY_GOAL_TO_EDIT)){
+                            goal.setId(mGoalToEditId);
+                            replyIntent.putExtra(EXTRA_GOAL_TO_EDIT, goal);
+                        } else {
+                            replyIntent.putExtra(EXTRA_GOAL_TO_ADD, goal);
+                        }
+
                         replyIntent.putExtra(EXTRA_GOAL_TO_ADD, goal);
-                        setResult(RESULT_OK,replyIntent);
+                        setResult(RESULT_OK, replyIntent);
                         finish();
                     } else {
                         Toast.makeText(AddGoalActivity.this, "Date Required", Toast.LENGTH_SHORT).show();
@@ -94,5 +107,16 @@ public class AddGoalActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+
+    /**
+     * If editing an goal - populates fields with existing action data
+     */
+    private void populateFields(Goal goal) {
+        mGoalToEditId = goal.getId();
+        mGoalNameEt.setText(goal.getGoalName());
+        mGoalDateTxt.setText(goal.getCompletionDate());
+        mGoalDescriptionEt.setText(goal.getDescription());
     }
 }

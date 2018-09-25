@@ -1,6 +1,7 @@
 package com.development.georgemcl.goaltracker.view.MainGoalView;
 
 
+import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.model.Goal;
 import com.development.georgemcl.goaltracker.view.AddGoalActivity;
+import com.development.georgemcl.goaltracker.view.MainActivity;
 import com.development.georgemcl.goaltracker.view.ViewGoal.ViewGoalFragment;
 
 import java.util.List;
@@ -50,6 +52,10 @@ public class MainGoalViewFragment extends Fragment implements GoalRecyclerViewAd
 
         mMainGoalViewModel = ViewModelProviders.of(this).get(MainGoalViewModel.class);
 
+        //Only show the back button if a goal is selected
+        if (getActivity() instanceof MainActivity){
+            ((MainActivity) getActivity()).showBackButton(false);
+        }
 
         mRecyclerViewAdapter = new GoalRecyclerViewAdapter(getContext(), this);
         mGoalRecyclerView.setAdapter(mRecyclerViewAdapter);
@@ -95,5 +101,10 @@ public class MainGoalViewFragment extends Fragment implements GoalRecyclerViewAd
         args.putInt(Constants.KEY_PARENT_GOAL_ID, goalId);
         fragment.setArguments(args);
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_activity_fragment_container, fragment).addToBackStack(null).commit();
+        if (getActivity() instanceof MainActivity){
+            ((MainActivity) getActivity()).showBackButton(true);
+        }
     }
+
+
 }

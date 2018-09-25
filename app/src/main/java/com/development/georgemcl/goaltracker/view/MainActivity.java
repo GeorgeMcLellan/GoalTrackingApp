@@ -62,11 +62,11 @@ public class MainActivity extends AppCompatActivity {
         mNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         //start the MainGoalViewFragment by default
         replaceFragment(new MainGoalViewFragment());
-
-        //Show the back button
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    public void showBackButton(boolean show){
+        getSupportActionBar().setDisplayHomeAsUpEnabled(show);
+    }
 
     public void replaceFragment(Fragment fragment){
         getSupportFragmentManager().beginTransaction().replace(R.id.main_activity_fragment_container, fragment).commit();
