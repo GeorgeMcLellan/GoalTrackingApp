@@ -29,6 +29,10 @@ public class ActionRepository {
         return mActionDao.getActions(parentGoalId);
     }
 
+    public LiveData<List<Action>> getActionsByRepeatTimePeriod(String repeatTimePeriod) {
+        return mActionDao.getActionsByRepeatTimePeriod(repeatTimePeriod);
+    }
+
     public void insert(Action action) {
         new InsertAsyncTask(mActionDao).execute(action);
     }

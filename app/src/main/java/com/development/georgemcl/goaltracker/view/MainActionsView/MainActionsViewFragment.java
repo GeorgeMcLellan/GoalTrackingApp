@@ -12,10 +12,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TableLayout;
 
 import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
+import com.development.georgemcl.goaltracker.view.ActionTab.ActionsTabFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,6 +31,7 @@ public class MainActionsViewFragment extends Fragment {
     ViewPager mViewPager;
     @BindView(R.id.tabs)
     TabLayout mTabLayout;
+
 
 
     public MainActionsViewFragment() {
@@ -97,17 +98,17 @@ public class MainActionsViewFragment extends Fragment {
             Bundle args = new Bundle();
             switch (position){
                 case 0 : {
-                    args.putString(Constants.KEY_TAB_SELECTED, "daily");
+                    args.putString(Constants.KEY_TAB_SELECTED, getString(R.string.daily));
                     fragment.setArguments(args);
                     return fragment;
                 }
                 case 1: {
-                    args.putString(Constants.KEY_TAB_SELECTED, "weekly");
+                    args.putString(Constants.KEY_TAB_SELECTED, getString(R.string.weekly));
                     fragment.setArguments(args);
                     return fragment;
                 }
                 case 2: {
-                    args.putString(Constants.KEY_TAB_SELECTED, "monthly");
+                    args.putString(Constants.KEY_TAB_SELECTED, getString(R.string.monthly));
                     fragment.setArguments(args);
                     return fragment;
                 }

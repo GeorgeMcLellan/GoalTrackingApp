@@ -31,4 +31,7 @@ public interface ActionDao {
 
     @Query("SELECT * FROM action_table WHERE parentGoalId IS :parentGoalId")
     LiveData<List<Action>> getActions(int parentGoalId);
+
+    @Query("SELECT * FROM action_table WHERE repeatTimePeriod IS :repeatTimePeriod")
+    LiveData<List<Action>> getActionsByRepeatTimePeriod(String repeatTimePeriod);
 }
