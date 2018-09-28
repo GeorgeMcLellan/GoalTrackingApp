@@ -11,7 +11,7 @@ import com.development.georgemcl.goaltracker.model.Action;
 import java.util.List;
 
 /**
- * Created by george on 25/09/18.
+ * ViewModel class for each action tab
  */
 
 public class ActionTabViewModel extends AndroidViewModel {
@@ -30,10 +30,18 @@ public class ActionTabViewModel extends AndroidViewModel {
     }
 
 
+    /**
+     * This class requires the consumer to specify which repeat time period (per day/week/month)
+     * of which Actions are required
+     * @param actionRepeatCategory per day/week/month of Actions to retrieve
+     */
     public void setActionRepeatCategory(String actionRepeatCategory) {
         mActionsForRepeatCategory = mActionRepository.getActionsByRepeatTimePeriod(actionRepeatCategory);
     }
 
+    /**
+     * @return list of Actions for the specified repeat time period
+     */
     public LiveData<List<Action>> getActionsForRepeatCategory() {
         return mActionsForRepeatCategory;
     }

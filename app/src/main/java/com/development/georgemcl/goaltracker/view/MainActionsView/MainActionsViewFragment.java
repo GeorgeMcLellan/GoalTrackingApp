@@ -21,7 +21,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Main container for the actions tabs, where the user can see all of their repeat actions
+ * for each time period.
  */
 public class MainActionsViewFragment extends Fragment {
 
@@ -29,10 +30,8 @@ public class MainActionsViewFragment extends Fragment {
 
     @BindView(R.id.pager)
     ViewPager mViewPager;
-    @BindView(R.id.tabs)
+    @BindView(R.id.main_actions_tabs)
     TabLayout mTabLayout;
-
-
 
     public MainActionsViewFragment() {
         // Required empty public constructor
@@ -58,24 +57,21 @@ public class MainActionsViewFragment extends Fragment {
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                Log.d(TAG, "onTabSelected: " +tab.getText());
+                Log.d(TAG, "onTabSelected: " + tab.getText());
                 mViewPager.setCurrentItem(tab.getPosition());
             }
-
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
+            public void onTabUnselected(TabLayout.Tab tab) {}
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
+            public void onTabReselected(TabLayout.Tab tab) {}
         });
         return view;
     }
 
-
+    /**
+     * FragmentStatePagerAdapter implementation to persist 3 instances of ActionsTabFragment for each time period.
+     * Integrates with the tablayout to allow for easy navigation and robust performance.
+     */
     public class PagerAdapter extends FragmentStatePagerAdapter {
         int mNumOfTabs;
         private String[] mTabTitles = new String[] {"daily", "weekly", "monthly"};
