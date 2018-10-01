@@ -9,17 +9,15 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 import com.development.georgemcl.goaltracker.model.Action;
-import com.development.georgemcl.goaltracker.model.ActionTargetProgression;
 import com.development.georgemcl.goaltracker.model.Goal;
 
-@Database(entities = {Goal.class, Action.class, ActionTargetProgression.class}, version = 4, exportSchema = false)
+@Database(entities = {Goal.class, Action.class}, version = 2, exportSchema = false)
 public abstract class GoalRoomDatabase extends RoomDatabase{
 
     public abstract GoalDao goalDao();
 
     public abstract ActionDao actionDao();
 
-    public abstract ActionTargetProgressionDao actionTargetProgressionDao();
 
     private static volatile GoalRoomDatabase INSTANCE;
 

@@ -19,7 +19,6 @@ import android.widget.Toast;
 import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.model.Action;
-import com.development.georgemcl.goaltracker.model.ActionTargetProgression;
 import com.development.georgemcl.goaltracker.model.Goal;
 import com.development.georgemcl.goaltracker.view.AddActionActivity;
 
