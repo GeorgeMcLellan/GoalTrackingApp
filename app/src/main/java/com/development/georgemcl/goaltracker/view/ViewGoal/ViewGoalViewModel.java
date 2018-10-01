@@ -5,8 +5,10 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 
 import com.development.georgemcl.goaltracker.data.repository.ActionRepository;
+import com.development.georgemcl.goaltracker.data.repository.ActionTargetProgressionRepository;
 import com.development.georgemcl.goaltracker.data.repository.GoalRepository;
 import com.development.georgemcl.goaltracker.model.Action;
+import com.development.georgemcl.goaltracker.model.ActionTargetProgression;
 import com.development.georgemcl.goaltracker.model.Goal;
 
 import java.util.Collections;
@@ -16,14 +18,18 @@ public class ViewGoalViewModel extends AndroidViewModel {
 
     private GoalRepository mGoalRepository;
     private ActionRepository mActionRepository;
+//    private ActionTargetProgressionRepository mActionTargetProgressionRepository;
     private LiveData<List<Goal>> mSubGoals;
     private LiveData<List<Action>> mActions;
+//    private LiveData<List<ActionTargetProgression>> mActionProgressions;
     private int mParentGoalId;
 
     public ViewGoalViewModel (Application application) {
         super(application);
         mGoalRepository = new GoalRepository(application);
         mActionRepository = new ActionRepository(application);
+//        mActionTargetProgressionRepository = new ActionTargetProgressionRepository(application);
+//        mActionProgressions = mActionTargetProgressionRepository.getActionTargetProgressions();
     }
 
     public void populateLists(int parentGoalId){
@@ -41,6 +47,8 @@ public class ViewGoalViewModel extends AndroidViewModel {
     }
 
     public LiveData<Goal> getGoalById(int id) { return mGoalRepository.getGoalById(id);}
+
+//    public LiveData<ActionTargetProgression> getRelevantTargetProgressions(int[] actionIds, String finalDay)
 
     public void insertSubGoal(Goal goal) {
         mGoalRepository.insert(goal);
