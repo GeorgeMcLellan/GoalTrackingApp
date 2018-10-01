@@ -53,4 +53,6 @@ public class ViewGoalViewModel extends AndroidViewModel {
     public void editAction(Action action) { mActionRepository.edit(action); }
 
     public void editGoal(Goal goal) { mGoalRepository.edit(goal);}
+
+    public void deleteAction(Action action){ mActionRepository.delete(action);}
 }

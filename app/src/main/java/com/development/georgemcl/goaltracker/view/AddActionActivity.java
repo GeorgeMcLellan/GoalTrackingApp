@@ -87,23 +87,21 @@ public class AddActionActivity extends AppCompatActivity {
                 if (!actionName.isEmpty()) {
                     Action action;
                     if (mRepeatSwitch.isChecked()) {
-                        action = new Action(actionName, parentGoalId,
-                                Integer.parseInt(mRepeatMeasurementEt.getText().toString()),
-                                mRepeatPerTimePeriodSpn.getSelectedItem().toString(),
-                                mRepeatUnitOfMeasurementSpn.getSelectedItem().toString());
+                        if (!mRepeatMeasurementEt.getText().toString().isEmpty()
+                                && Integer.parseInt(mRepeatMeasurementEt.getText().toString()) > 0) {
+                                    action = new Action(actionName, parentGoalId,
+                                    Integer.parseInt(mRepeatMeasurementEt.getText().toString()),
+                                    mRepeatPerTimePeriodSpn.getSelectedItem().toString(),
+                                    mRepeatUnitOfMeasurementSpn.getSelectedItem().toString());
+                                    addAction(action);
+                        }else {
+                            Toast.makeText(AddActionActivity.this, "Enter valid repeat amount", Toast.LENGTH_SHORT).show();
+                        }
                     }else {
                         action = new Action(actionName, parentGoalId);
+                        addAction(action);
                     }
-                    Intent replyIntent = new Intent();
-                    if (getIntent().hasExtra(Constants.KEY_ACTION_TO_EDIT)){
-                        action.setId(actionToEditId);
-                        replyIntent.putExtra(EXTRA_ACTION_TO_EDIT, action);
-                    } else {
-                        replyIntent.putExtra(EXTRA_ACTION_TO_ADD, action);
-                    }
-                    Log.d(TAG, "onClick: " + action);
-                    setResult(RESULT_OK, replyIntent);
-                    finish();
+
                 }
                 else {
                     Toast.makeText(AddActionActivity.this, "Name Required", Toast.LENGTH_SHORT).show();
@@ -111,6 +109,19 @@ public class AddActionActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void addAction(Action action) {
+        Intent replyIntent = new Intent();
+        if (getIntent().hasExtra(Constants.KEY_ACTION_TO_EDIT)){
+            action.setId(actionToEditId);
+            replyIntent.putExtra(EXTRA_ACTION_TO_EDIT, action);
+        } else {
+            replyIntent.putExtra(EXTRA_ACTION_TO_ADD, action);
+        }
+        Log.d(TAG, "addAction: " + action);
+        setResult(RESULT_OK, replyIntent);
+        finish();
     }
 
     /**

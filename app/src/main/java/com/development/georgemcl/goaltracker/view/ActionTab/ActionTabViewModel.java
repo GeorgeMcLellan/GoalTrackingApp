@@ -45,4 +45,13 @@ public class ActionTabViewModel extends AndroidViewModel {
     public LiveData<List<Action>> getActionsForRepeatCategory() {
         return mActionsForRepeatCategory;
     }
+
+
+    public void insertAction(Action action) {
+        mActionRepository.insert(action);
+    }
+
+    public void editAction(Action action) { mActionRepository.edit(action); }
+
+    public void deleteAction(Action action){ mActionRepository.delete(action);}
 }

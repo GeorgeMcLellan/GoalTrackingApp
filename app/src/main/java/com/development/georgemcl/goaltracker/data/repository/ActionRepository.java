@@ -39,6 +39,8 @@ public class ActionRepository {
 
     public void edit(Action action) { new EditAsyncTask(mActionDao).execute(action);}
 
+    public void delete(Action action) { new DeleteAsyncTask(mActionDao).execute(action);}
+
     private static class InsertAsyncTask extends AsyncTask<Action, Void, Void> {
 
         private ActionDao mAsyncTaskDao;
@@ -65,6 +67,21 @@ public class ActionRepository {
         @Override
         protected Void doInBackground(final Action... params) {
             mAsyncTaskDao.updateActions(params[0]);
+            return null;
+        }
+    }
+
+    private static class DeleteAsyncTask extends AsyncTask<Action, Void, Void> {
+
+        private ActionDao mAsyncTaskDao;
+
+        DeleteAsyncTask(ActionDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final Action... params) {
+            mAsyncTaskDao.deleteActions(params[0]);
             return null;
         }
     }

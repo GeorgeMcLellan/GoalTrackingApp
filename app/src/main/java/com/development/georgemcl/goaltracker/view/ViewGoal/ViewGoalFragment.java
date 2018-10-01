@@ -81,6 +81,7 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
             @Override
             public void onChanged(@Nullable List<Action> actions) {
                 mRecyclerViewAdapter.setActions(actions);
+                Log.d(TAG, "onChanged: ");
             }
         });
 
@@ -220,8 +221,15 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
         startActivityForResult(intent, EDIT_ACTION_REQUEST_CODE);
     }
 
+
+
     @Override
     public void updateAction(Action action) {
         mViewGoalViewModel.editAction(action);
+    }
+
+    @Override
+    public void deleteAction(Action action) {
+        mViewGoalViewModel.deleteAction(action);
     }
 }

@@ -1,6 +1,8 @@
 package com.development.georgemcl.goaltracker.view.ViewGoal;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -28,7 +31,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = "ViewGoalRecyclerViewAda";
 
     private static final int VIEW_TYPE_SUBGOAL = 10;
@@ -78,14 +81,21 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             final Action action = mActions.get(position - mSubGoals.size());
             final ActionViewHolder actionViewHolder = (ActionViewHolder) holder;
             actionViewHolder.populateFields(action);
+            Log.d(TAG, "onBindViewHolder: " + action.getRepeatProgressAmount());
 
             actionViewHolder.doneImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d(TAG, "onClick: setting repeat progress amount to "+ action.getRepeatAmount());
-                    action.setRepeatProgressAmount(action.getRepeatAmount());
-                    mOnItemSelectedListener.updateAction(action);
-                    Toast.makeText(mContext, "Action completed", Toast.LENGTH_SHORT).show();
+                    if (action.isRepeatAction()) {
+                        Log.d(TAG, "onClick: setting repeat progress amount to " + action.getRepeatAmount());
+                        action.setRepeatProgressAmount(action.getRepeatAmount());
+                        mOnItemSelectedListener.updateAction(action);
+                    } else {
+                        ///Might want to rethink this
+                        mOnItemSelectedListener.deleteAction(action);
+                    }
+
+                    Toast.makeText(mContext, "Action completed, well done!", Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -104,16 +114,17 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                     popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
-                            switch (item.getItemId()){
-                                case R.id.action_edit_action : {
+                            switch (item.getItemId()) {
+                                case R.id.action_edit_action: {
                                     mOnItemSelectedListener.onActionEdit(action);
                                     return true;
                                 }
-                                case R.id.action_delete_action : {
+                                case R.id.action_delete_action: {
+                                    confirmDeleteAction(action);
                                     return true;
                                 }
-                                case R.id.action_reset_progress : {
-                                    action.setRepeatAmount(0);
+                                case R.id.action_reset_progress: {
+                                    action.setRepeatProgressAmount(0);
                                     mOnItemSelectedListener.updateAction(action);
                                 }
                                 default:
@@ -128,6 +139,27 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
     }
 
+    private void confirmDeleteAction(final Action action) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext, android.R.style.Theme_Material_Dialog_Alert)
+                .setTitle("Delete action")
+                .setMessage("Are you sure you want to delete this action? \n " + action.getActionName())
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mOnItemSelectedListener.deleteAction(action);
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                ;
+        builder.show();
+    }
+
     public void setSubGoals(List<Goal> goals) {
         mSubGoals = goals;
         notifyDataSetChanged();
@@ -135,6 +167,12 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
     public void setActions(List<Action> actions) {
         mActions = actions;
+        for (Action action : actions
+                ) {
+            Log.d(TAG, "setActions: " + action.getActionName());
+            Log.d(TAG, "setActions: " + action.getRepeatProgressAmount());
+
+        }
         notifyDataSetChanged();
     }
 
@@ -157,12 +195,20 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     public class ActionViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.action_item_name_textview) TextView nameTxt;
-        @BindView(R.id.action_item_parent_layout) View parentLayout;
-        @BindView(R.id.action_item_done_imageview) ImageView doneImageView;
-        @BindView(R.id.action_item_options_button) Button optionsButton;
-        @BindView(R.id.action_item_repeat_textview) TextView repeatTxt;
-        @BindView(R.id.action_item_progressbar) ProgressBar completionProgressBar;
+        @BindView(R.id.action_item_name_textview)
+        TextView nameTxt;
+        @BindView(R.id.action_item_parent_layout)
+        View parentLayout;
+        @BindView(R.id.action_item_done_imageview)
+        ImageView doneImageView;
+        @BindView(R.id.action_item_options_button)
+        Button optionsButton;
+        @BindView(R.id.action_item_repeat_layout)
+        LinearLayout repeatLayout;
+        @BindView(R.id.action_item_repeat_textview)
+        TextView repeatTxt;
+        @BindView(R.id.action_item_progressbar)
+        ProgressBar completionProgressBar;
 
         public ActionViewHolder(View itemView) {
             super(itemView);
@@ -171,21 +217,25 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
         public void populateFields(Action action) {
             nameTxt.setText(action.getActionName());
-            String repeatString = action.getRepeatAmount() + " " + action.getRepeatUnitOfMeasurement() + " " + action.getRepeatTimePeriod();
-            repeatTxt.setText(repeatString);
-            if (action.getRepeatProgressAmount() > 0 && action.getRepeatAmount() > 0){
-                double amount = (action.getRepeatProgressAmount() / action.getRepeatAmount()) * 100;
-                Log.d(TAG, "populateFields: "+amount);
-                completionProgressBar.setProgress((int)amount);
-
+            if (action.isRepeatAction()) {
+                repeatLayout.setVisibility(View.VISIBLE);
+                completionProgressBar.setProgress(calculateProgress(action.getRepeatProgressAmount(), action.getRepeatAmount()));
+                String repeatString = action.getRepeatAmount() + " " + action.getRepeatUnitOfMeasurement() + " " + action.getRepeatTimePeriod();
+                repeatTxt.setText(repeatString);
+            } else {
+                repeatLayout.setVisibility(View.GONE);
             }
+
         }
     }
 
     public class GoalViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.goal_item_name_textview) TextView nameTxt;
-        @BindView(R.id.goal_item_completion_date_textview) TextView completionDateTxt;
-        @BindView(R.id.goal_item_parent_layout) View parentLayout;
+        @BindView(R.id.goal_item_name_textview)
+        TextView nameTxt;
+        @BindView(R.id.goal_item_completion_date_textview)
+        TextView completionDateTxt;
+        @BindView(R.id.goal_item_parent_layout)
+        View parentLayout;
 
         public GoalViewHolder(View itemView) {
             super(itemView);
@@ -196,17 +246,21 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             nameTxt.setText(goal.getGoalName());
             completionDateTxt.setText(goal.getCompletionDate());
         }
+
+
     }
 
     public interface OnItemSelectedListener {
         /**
          * Called when a sub goal is selected
+         *
          * @param goalId
          */
         void onSubGoalSelected(int goalId);
 
         /**
          * Called when an action is selected
+         *
          * @param actionId
          */
         void onActionSelected(int actionId);
@@ -214,6 +268,23 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         void onActionEdit(Action action);
 
         void updateAction(Action action);
+
+        void deleteAction(Action action);
+    }
+
+    /**
+     * Calculates progress to be shown in progress bar
+     * @param progress amount progressed
+     * @param aim goal amount
+     * @return progress from 0-100
+     */
+    private int calculateProgress(int progress, int aim) {
+        if (aim != 0) {
+            double progressPercentage = (progress / aim) * 100;
+            return (int) progressPercentage;
+        }
+        Log.e(TAG, "calculateProgress: division by 0: " + progress + " / " + aim);
+        return 0;
     }
 
 }
