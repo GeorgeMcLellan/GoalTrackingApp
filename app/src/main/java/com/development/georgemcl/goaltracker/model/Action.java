@@ -28,11 +28,15 @@ public class Action implements Serializable{
     @ColumnInfo(name = "repeatAmount")
     private int repeatAmount;
 
+    @ColumnInfo(name = "repeatProgressAmount")
+    private int repeatProgressAmount;
+
     @ColumnInfo(name = "repeatTimePeriod")
     private String repeatTimePeriod;
 
     @ColumnInfo(name = "repeatUnitOfMeasurement")
     private String repeatUnitOfMeasurement;
+
 
     @Ignore
     public Action(String actionName, int parentGoalId) {
@@ -46,6 +50,7 @@ public class Action implements Serializable{
         this.parentGoalId = parentGoalId;
         this.repeatAction = true;
         this.repeatAmount = repeatAmount;
+        this.repeatProgressAmount = 0;
         this.repeatTimePeriod = repeatTimePeriod;
         this.repeatUnitOfMeasurement = repeatUnitOfMeasurement;
     }
@@ -91,6 +96,14 @@ public class Action implements Serializable{
         this.repeatAmount = repeatAmount;
     }
 
+    public int getRepeatProgressAmount() {
+        return repeatProgressAmount;
+    }
+
+    public void setRepeatProgressAmount(int repeatProgressAmount) {
+        this.repeatProgressAmount = repeatProgressAmount;
+    }
+
     public String getRepeatTimePeriod() {
         return repeatTimePeriod;
     }
@@ -108,15 +121,15 @@ public class Action implements Serializable{
     }
 
 
-
     @Override
     public String toString() {
         return "Action{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", actionName='" + actionName + '\'' +
                 ", parentGoalId=" + parentGoalId +
                 ", repeatAction=" + repeatAction +
                 ", repeatAmount=" + repeatAmount +
+                ", repeatProgressAmount=" + repeatProgressAmount +
                 ", repeatTimePeriod='" + repeatTimePeriod + '\'' +
                 ", repeatUnitOfMeasurement='" + repeatUnitOfMeasurement + '\'' +
                 '}';

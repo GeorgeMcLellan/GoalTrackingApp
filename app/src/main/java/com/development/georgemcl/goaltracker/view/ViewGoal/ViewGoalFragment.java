@@ -219,4 +219,9 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
         intent.putExtra(Constants.KEY_ACTION_TO_EDIT, action);
         startActivityForResult(intent, EDIT_ACTION_REQUEST_CODE);
     }
+
+    @Override
+    public void updateAction(Action action) {
+        mViewGoalViewModel.editAction(action);
+    }
 }

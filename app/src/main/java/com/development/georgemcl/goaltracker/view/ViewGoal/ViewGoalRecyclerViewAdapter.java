@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,12 +12,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.model.Action;
+import com.development.georgemcl.goaltracker.model.ActionTargetProgression;
 import com.development.georgemcl.goaltracker.model.Goal;
 import com.development.georgemcl.goaltracker.view.AddActionActivity;
 
@@ -27,6 +30,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+    private static final String TAG = "ViewGoalRecyclerViewAda";
 
     private static final int VIEW_TYPE_SUBGOAL = 10;
     private static final int VIEW_TYPE_ACTION = 20;
@@ -79,6 +83,9 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             actionViewHolder.doneImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Log.d(TAG, "onClick: setting repeat progress amount to "+ action.getRepeatAmount());
+                    action.setRepeatProgressAmount(action.getRepeatAmount());
+                    mOnItemSelectedListener.updateAction(action);
                     Toast.makeText(mContext, "Action completed", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -105,6 +112,10 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                                 }
                                 case R.id.action_delete_action : {
                                     return true;
+                                }
+                                case R.id.action_reset_progress : {
+                                    action.setRepeatAmount(0);
+                                    mOnItemSelectedListener.updateAction(action);
                                 }
                                 default:
                                     return false;
@@ -151,6 +162,8 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         @BindView(R.id.action_item_parent_layout) View parentLayout;
         @BindView(R.id.action_item_done_imageview) ImageView doneImageView;
         @BindView(R.id.action_item_options_button) Button optionsButton;
+        @BindView(R.id.action_item_repeat_textview) TextView repeatTxt;
+        @BindView(R.id.action_item_progressbar) ProgressBar completionProgressBar;
 
         public ActionViewHolder(View itemView) {
             super(itemView);
@@ -159,6 +172,14 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
         public void populateFields(Action action) {
             nameTxt.setText(action.getActionName());
+            String repeatString = action.getRepeatAmount() + " " + action.getRepeatUnitOfMeasurement() + " " + action.getRepeatTimePeriod();
+            repeatTxt.setText(repeatString);
+            if (action.getRepeatProgressAmount() > 0 && action.getRepeatAmount() > 0){
+                double amount = (action.getRepeatProgressAmount() / action.getRepeatAmount()) * 100;
+                Log.d(TAG, "populateFields: "+amount);
+                completionProgressBar.setProgress((int)amount);
+
+            }
         }
     }
 
@@ -192,6 +213,8 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         void onActionSelected(int actionId);
 
         void onActionEdit(Action action);
+
+        void updateAction(Action action);
     }
 
 }

@@ -100,4 +100,9 @@ public class ActionsTabFragment extends Fragment implements ViewGoalRecyclerView
     public void onActionEdit(Action action) {
 
     }
+
+    @Override
+    public void updateAction(Action action) {
+
+    }
 }
