@@ -26,6 +26,11 @@ public class ViewGoalViewModel extends AndroidViewModel {
         mActionRepository = new ActionRepository(application);
     }
 
+    /**
+     * Populates lists with relevant data based on the goal being viewed
+     * @param parentGoalId
+     */
+
     public void populateLists(int parentGoalId){
         mParentGoalId = parentGoalId;
         mSubGoals = mGoalRepository.getSubGoals(mParentGoalId);

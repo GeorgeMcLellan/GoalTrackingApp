@@ -1,6 +1,7 @@
 package com.development.georgemcl.goaltracker.view.MainGoalView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.model.Goal;
+import com.development.georgemcl.goaltracker.view.ViewGoal.ViewGoalFragment;
 
 import java.util.Collections;
 import java.util.List;
@@ -44,7 +46,6 @@ public class GoalRecyclerViewAdapter extends RecyclerView.Adapter<GoalRecyclerVi
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 mGoalSelectedListener.onGoalSelected(goal.getId());
 //                Intent intent = new Intent(mContext, ViewGoalActivity.class);
 //                intent.putExtra(Constants.KEY_PARENT_GOAL_ID, goal.getId());

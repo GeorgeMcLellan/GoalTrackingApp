@@ -73,10 +73,6 @@ public class MainGoalViewFragment extends Fragment implements GoalRecyclerViewAd
             @Override
             public void onChanged(@Nullable List<Goal> goals) {
                 mRecyclerViewAdapter.setGoals(goals);
-                Log.d(TAG, "onChanged: Goals changed, new goals...");
-                for(int i = 0; i < goals.size(); i++) {
-                    Log.d(TAG, "goal "+ i + " : "+ goals.get(i).toString());
-                }
             }
         });
 

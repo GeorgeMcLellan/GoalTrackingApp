@@ -4,14 +4,18 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -81,21 +85,11 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             final Action action = mActions.get(position - mSubGoals.size());
             final ActionViewHolder actionViewHolder = (ActionViewHolder) holder;
             actionViewHolder.populateFields(action);
-            Log.d(TAG, "onBindViewHolder: " + action.getRepeatProgressAmount());
 
             actionViewHolder.doneImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (action.isRepeatAction()) {
-                        Log.d(TAG, "onClick: setting repeat progress amount to " + action.getRepeatAmount());
-                        action.setRepeatProgressAmount(action.getRepeatAmount());
-                        mOnItemSelectedListener.updateAction(action);
-                    } else {
-                        ///Might want to rethink this
-                        mOnItemSelectedListener.deleteAction(action);
-                    }
-
-                    Toast.makeText(mContext, "Action completed, well done!", Toast.LENGTH_SHORT).show();
+                    handleActionDoneSelected(action);
                 }
             });
 
@@ -135,6 +129,42 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                     popupMenu.show();
                 }
             });
+        }
+
+    }
+
+    private void handleActionDoneSelected(final Action action) {
+        if (action.isRepeatAction()) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+            alert.setTitle("Action Progress");
+            alert.setMessage(action.getRepeatUnitOfMeasurement() + " completed");
+            final EditText input = new EditText(mContext);
+            input.setGravity(Gravity.CENTER_HORIZONTAL);
+            input.setInputType(InputType.TYPE_CLASS_NUMBER);
+            input.setRawInputType(Configuration.KEYBOARD_12KEY);
+            alert.setView(input);
+            alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    action.setRepeatProgressAmount(action.getRepeatProgressAmount() + Integer.parseInt(input.getText().toString()));
+                    mOnItemSelectedListener.updateAction(action);
+                    Log.d(TAG, "handleActionDone: setting repeat progress amount to " + action.getRepeatProgressAmount());
+                    if (action.getRepeatProgressAmount() >= action.getRepeatAmount()){
+                        Toast.makeText(mContext, "Action completed, well done!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mContext, "Action progressed, well done!", Toast.LENGTH_SHORT).show();
+
+                    }
+                }
+            });
+            alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                }
+            });
+            alert.show();
+        } else {
+            ///Might want to rethink this
+            Toast.makeText(mContext, "Action completed, well done!", Toast.LENGTH_SHORT).show();
+            mOnItemSelectedListener.deleteAction(action);
         }
 
     }
@@ -279,8 +309,9 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
      * @return progress from 0-100
      */
     private int calculateProgress(int progress, int aim) {
+        Log.d(TAG, "calculateProgress: progress = " + progress + ", aim = " + aim);
         if (aim != 0) {
-            double progressPercentage = (progress / aim) * 100;
+            double progressPercentage = (((double)progress / (double)aim)) * 100;
             return (int) progressPercentage;
         }
         Log.e(TAG, "calculateProgress: division by 0: " + progress + " / " + aim);

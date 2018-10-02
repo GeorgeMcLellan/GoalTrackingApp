@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.view.ActionTab.ActionsTabFragment;
+import com.development.georgemcl.goaltracker.view.MainActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,6 +44,10 @@ public class MainActionsViewFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main_actions_view, container, false);
         ButterKnife.bind(this, view);
+
+        if (getActivity() instanceof MainActivity){
+            ((MainActivity) getActivity()).showBackButton(false);
+        }
 
 
         mTabLayout.addTab(mTabLayout.newTab());
