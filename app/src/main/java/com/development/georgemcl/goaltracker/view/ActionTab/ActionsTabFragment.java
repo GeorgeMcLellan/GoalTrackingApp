@@ -114,9 +114,7 @@ public class ActionsTabFragment extends Fragment implements ViewGoalRecyclerView
     public void onSubGoalSelected(int goalId) {}
 
     @Override
-    public void onActionSelected(int actionId) {
-
-    }
+    public void onActionSelected(int actionId) {}
 
     @Override
     public void onActionEdit(Action action) {

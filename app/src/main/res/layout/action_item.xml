@@ -29,6 +29,7 @@
             android:layout_marginRight="10dp"
             android:id="@+id/action_item_done_imageview"
             android:layout_gravity="right"
+            android:tint="@color/colorAccent"
             android:contentDescription="@string/done"
             android:layout_marginEnd="10dp" />
         <Button

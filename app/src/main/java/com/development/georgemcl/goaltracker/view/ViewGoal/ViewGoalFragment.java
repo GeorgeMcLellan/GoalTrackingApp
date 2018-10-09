@@ -1,7 +1,9 @@
 package com.development.georgemcl.goaltracker.view.ViewGoal;
 
+import android.app.AlertDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -42,6 +45,7 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
     @BindView(R.id.view_goal_description_textview) TextView mGoalDescriptionTxt;
     @BindView(R.id.view_goal_completion_date_textview) TextView mGoalCompletionDateTxt;
     @BindView(R.id.view_goal_options_button) Button mOptionsBtn;
+    @BindView(R.id.view_goal_compelete_imageview) ImageView mGoalCompletedImageView;
 
     private static final int ADD_ACTION_REQUEST_CODE = 204;
     private static final int EDIT_ACTION_REQUEST_CODE = 689;
@@ -53,9 +57,11 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
 
     private ViewGoalViewModel mViewGoalViewModel;
 
-    private int parentGoalId;
+    private int mParentGoalId;
 
     private Goal mGoalInView;
+    
+    private int mSubGoalCount = -1;
 
     @Nullable
     @Override
@@ -63,11 +69,11 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
         View view = inflater.inflate(R.layout.fragment_view_goal, container, false);
         ButterKnife.bind(this, view);
 
-        parentGoalId = getArguments().getInt(Constants.KEY_PARENT_GOAL_ID);
+        mParentGoalId = getArguments().getInt(Constants.KEY_PARENT_GOAL_ID);
 
         mViewGoalViewModel = ViewModelProviders.of(this).get(ViewGoalViewModel.class);
 
-        mViewGoalViewModel.populateLists(parentGoalId);
+        mViewGoalViewModel.populateLists(mParentGoalId);
 
 
 
@@ -81,7 +87,6 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
             @Override
             public void onChanged(@Nullable List<Action> actions) {
                 mRecyclerViewAdapter.setActions(actions);
-                Log.d(TAG, "onChanged: ");
             }
         });
 
@@ -89,10 +94,13 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
             @Override
             public void onChanged(@Nullable List<Goal> goals) {
                 mRecyclerViewAdapter.setSubGoals(goals);
+                if (goals != null) {
+                    mSubGoalCount = goals.size();
+                }
             }
         });
 
-        mViewGoalViewModel.getGoalById(parentGoalId).observe(this, new Observer<Goal>() {
+        mViewGoalViewModel.getGoalById(mParentGoalId).observe(this, new Observer<Goal>() {
             @Override
             public void onChanged(@Nullable Goal goal) {
                 mGoalInView = goal;
@@ -114,13 +122,13 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
                 switch (menuItem.getItemId()){
                     case R.id.action_add_action : {
                         Intent intent = new Intent(getContext(), AddActionActivity.class);
-                        intent.putExtra(Constants.KEY_PARENT_GOAL_ID, parentGoalId);
+                        intent.putExtra(Constants.KEY_PARENT_GOAL_ID, mParentGoalId);
                         startActivityForResult(intent, ADD_ACTION_REQUEST_CODE);
                         return true;
                     }
                     case R.id.action_add_subgoal : {
                         Intent intent = new Intent(getContext(), AddGoalActivity.class);
-                        intent.putExtra(Constants.KEY_PARENT_GOAL_ID, parentGoalId);
+                        intent.putExtra(Constants.KEY_PARENT_GOAL_ID, mParentGoalId);
                         startActivityForResult(intent, ADD_SUBGOAL_REQUEST_CODE);
                         break;
                     }
@@ -158,6 +166,16 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
                 popupMenu.show();
             }
         });
+
+        mGoalCompletedImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mSubGoalCount == 0) {
+                    completeGoalConfirmationDialog();
+                }
+            }
+        });
+
         return view;
     }
 
@@ -199,6 +217,52 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
 
     }
 
+    private void completeGoalConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+                .setTitle("Complete Goal")
+                .setMessage("Has this goal been reached? \n This will remove all of its related actions")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteGoalAndActions();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                ;
+        builder.show();
+    }
+
+    private void deleteGoalAndActions() {
+
+    }
+
+    private void deleteGoalConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Dialog_Alert)
+                .setTitle("Delete Goal")
+                .setMessage("Are you sure you want to delete this gooal? \n " + mGoalInView.getGoalName() + " \n This will remove all of its related actions")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteGoalAndActions();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                ;
+        builder.show();
+    }
+
+
     @Override
     public void onSubGoalSelected(int goalId) {
         Fragment fragment = new ViewGoalFragment();
@@ -209,19 +273,15 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
     }
 
     @Override
-    public void onActionSelected(int actionId) {
-
-    }
+    public void onActionSelected(int actionId) {}
 
     @Override
     public void onActionEdit(Action action) {
         Intent intent = new Intent(getContext(), AddActionActivity.class);
-        intent.putExtra(Constants.KEY_PARENT_GOAL_ID, parentGoalId);
+        intent.putExtra(Constants.KEY_PARENT_GOAL_ID, mParentGoalId);
         intent.putExtra(Constants.KEY_ACTION_TO_EDIT, action);
         startActivityForResult(intent, EDIT_ACTION_REQUEST_CODE);
     }
-
-
 
     @Override
     public void updateAction(Action action) {

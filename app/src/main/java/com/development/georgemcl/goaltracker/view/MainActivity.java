@@ -38,8 +38,6 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_dashboard:
                     replaceFragment(new MainActionsViewFragment());
                     return true;
-                case R.id.navigation_notifications:
-                    return true;
             }
             return false;
         }

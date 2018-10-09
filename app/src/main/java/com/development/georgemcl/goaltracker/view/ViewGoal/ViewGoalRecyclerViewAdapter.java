@@ -41,6 +41,7 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     private static final int VIEW_TYPE_SUBGOAL = 10;
     private static final int VIEW_TYPE_ACTION = 20;
 
+    private static final int AMOUNT_TO_INCREMEMNT = 1;
     private Context mContext;
     private OnItemSelectedListener mOnItemSelectedListener;
     private List<Goal> mSubGoals = Collections.emptyList();
@@ -80,6 +81,7 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 //                    mContext.startActivity(intent);
                 }
             });
+
         }
         if (holder instanceof ActionViewHolder) {
             final Action action = mActions.get(position - mSubGoals.size());
@@ -135,6 +137,13 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
     private void handleActionDoneSelected(final Action action) {
         if (action.isRepeatAction()) {
+            action.setRepeatProgressAmount(action.getRepeatProgressAmount() + AMOUNT_TO_INCREMEMNT);
+            mOnItemSelectedListener.updateAction(action);
+            Log.d(TAG, "handleActionDone: setting repeat progress amount to " + action.getRepeatProgressAmount());
+            if (action.getRepeatProgressAmount() >= action.getRepeatAmount()){
+                Toast.makeText(mContext, "Action completed, well done!", Toast.LENGTH_SHORT).show();
+            }
+            /*
             AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
             alert.setTitle("Action Progress");
             alert.setMessage(action.getRepeatUnitOfMeasurement() + " completed");
@@ -161,6 +170,8 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                 }
             });
             alert.show();
+
+            */
         } else {
             ///Might want to rethink this
             Toast.makeText(mContext, "Action completed, well done!", Toast.LENGTH_SHORT).show();
@@ -252,7 +263,9 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                 completionProgressBar.setProgress(calculateProgress(action.getRepeatProgressAmount(), action.getRepeatAmount()));
                 String repeatString = action.getRepeatAmount() + " " + action.getRepeatUnitOfMeasurement() + " " + action.getRepeatTimePeriod();
                 repeatTxt.setText(repeatString);
+                doneImageView.setImageResource(android.R.drawable.ic_input_add);
             } else {
+                doneImageView.setImageResource(R.drawable.baseline_done_24);
                 repeatLayout.setVisibility(View.GONE);
             }
 
