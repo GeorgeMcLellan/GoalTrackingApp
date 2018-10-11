@@ -52,7 +52,6 @@ public class AddActionActivity extends AppCompatActivity {
 
         if (getIntent().hasExtra(Constants.KEY_PARENT_GOAL_ID)){
             parentGoalId = getIntent().getIntExtra(Constants.KEY_PARENT_GOAL_ID, -1);
-            Log.i(TAG, "onCreate: parent goal id = " + parentGoalId);
         }
 
 

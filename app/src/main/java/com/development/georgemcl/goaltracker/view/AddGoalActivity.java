@@ -16,8 +16,10 @@ import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.model.Goal;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import butterknife.BindView;
@@ -32,7 +34,7 @@ public class AddGoalActivity extends AppCompatActivity {
     public static final String EXTRA_GOAL_TO_ADD  = "GOAL_TO_ADD";
     public static final String EXTRA_GOAL_TO_EDIT  = "GOAL_TO_EDIT";
 
-
+    SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
     @BindView(R.id.add_goal_name_edittext)
     EditText mGoalNameEt;
@@ -71,8 +73,7 @@ public class AddGoalActivity extends AppCompatActivity {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         Calendar cal = new GregorianCalendar(year, month, dayOfMonth);
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
-                        mGoalDateTxt.setText(simpleDateFormat.format(cal.getTime()));
+                        mGoalDateTxt.setText(mSimpleDateFormat.format(cal.getTime()));
                     }
                 }), year, month, day );
                 datePickerDialog.show();
@@ -86,21 +87,22 @@ public class AddGoalActivity extends AppCompatActivity {
                 String goalName = mGoalNameEt.getText().toString();
                 String description = mGoalDescriptionEt.getText().toString();
                 String dateToAchieve = mGoalDateTxt.getText().toString();
+
+
                 if (!goalName.isEmpty()) {
                     if (!dateToAchieve.isEmpty()){
-                        Goal goal = new Goal(goalName, description, dateToAchieve, parentGoalId);
-
-                        Intent replyIntent = new Intent();
-                        if (getIntent().hasExtra(Constants.KEY_GOAL_TO_EDIT)){
-                            goal.setId(mGoalToEditId);
-                            replyIntent.putExtra(EXTRA_GOAL_TO_EDIT, goal);
-                        } else {
-                            replyIntent.putExtra(EXTRA_GOAL_TO_ADD, goal);
+                        try {
+                            Date date = mSimpleDateFormat.parse((mGoalDateTxt.getText().toString()));
+                            Date todaysDate = Calendar.getInstance().getTime();
+                            if (date.getTime() > todaysDate.getTime()) {
+                                Goal goal = new Goal(goalName, description, dateToAchieve, parentGoalId);
+                                addOrEditGoal(goal);
+                            } else {
+                                Toast.makeText(AddGoalActivity.this, "Date must be after today's date", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (ParseException e) {
+                            Toast.makeText(AddGoalActivity.this, "Invalid date", Toast.LENGTH_SHORT).show();
                         }
-
-                        replyIntent.putExtra(EXTRA_GOAL_TO_ADD, goal);
-                        setResult(RESULT_OK, replyIntent);
-                        finish();
                     } else {
                         Toast.makeText(AddGoalActivity.this, "Date Required", Toast.LENGTH_SHORT).show();
                     }
@@ -110,6 +112,25 @@ public class AddGoalActivity extends AppCompatActivity {
             }
         });
 
+    }
+    /**
+     * Based on what the user had selected to do, this edits the goal they're viewing,
+     * or creates the new goal in the database
+     * @param goal goal to add/edit
+     */
+    private void addOrEditGoal(Goal goal) {
+
+        Intent replyIntent = new Intent();
+        if (getIntent().hasExtra(Constants.KEY_GOAL_TO_EDIT)){
+            goal.setId(mGoalToEditId);
+            replyIntent.putExtra(EXTRA_GOAL_TO_EDIT, goal);
+        } else {
+            replyIntent.putExtra(EXTRA_GOAL_TO_ADD, goal);
+        }
+
+        replyIntent.putExtra(EXTRA_GOAL_TO_ADD, goal);
+        setResult(RESULT_OK, replyIntent);
+        finish();
     }
 
 

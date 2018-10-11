@@ -3,6 +3,7 @@ package com.development.georgemcl.goaltracker.view.ViewGoal;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
+import android.util.Log;
 
 import com.development.georgemcl.goaltracker.data.repository.ActionRepository;
 import com.development.georgemcl.goaltracker.data.repository.GoalRepository;
@@ -15,6 +16,7 @@ import java.util.List;
  * ViewModel pattern for sub-goals and actions that fall under the selected goal (mParentGoalId)
  */
 public class ViewGoalViewModel extends AndroidViewModel {
+    private static final String TAG = "ViewGoalViewModel";
 
     private GoalRepository mGoalRepository;
     private ActionRepository mActionRepository;
@@ -64,4 +66,17 @@ public class ViewGoalViewModel extends AndroidViewModel {
     public void deleteAction(Action action){ mActionRepository.delete(action);}
 
     public void deleteGoal(Goal goal) {mGoalRepository.delete(goal);}
+
+    public boolean deleteGoalAndActions (Goal goal) {
+        if (mActions.getValue() != null) {
+            for (Action action : mActions.getValue()) {
+                mActionRepository.delete(action);
+            }
+            mGoalRepository.delete(goal);
+            //deletegoal
+            return true;
+        }
+        return false;
+    }
 }
+

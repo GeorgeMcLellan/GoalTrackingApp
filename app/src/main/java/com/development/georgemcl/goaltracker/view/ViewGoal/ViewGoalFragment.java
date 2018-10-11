@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
@@ -107,9 +108,12 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
             @Override
             public void onChanged(@Nullable Goal goal) {
                 mGoalInView = goal;
-                mGoalNameTxt.setText(goal.getGoalName());
-                mGoalDescriptionTxt.setText(goal.getDescription());
-                mGoalCompletionDateTxt.setText(goal.getCompletionDate());
+                if (mGoalInView != null) {
+                    mGoalNameTxt.setText(goal.getGoalName());
+                    mGoalDescriptionTxt.setText(goal.getDescription());
+                    mGoalCompletionDateTxt.setText(goal.getCompletionDate());
+                }
+
             }
         });
 
@@ -161,6 +165,13 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
                                 startActivityForResult(intent, EDIT_GOAL_REQUEST_CODE);
                                 return true;
                             }
+                            case R.id.goal_delete_action : {
+                                if (mSubGoalCount == 0) {
+                                    deleteGoalConfirmationDialog();
+                                } else {
+                                    Toast.makeText(getContext(), "You need to delete sub-goals first", Toast.LENGTH_SHORT).show();
+                                }
+                            }
                             default:
                                 return false;
                         }
@@ -175,6 +186,8 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
             public void onClick(View v) {
                 if (mSubGoalCount == 0) {
                     completeGoalConfirmationDialog();
+                } else {
+                    Toast.makeText(getContext(), "You need to complete sub-goals first", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -223,7 +236,7 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
     private void completeGoalConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
                 .setTitle("Complete Goal")
-                .setMessage("Has this goal been reached? \n This will remove all of its related actions")
+                .setMessage("Has this goal been reached? \n This will also remove all of its related actions")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -241,13 +254,21 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
     }
 
     private void deleteGoalAndActions() {
+        boolean success = mViewGoalViewModel.deleteGoalAndActions(mGoalInView);
+        if (success) {
+            Toast.makeText(getContext(), "Goal and Actions deleted", Toast.LENGTH_SHORT).show();
+            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+            getActivity().getSupportFragmentManager().popBackStack();
+        } else {
+            Toast.makeText(getContext(), "Failed to delete", Toast.LENGTH_SHORT).show();
 
+        }
     }
 
     private void deleteGoalConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle("Delete Goal")
-                .setMessage("Are you sure you want to delete this gooal? \n " + mGoalInView.getGoalName() + " \n This will remove all of its related actions")
+                .setMessage("Are you sure you want to delete this goal? \n " + mGoalInView.getGoalName() + " \n This will remove all of its related actions")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

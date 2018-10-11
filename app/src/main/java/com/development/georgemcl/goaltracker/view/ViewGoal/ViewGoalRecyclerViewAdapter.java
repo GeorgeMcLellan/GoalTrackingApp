@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
@@ -143,39 +145,9 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         if (action.isRepeatAction()) {
             action.setRepeatProgressAmount(action.getRepeatProgressAmount() + AMOUNT_TO_INCREMEMNT);
             mOnItemSelectedListener.updateAction(action);
-            Log.d(TAG, "handleActionDone: setting repeat progress amount to " + action.getRepeatProgressAmount());
             if (action.getRepeatProgressAmount() >= action.getRepeatAmount()){
                 Toast.makeText(mContext, "Action completed, well done!", Toast.LENGTH_SHORT).show();
             }
-            /*
-            AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-            alert.setTitle("Action Progress");
-            alert.setMessage(action.getRepeatUnitOfMeasurement() + " completed");
-            final EditText input = new EditText(mContext);
-            input.setGravity(Gravity.CENTER_HORIZONTAL);
-            input.setInputType(InputType.TYPE_CLASS_NUMBER);
-            input.setRawInputType(Configuration.KEYBOARD_12KEY);
-            alert.setView(input);
-            alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    action.setRepeatProgressAmount(action.getRepeatProgressAmount() + Integer.parseInt(input.getText().toString()));
-                    mOnItemSelectedListener.updateAction(action);
-                    Log.d(TAG, "handleActionDone: setting repeat progress amount to " + action.getRepeatProgressAmount());
-                    if (action.getRepeatProgressAmount() >= action.getRepeatAmount()){
-                        Toast.makeText(mContext, "Action completed, well done!", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(mContext, "Action progressed, well done!", Toast.LENGTH_SHORT).show();
-
-                    }
-                }
-            });
-            alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                }
-            });
-            alert.show();
-
-            */
         } else {
             ///Might want to rethink this
             Toast.makeText(mContext, "Action completed, well done!", Toast.LENGTH_SHORT).show();
@@ -270,7 +242,6 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                 completionProgressBar.setProgress(calculateProgress(action.getRepeatProgressAmount(), action.getRepeatAmount()));
                 String repeatString = action.getRepeatAmount() + " " + action.getRepeatUnitOfMeasurement() + " " + action.getRepeatTimePeriod();
                 repeatTxt.setText(repeatString);
-                doneImageView.setImageResource(android.R.drawable.ic_input_add);
             } else {
                 doneImageView.setImageResource(R.drawable.baseline_done_24);
                 repeatLayout.setVisibility(View.GONE);
