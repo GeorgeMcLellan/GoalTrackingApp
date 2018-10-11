@@ -10,9 +10,13 @@ import com.development.georgemcl.goaltracker.model.Goal;
 
 import java.util.List;
 
+/**
+ * Clean API to access Goal Data. Mediator between different data sources.
+ */
 public class GoalRepository {
     private GoalDao mGoalDao;
     private LiveData<List<Goal>> mAllGoals;
+    //Goals that are shown on the main screen, which have no parentGoalId. They are not sub-goals.
     private LiveData<List<Goal>> mMainGoals;
 
     public GoalRepository(Application application) {

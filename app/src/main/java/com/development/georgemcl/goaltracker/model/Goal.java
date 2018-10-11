@@ -8,6 +8,11 @@ import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 
+/**
+ * Represents goal_table in the Room Database
+ * Properties represent columns in the Room Database
+ * Data Transfer Object pattern
+ */
 @Entity(tableName = "goal_table")
 public class Goal implements Serializable{
 

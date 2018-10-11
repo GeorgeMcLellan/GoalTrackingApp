@@ -19,6 +19,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * Shows just goals in list that can be selected for more detail
+ */
 public class GoalRecyclerViewAdapter extends RecyclerView.Adapter<GoalRecyclerViewAdapter.ViewHolder> {
 
     private Context mContext;

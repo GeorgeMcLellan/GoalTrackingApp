@@ -3,12 +3,12 @@
 
     <item
         android:id="@+id/navigation_home"
-        android:icon="@drawable/ic_home_black_24dp"
+        android:icon="@drawable/baseline_trending_up_24"
         android:title="Goals" />
 
     <item
         android:id="@+id/navigation_dashboard"
-        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:icon="@drawable/baseline_list_24"
         android:title="Actions" />
 
 </menu>

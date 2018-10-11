@@ -9,6 +9,9 @@ import com.development.georgemcl.goaltracker.model.Goal;
 
 import java.util.List;
 
+/**
+ * ViewModel pattern for showing goals on the main screen
+ */
 public class MainGoalViewModel extends AndroidViewModel {
 
     private GoalRepository mRepository;

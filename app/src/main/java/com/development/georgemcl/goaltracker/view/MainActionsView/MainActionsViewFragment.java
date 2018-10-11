@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 
 /**
  * Main container for the actions tabs, where the user can see all of their repeat actions
- * for each time period.
+ * for each repeat time period.
  */
 public class MainActionsViewFragment extends Fragment {
 
@@ -99,17 +99,17 @@ public class MainActionsViewFragment extends Fragment {
             Bundle args = new Bundle();
             switch (position){
                 case 0 : {
-                    args.putString(Constants.KEY_TAB_SELECTED, getString(R.string.daily));
+                    args.putString(Constants.KEY_TAB_SELECTED, getString(R.string.per_day));
                     fragment.setArguments(args);
                     return fragment;
                 }
                 case 1: {
-                    args.putString(Constants.KEY_TAB_SELECTED, getString(R.string.weekly));
+                    args.putString(Constants.KEY_TAB_SELECTED, getString(R.string.per_week));
                     fragment.setArguments(args);
                     return fragment;
                 }
                 case 2: {
-                    args.putString(Constants.KEY_TAB_SELECTED, getString(R.string.monthly));
+                    args.putString(Constants.KEY_TAB_SELECTED, getString(R.string.per_month));
                     fragment.setArguments(args);
                     return fragment;
                 }

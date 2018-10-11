@@ -20,6 +20,10 @@
     <string name="daily">Daily</string>
     <string name="weekly">Weekly</string>
     <string name="monthly">Monthly</string>
+    <string name="per_day">per day</string>
+    <string name="per_week">per week</string>
+    <string name="per_month">per month</string>
+
 
     <array name="repeat_units_of_measurements">
         <item>time(s)</item>

@@ -13,15 +13,10 @@ import java.util.List;
 /**
  * ViewModel class for each action tab
  */
-
 public class ActionTabViewModel extends AndroidViewModel {
     private ActionRepository mActionRepository;
     private LiveData<List<Action>> mActions;
     private LiveData<List<Action>> mActionsForRepeatCategory;
-    /**
-     * Daily, Monthly or Weekly
-     */
-    private String mActionRepeatTimePeriod;
 
     public ActionTabViewModel(Application application) {
         super(application);
@@ -44,11 +39,6 @@ public class ActionTabViewModel extends AndroidViewModel {
      */
     public LiveData<List<Action>> getActionsForRepeatCategory() {
         return mActionsForRepeatCategory;
-    }
-
-
-    public void insertAction(Action action) {
-        mActionRepository.insert(action);
     }
 
     public void editAction(Action action) { mActionRepository.edit(action); }

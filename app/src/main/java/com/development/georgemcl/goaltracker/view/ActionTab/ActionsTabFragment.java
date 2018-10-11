@@ -65,26 +65,14 @@ public class ActionsTabFragment extends Fragment implements ViewGoalRecyclerView
 
         mActionTabCategory = getArguments().getString(Constants.KEY_TAB_SELECTED);
 
-        String actionTab = "";
-        if (mActionTabCategory.equals(getString(R.string.daily))){
-            actionTab = "per day";
-        }
-        else if (mActionTabCategory.equals(getString(R.string.weekly))){
-            actionTab = "per week";
-
-        }
-        else if (mActionTabCategory.equals(getString(R.string.monthly))) {
-            actionTab = "per month";
-        }
 
 
         mActionsTabViewModel = ViewModelProviders.of(this).get(ActionTabViewModel.class);
-        mActionsTabViewModel.setActionRepeatCategory(actionTab);
+        mActionsTabViewModel.setActionRepeatCategory(mActionTabCategory);
 
         mActionsTabViewModel.getActionsForRepeatCategory().observe(this, new Observer<List<Action>>() {
             @Override
             public void onChanged(@Nullable List<Action> actions) {
-                Log.d(TAG, "onChanged: actions size = "+ actions.size());
                 mRecyclerViewAdapter.setActions(actions);
             }
         });

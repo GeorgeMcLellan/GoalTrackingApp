@@ -35,6 +35,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * Combines both sub-goals and actions into one recyclerview that can be acted upon
+ */
 public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = "ViewGoalRecyclerViewAda";
 
@@ -46,6 +49,7 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     private OnItemSelectedListener mOnItemSelectedListener;
     private List<Goal> mSubGoals = Collections.emptyList();
     private List<Action> mActions = Collections.emptyList();
+
 
     public ViewGoalRecyclerViewAdapter(Context context, OnItemSelectedListener listener) {
         mContext = context;
@@ -235,6 +239,9 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         return -1;
     }
 
+    /**
+     * Represents an action in the recycler view
+     */
     public class ActionViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.action_item_name_textview)
         TextView nameTxt;
@@ -272,6 +279,9 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
+    /**
+     * Represents a goal in the recycler view
+     */
     public class GoalViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.goal_item_name_textview)
         TextView nameTxt;
@@ -293,25 +303,40 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
     }
 
+    /**
+     * Interface to update the data in the database through communicating with the view
+     */
     public interface OnItemSelectedListener {
         /**
          * Called when a sub goal is selected
          *
-         * @param goalId
+         * @param goalId id of sub-goal selected
          */
         void onSubGoalSelected(int goalId);
 
         /**
          * Called when an action is selected
          *
-         * @param actionId
+         * @param actionId id of action selected
          */
         void onActionSelected(int actionId);
 
+        /**
+         * Called when action is to be edited
+         * @param action action to be edited
+         */
         void onActionEdit(Action action);
 
+        /**
+         * Called when action is needs to be updated in the database
+         * @param action updated action
+         */
         void updateAction(Action action);
 
+        /**
+         * Called when action is needs to be deleted in the database
+         * @param action updated action
+         */
         void deleteAction(Action action);
     }
 

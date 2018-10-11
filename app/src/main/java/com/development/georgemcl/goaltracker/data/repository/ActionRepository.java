@@ -10,6 +10,9 @@ import com.development.georgemcl.goaltracker.model.Action;
 
 import java.util.List;
 
+/**
+ * Clean API to access Action Data. Mediator between different data sources
+ */
 public class ActionRepository {
     private ActionDao mActionDao;
     private LiveData<List<Action>> mAllActions;

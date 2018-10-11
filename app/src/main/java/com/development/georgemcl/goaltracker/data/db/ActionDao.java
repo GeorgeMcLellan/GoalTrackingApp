@@ -10,7 +10,9 @@ import android.arch.persistence.room.Update;
 import com.development.georgemcl.goaltracker.model.Action;
 
 import java.util.List;
-
+/**
+ * Data Access Object pattern for Room. Provides methods to be performed on the Action table
+ */
 @Dao
 public interface ActionDao {
 

@@ -30,7 +30,9 @@ import butterknife.ButterKnife;
 
 import static android.app.Activity.RESULT_OK;
 
-
+/**
+ * Main Goal screen that shows all goals which are not sub-goals
+ */
 public class MainGoalViewFragment extends Fragment implements GoalRecyclerViewAdapter.OnGoalSelectedListener{
 
     private static final String TAG = "MainGoalViewFragment";

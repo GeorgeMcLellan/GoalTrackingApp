@@ -8,6 +8,12 @@ import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 
+/**
+ * Represents an action for specific goal.
+ * Represents action_table in the Room Database
+ * Properties represent columns in the Room Database
+ * Data Transfer Object pattern
+ */
 @Entity(tableName = "action_table")
 public class Action implements Serializable{
 

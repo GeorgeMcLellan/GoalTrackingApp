@@ -23,6 +23,9 @@ import java.util.GregorianCalendar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * For adding goals/sub-goals
+ */
 public class AddGoalActivity extends AppCompatActivity {
 
     private static final String TAG = "AddGoalActivity";

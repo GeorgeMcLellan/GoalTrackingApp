@@ -11,6 +11,9 @@ import com.development.georgemcl.goaltracker.model.Goal;
 
 import java.util.List;
 
+/**
+ * Data Access Object pattern for Room. Provides methods to be performed on the Goal table
+ */
 @Dao
 public interface GoalDao {
 

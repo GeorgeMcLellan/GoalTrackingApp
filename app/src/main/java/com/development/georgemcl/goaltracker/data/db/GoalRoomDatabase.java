@@ -11,6 +11,9 @@ import android.support.annotation.NonNull;
 import com.development.georgemcl.goaltracker.model.Action;
 import com.development.georgemcl.goaltracker.model.Goal;
 
+/**
+ * RoomDatabase implementation, making use of the Dao classes to create an SQL database
+ */
 @Database(entities = {Goal.class, Action.class}, version = 2, exportSchema = false)
 public abstract class GoalRoomDatabase extends RoomDatabase{
 

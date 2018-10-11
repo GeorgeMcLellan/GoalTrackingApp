@@ -21,6 +21,9 @@ import com.development.georgemcl.goaltracker.model.Action;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * Used for adding and also editing an action
+ */
 public class AddActionActivity extends AppCompatActivity {
     private static final String TAG = "AddActionActivity";
 
@@ -93,13 +96,13 @@ public class AddActionActivity extends AppCompatActivity {
                                     Integer.parseInt(mRepeatMeasurementEt.getText().toString()),
                                     mRepeatPerTimePeriodSpn.getSelectedItem().toString(),
                                     mRepeatUnitOfMeasurementSpn.getSelectedItem().toString());
-                                    addAction(action);
+                                addOrEditAction(action);
                         }else {
                             Toast.makeText(AddActionActivity.this, "Enter valid repeat amount", Toast.LENGTH_SHORT).show();
                         }
                     }else {
                         action = new Action(actionName, parentGoalId);
-                        addAction(action);
+                        addOrEditAction(action);
                     }
 
                 }
@@ -111,7 +114,12 @@ public class AddActionActivity extends AppCompatActivity {
         });
     }
 
-    private void addAction(Action action) {
+    /**
+     * Based on what the user had selected to do, this edits the action they're viewing,
+     * or creates the new action in the database
+     * @param action action to add/edit
+     */
+    private void addOrEditAction(Action action) {
         Intent replyIntent = new Intent();
         if (getIntent().hasExtra(Constants.KEY_ACTION_TO_EDIT)){
             action.setId(actionToEditId);

@@ -37,6 +37,9 @@ import io.github.yavski.fabspeeddial.FabSpeedDial;
 
 import static android.app.Activity.RESULT_OK;
 
+/**
+ * For viewing a goal and its related actions and sub-goals using ViewGoalRecyclerViewAdapter
+ */
 public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAdapter.OnItemSelectedListener{
     private static final String TAG = "ViewGoalFragment";
     @BindView(R.id.view_goal_add_fab) FabSpeedDial mAddFab;

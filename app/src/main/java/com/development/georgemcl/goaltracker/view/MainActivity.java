@@ -17,7 +17,9 @@ import com.development.georgemcl.goaltracker.view.MainGoalView.MainGoalViewFragm
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-
+/**
+ * Main container class for all fragments
+ */
 public class MainActivity extends AppCompatActivity {
     private static final String TAG="MainActivity";
 

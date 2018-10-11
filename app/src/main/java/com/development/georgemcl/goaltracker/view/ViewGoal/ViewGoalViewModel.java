@@ -11,13 +11,16 @@ import com.development.georgemcl.goaltracker.model.Goal;
 
 import java.util.Collections;
 import java.util.List;
-
+/**
+ * ViewModel pattern for sub-goals and actions that fall under the selected goal (mParentGoalId)
+ */
 public class ViewGoalViewModel extends AndroidViewModel {
 
     private GoalRepository mGoalRepository;
     private ActionRepository mActionRepository;
     private LiveData<List<Goal>> mSubGoals;
     private LiveData<List<Action>> mActions;
+    //The selected goal's goal id
     private int mParentGoalId;
 
     public ViewGoalViewModel (Application application) {
@@ -30,7 +33,6 @@ public class ViewGoalViewModel extends AndroidViewModel {
      * Populates lists with relevant data based on the goal being viewed
      * @param parentGoalId
      */
-
     public void populateLists(int parentGoalId){
         mParentGoalId = parentGoalId;
         mSubGoals = mGoalRepository.getSubGoals(mParentGoalId);
