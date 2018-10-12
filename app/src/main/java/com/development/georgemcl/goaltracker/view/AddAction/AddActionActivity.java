@@ -1,4 +1,4 @@
-package com.development.georgemcl.goaltracker.view;
+package com.development.georgemcl.goaltracker.view.AddAction;
 
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;

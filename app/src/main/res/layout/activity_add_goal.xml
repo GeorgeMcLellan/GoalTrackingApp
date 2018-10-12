@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".view.AddGoalActivity">
+    tools:context=".view.AddGoal.AddGoalActivity">
 
     <EditText
         android:id="@+id/add_goal_name_edittext"

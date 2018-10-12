@@ -13,14 +13,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.model.Action;
-import com.development.georgemcl.goaltracker.view.AddActionActivity;
+import com.development.georgemcl.goaltracker.view.AddAction.AddActionActivity;
 import com.development.georgemcl.goaltracker.view.ViewGoal.ViewGoalRecyclerViewAdapter;
-import com.development.georgemcl.goaltracker.view.ViewGoal.ViewGoalViewModel;
 
 import java.util.List;
 
@@ -96,7 +94,7 @@ public class ActionsTabFragment extends Fragment implements ViewGoalRecyclerView
     }
 
 
-    //Recylcerview listener
+    //RecyclerView listener
 
     @Override
     public void onSubGoalSelected(int goalId) {}

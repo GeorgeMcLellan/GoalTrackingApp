@@ -11,6 +11,14 @@
         android:background="@color/colorAccent"
         android:id="@+id/view_goal_header_layout"
         >
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="40dp"
+            app:srcCompat="@drawable/baseline_done_24"
+            android:layout_marginStart="5dp"
+            android:id="@+id/view_goal_compelete_imageview"
+            android:contentDescription="@string/done"
+            android:layout_marginLeft="5dp" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,14 +47,7 @@
                 android:textAlignment="center"
                 android:id="@+id/view_goal_description_textview"/>
         </LinearLayout>
-        <ImageView
-        android:layout_width="30dp"
-        android:layout_height="50dp"
-        app:srcCompat="@drawable/baseline_done_24"
-        android:layout_marginRight="10dp"
-        android:id="@+id/view_goal_compelete_imageview"
-        android:layout_gravity="right"
-        android:contentDescription="@string/done"/>
+
         <Button
             android:id="@+id/view_goal_options_button"
             android:layout_width="10dp"

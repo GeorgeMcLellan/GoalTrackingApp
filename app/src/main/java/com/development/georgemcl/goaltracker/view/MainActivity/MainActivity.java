@@ -1,4 +1,4 @@
-package com.development.georgemcl.goaltracker.view;
+package com.development.georgemcl.goaltracker.view.MainActivity;
 
 import android.support.v4.app.Fragment;
 
@@ -21,12 +21,9 @@ import butterknife.ButterKnife;
  * Main container class for all fragments
  */
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG="MainActivity";
-
+    private static final String TAG = "MainActivity";
 
     @BindView(R.id.navigation) BottomNavigationView mNavigation;
-    @BindView(R.id.main_activity_fragment_container)
-    FrameLayout mFragmentContainer;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -66,10 +63,18 @@ public class MainActivity extends AppCompatActivity {
         replaceFragment(new MainGoalViewFragment());
     }
 
+    /**
+     * Called by fragments to toggle whether the back button needs to be shown.
+     * @param show
+     */
     public void showBackButton(boolean show){
         getSupportActionBar().setDisplayHomeAsUpEnabled(show);
     }
 
+    /**
+     * Replaces the fragment being shown in the main container, and adds it to the fragment backstack
+     * @param fragment
+     */
     public void replaceFragment(Fragment fragment){
         getSupportFragmentManager().beginTransaction().replace(R.id.main_activity_fragment_container, fragment).addToBackStack(null).commit();
     }

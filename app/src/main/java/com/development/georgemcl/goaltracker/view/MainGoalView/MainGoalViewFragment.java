@@ -1,7 +1,6 @@
 package com.development.georgemcl.goaltracker.view.MainGoalView;
 
 
-import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -11,7 +10,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +17,8 @@ import android.view.ViewGroup;
 import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.model.Goal;
-import com.development.georgemcl.goaltracker.view.AddGoalActivity;
-import com.development.georgemcl.goaltracker.view.MainActivity;
+import com.development.georgemcl.goaltracker.view.AddGoal.AddGoalActivity;
+import com.development.georgemcl.goaltracker.view.MainActivity.MainActivity;
 import com.development.georgemcl.goaltracker.view.ViewGoal.ViewGoalFragment;
 
 import java.util.List;

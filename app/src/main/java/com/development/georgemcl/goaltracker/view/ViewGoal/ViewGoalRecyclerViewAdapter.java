@@ -3,21 +3,14 @@ package com.development.georgemcl.goaltracker.view.ViewGoal;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -25,11 +18,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.model.Action;
 import com.development.georgemcl.goaltracker.model.Goal;
-import com.development.georgemcl.goaltracker.view.AddActionActivity;
 
 import java.util.Collections;
 import java.util.List;
@@ -240,8 +231,20 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             if (action.isRepeatAction()) {
                 repeatLayout.setVisibility(View.VISIBLE);
                 completionProgressBar.setProgress(calculateProgress(action.getRepeatProgressAmount(), action.getRepeatAmount()));
-                String repeatString = action.getRepeatAmount() + " " + action.getRepeatUnitOfMeasurement() + " " + action.getRepeatTimePeriod();
+                String repeatString = String.valueOf(action.getRepeatAmount()) + " ";
+                String unitOfMeasure = action.getRepeatUnitOfMeasurement();
+                //chop off the last 4 characters " (s)"
+                repeatString += (unitOfMeasure.substring(0, unitOfMeasure.length() - 3));
+                //only append with an 's' if it requires a plural
+                if (action.getRepeatAmount() > 1) {
+                    repeatString += "s ";
+                 } else{
+                    repeatString += " ";
+                }
+                repeatString += action.getRepeatTimePeriod();
                 repeatTxt.setText(repeatString);
+                doneImageView.setImageResource(android.R.drawable.ic_input_add);
+
             } else {
                 doneImageView.setImageResource(R.drawable.baseline_done_24);
                 repeatLayout.setVisibility(View.GONE);

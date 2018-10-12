@@ -24,10 +24,14 @@
     <string name="per_week">per week</string>
     <string name="per_month">per month</string>
 
+    <string name="repeat_amount_per"></string>
+    <string name="ellipsis">⋮</string>
+
 
     <array name="repeat_units_of_measurements">
         <item>time(s)</item>
         <item>hour(s)</item>
+        <item>minute(s)</item>
     </array>
     <array name="repeat_time_periods">
         <item>per day</item>

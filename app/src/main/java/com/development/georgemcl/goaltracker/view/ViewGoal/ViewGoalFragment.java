@@ -27,8 +27,8 @@ import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.model.Action;
 import com.development.georgemcl.goaltracker.model.Goal;
-import com.development.georgemcl.goaltracker.view.AddActionActivity;
-import com.development.georgemcl.goaltracker.view.AddGoalActivity;
+import com.development.georgemcl.goaltracker.view.AddAction.AddActionActivity;
+import com.development.georgemcl.goaltracker.view.AddGoal.AddGoalActivity;
 
 import java.util.List;
 
@@ -73,14 +73,13 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
         View view = inflater.inflate(R.layout.fragment_view_goal, container, false);
         ButterKnife.bind(this, view);
 
-        mParentGoalId = getArguments().getInt(Constants.KEY_PARENT_GOAL_ID);
+        if (getArguments() != null) {
+            mParentGoalId = getArguments().getInt(Constants.KEY_PARENT_GOAL_ID);
+        }
 
         mViewGoalViewModel = ViewModelProviders.of(this).get(ViewGoalViewModel.class);
 
         mViewGoalViewModel.populateLists(mParentGoalId);
-
-
-
 
         mRecyclerViewAdapter = new ViewGoalRecyclerViewAdapter(getContext(), this);
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
@@ -236,7 +235,8 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
     private void completeGoalConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
                 .setTitle("Complete Goal")
-                .setMessage("Has this goal been reached? \n This will also remove all of its related actions")
+                .setMessage("Has this goal been reached?\n" +
+                        "This will also remove all of its related actions")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -268,7 +268,7 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
     private void deleteGoalConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle("Delete Goal")
-                .setMessage("Are you sure you want to delete this goal? \n " + mGoalInView.getGoalName() + " \n This will remove all of its related actions")
+                .setMessage("Are you sure you want to delete this goal? \n" + mGoalInView.getGoalName() + "\n This will remove all of its related actions")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

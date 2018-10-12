@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.view.ActionTab.ActionsTabFragment;
-import com.development.georgemcl.goaltracker.view.MainActivity;
+import com.development.georgemcl.goaltracker.view.MainActivity.MainActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

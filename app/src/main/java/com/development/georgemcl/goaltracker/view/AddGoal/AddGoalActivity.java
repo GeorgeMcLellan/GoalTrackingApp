@@ -1,4 +1,4 @@
-package com.development.georgemcl.goaltracker.view;
+package com.development.georgemcl.goaltracker.view.AddGoal;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
