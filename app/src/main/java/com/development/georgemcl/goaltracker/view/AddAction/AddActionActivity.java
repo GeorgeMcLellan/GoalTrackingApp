@@ -39,8 +39,10 @@ public class AddActionActivity extends AppCompatActivity {
     @BindView(R.id.add_action_repeat_measurement_edittext) EditText mRepeatMeasurementEt;
     @BindView(R.id.add_action_submit_fab) FloatingActionButton mSubmitFab;
 
-    private int parentGoalId;
-    private int actionToEditId;
+    private int mParentGoalId;
+    //If existing action is being edited
+    private int mActionToEditId;
+
     private ArrayAdapter<String> mRepeatPerTimePeriodAdapter;
     private ArrayAdapter<String> mRepeatUnitOfMeasurementAdapter;
 
@@ -51,9 +53,8 @@ public class AddActionActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         if (getIntent().hasExtra(Constants.KEY_PARENT_GOAL_ID)){
-            parentGoalId = getIntent().getIntExtra(Constants.KEY_PARENT_GOAL_ID, -1);
+            mParentGoalId = getIntent().getIntExtra(Constants.KEY_PARENT_GOAL_ID, -1);
         }
-
 
         mRepeatSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -80,8 +81,6 @@ public class AddActionActivity extends AppCompatActivity {
             populateFields((Action) getIntent().getSerializableExtra(Constants.KEY_ACTION_TO_EDIT));
         }
 
-
-
         mSubmitFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,22 +90,22 @@ public class AddActionActivity extends AppCompatActivity {
                     if (mRepeatSwitch.isChecked()) {
                         if (!mRepeatMeasurementEt.getText().toString().isEmpty()
                                 && Integer.parseInt(mRepeatMeasurementEt.getText().toString()) > 0) {
-                                    action = new Action(actionName, parentGoalId,
+                                    action = new Action(actionName, mParentGoalId,
                                     Integer.parseInt(mRepeatMeasurementEt.getText().toString()),
                                     mRepeatPerTimePeriodSpn.getSelectedItem().toString(),
                                     mRepeatUnitOfMeasurementSpn.getSelectedItem().toString());
                                 addOrEditAction(action);
                         }else {
-                            Toast.makeText(AddActionActivity.this, "Enter valid repeat amount", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddActionActivity.this, getString(R.string.invalid_repeat_amount), Toast.LENGTH_SHORT).show();
                         }
                     }else {
-                        action = new Action(actionName, parentGoalId);
+                        action = new Action(actionName, mParentGoalId);
                         addOrEditAction(action);
                     }
 
                 }
                 else {
-                    Toast.makeText(AddActionActivity.this, "Name Required", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddActionActivity.this, getString(R.string.missing_name), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -121,12 +120,12 @@ public class AddActionActivity extends AppCompatActivity {
     private void addOrEditAction(Action action) {
         Intent replyIntent = new Intent();
         if (getIntent().hasExtra(Constants.KEY_ACTION_TO_EDIT)){
-            action.setId(actionToEditId);
+            action.setId(mActionToEditId);
             replyIntent.putExtra(EXTRA_ACTION_TO_EDIT, action);
         } else {
             replyIntent.putExtra(EXTRA_ACTION_TO_ADD, action);
         }
-        Log.d(TAG, "addAction: " + action);
+        Log.i(TAG, "addAction: " + action);
         setResult(RESULT_OK, replyIntent);
         finish();
     }
@@ -136,7 +135,7 @@ public class AddActionActivity extends AppCompatActivity {
      */
     private void populateFields(Action action) {
         mActionNameEt.setText(action.getActionName());
-        actionToEditId = action.getId();
+        mActionToEditId = action.getId();
         if (action.isRepeatAction()) {
             mRepeatSwitch.setChecked(true);
             mRepeatMeasurementEt.setText(String.valueOf(action.getRepeatAmount()));

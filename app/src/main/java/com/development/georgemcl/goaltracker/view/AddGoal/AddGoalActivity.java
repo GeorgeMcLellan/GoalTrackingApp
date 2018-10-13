@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -43,7 +42,9 @@ public class AddGoalActivity extends AppCompatActivity {
     TextView mGoalDateTxt;
     @BindView(R.id.add_goal_submit_fab)
     FloatingActionButton mSubmitFab;
-    private int parentGoalId;
+    private int mParentGoalId;
+
+    //If existing goal is being edited
     private int mGoalToEditId;
 
     @Override
@@ -53,12 +54,13 @@ public class AddGoalActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         if (getIntent().hasExtra(Constants.KEY_PARENT_GOAL_ID)){
-            parentGoalId = getIntent().getIntExtra(Constants.KEY_PARENT_GOAL_ID, -1);
-            Log.i(TAG, "onCreate: parent goal id = " + parentGoalId);
+            mParentGoalId = getIntent().getIntExtra(Constants.KEY_PARENT_GOAL_ID, -1);
         }
 
         if (getIntent().hasExtra(Constants.KEY_GOAL_TO_EDIT)) {
             populateFields((Goal) getIntent().getSerializableExtra(Constants.KEY_GOAL_TO_EDIT));
+        } else {
+            setGoalDateToEndOfYear();
         }
 
         mGoalDateTxt.setOnClickListener(new View.OnClickListener() {
@@ -95,24 +97,31 @@ public class AddGoalActivity extends AppCompatActivity {
                             Date date = mSimpleDateFormat.parse((mGoalDateTxt.getText().toString()));
                             Date todaysDate = Calendar.getInstance().getTime();
                             if (date.getTime() > todaysDate.getTime()) {
-                                Goal goal = new Goal(goalName, description, dateToAchieve, parentGoalId);
+                                Goal goal = new Goal(goalName, description, dateToAchieve, mParentGoalId);
                                 addOrEditGoal(goal);
                             } else {
-                                Toast.makeText(AddGoalActivity.this, "Date must be after today's date", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AddGoalActivity.this, getString(R.string.date_too_early), Toast.LENGTH_SHORT).show();
                             }
                         } catch (ParseException e) {
-                            Toast.makeText(AddGoalActivity.this, "Invalid date", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddGoalActivity.this, getString(R.string.invalid_date), Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(AddGoalActivity.this, "Date Required", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddGoalActivity.this, getString(R.string.missing_date), Toast.LENGTH_SHORT).show();
                     }
                 } else{
-                    Toast.makeText(AddGoalActivity.this, "Name Required", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddGoalActivity.this, getString(R.string.missing_name), Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
     }
+
+    private void setGoalDateToEndOfYear() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(calendar.get(Calendar.YEAR), Calendar.DECEMBER, 31);
+        mGoalDateTxt.setText(mSimpleDateFormat.format(calendar.getTime()));
+    }
+
     /**
      * Based on what the user had selected to do, this edits the goal they're viewing,
      * or creates the new goal in the database

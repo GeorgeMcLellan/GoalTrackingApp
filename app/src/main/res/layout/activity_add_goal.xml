@@ -30,14 +30,13 @@
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:layout_marginTop="10dp"
-
         android:layout_gravity="center_horizontal"
-        android:text="To Achieve By"/>
+        android:text="@string/to_achieve_by"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/add_goal_date_textview"
-        android:hint="Select Date"
+        android:hint="@string/date_hint"
         android:inputType="date"
         android:textSize="24sp"
         android:textAlignment="center"/>
@@ -49,7 +48,9 @@
         android:layout_gravity="right"
         android:layout_marginRight="5dp"
         app:fabSize="mini"
-        app:srcCompat="@drawable/baseline_done_24" />
+        app:srcCompat="@drawable/baseline_done_24"
+        android:focusable="true"
+        android:layout_marginEnd="5dp" />
 
 
 </LinearLayout>

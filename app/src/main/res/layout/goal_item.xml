@@ -10,10 +10,12 @@
     android:background="@drawable/blue_border">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_weight="1">
+        android:layout_marginLeft="40dp"
+        android:layout_weight="1"
+        android:layout_marginStart="40dp">
 
         <TextView
             android:layout_marginTop="5dp"
@@ -21,14 +23,12 @@
             android:layout_height="wrap_content"
             android:id="@+id/goal_item_name_textview"
             android:textSize="18sp"
-            android:text="Achieve something"
             android:textAlignment="center"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/goal_item_completion_date_textview"
             android:textSize="16sp"
-            android:text="24/12/2018"
             android:layout_margin="5dp"
             android:textAlignment="center"/>
     </LinearLayout>

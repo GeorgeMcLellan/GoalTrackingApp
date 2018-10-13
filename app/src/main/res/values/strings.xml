@@ -5,7 +5,6 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="action">Action</string>
     <string name="subgoal">Sub-Goal</string>
@@ -24,9 +23,18 @@
     <string name="per_week">per week</string>
     <string name="per_month">per month</string>
 
-    <string name="repeat_amount_per"></string>
-    <string name="ellipsis">⋮</string>
+    //Add goal error messages
+    <string name="date_too_early">Date must be after today\'s date</string>
+    <string name="invalid_date">Invalid date</string>
+    <string name="missing_date">Date Required</string>
+    <string name="missing_name">Name Required</string>
 
+    //Add action error messages
+    <string name="invalid_repeat_amount">Enter valid repeat amount</string>
+
+    <string name="ellipsis">⋮</string>
+    <string name="date_hint">Select Date</string>
+    <string name="to_achieve_by">To Achieve By</string>
 
     <array name="repeat_units_of_measurements">
         <item>time(s)</item>
