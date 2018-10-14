@@ -24,7 +24,7 @@ public abstract class GoalRoomDatabase extends RoomDatabase{
     private static volatile GoalRoomDatabase INSTANCE;
 
     /**
-     * Provides access to tehe damabase
+     * Provides access to the database
      * Implements Singleton pattern to ensure instance of database is not constantly recreated
      * @param context Application context
      * @return Database
