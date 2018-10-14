@@ -21,15 +21,20 @@ public abstract class GoalRoomDatabase extends RoomDatabase{
 
     public abstract ActionDao actionDao();
 
-
     private static volatile GoalRoomDatabase INSTANCE;
+
+    /**
+     * Provides access to tehe damabase
+     * Implements Singleton pattern to ensure instance of database is not constantly recreated
+     * @param context Application context
+     * @return Database
+     */
 
     public static GoalRoomDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             synchronized (GoalRoomDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(), GoalRoomDatabase.class, "goal_database")
-//                            .addCallback(sRoomDatabaseCallback)
                             .fallbackToDestructiveMigration()
                             .build();
                 }
@@ -38,33 +43,4 @@ public abstract class GoalRoomDatabase extends RoomDatabase{
 
         return INSTANCE;
     }
-
-    private static RoomDatabase.Callback sRoomDatabaseCallback =
-            new RoomDatabase.Callback(){
-
-                @Override
-                public void onOpen (@NonNull SupportSQLiteDatabase db){
-                    super.onOpen(db);
-                    new DeleteDbAsync(INSTANCE).execute();
-                }
-            };
-
-    private static class DeleteDbAsync extends AsyncTask<Void, Void, Void> {
-
-        private final GoalDao mGoalDao;
-        private final ActionDao mActionDao;
-
-        DeleteDbAsync(GoalRoomDatabase db) {
-            mGoalDao = db.goalDao();
-            mActionDao = db.actionDao();
-        }
-
-        @Override
-        protected Void doInBackground(final Void... params) {
-            mGoalDao.deleteAll();
-            mActionDao.deleteAll();
-            return null;
-        }
-    }
-
 }

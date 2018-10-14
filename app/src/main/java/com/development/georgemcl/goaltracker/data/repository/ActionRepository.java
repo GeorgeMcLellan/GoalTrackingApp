@@ -27,7 +27,11 @@ public class ActionRepository {
         return mAllActions;
     }
 
-
+    /**
+     * Get actions for a relevent goal
+     * @param parentGoalId the parent goal
+     * @return the actions for that goal
+     */
     public LiveData<List<Action>> getActions(int parentGoalId) {
         return mActionDao.getActions(parentGoalId);
     }

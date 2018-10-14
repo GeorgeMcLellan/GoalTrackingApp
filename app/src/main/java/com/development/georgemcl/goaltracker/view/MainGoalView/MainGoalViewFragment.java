@@ -52,7 +52,7 @@ public class MainGoalViewFragment extends Fragment implements GoalRecyclerViewAd
 
         mMainGoalViewModel = ViewModelProviders.of(this).get(MainGoalViewModel.class);
 
-        //Only show the back button if a goal is selected
+        //Only show the back button if a goal is selected, not in the main goal view
         if (getActivity() instanceof MainActivity){
             ((MainActivity) getActivity()).showBackButton(false);
         }

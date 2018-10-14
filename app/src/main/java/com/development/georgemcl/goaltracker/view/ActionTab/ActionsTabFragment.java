@@ -63,8 +63,6 @@ public class ActionsTabFragment extends Fragment implements ViewGoalRecyclerView
 
         mActionTabCategory = getArguments().getString(Constants.KEY_TAB_SELECTED);
 
-
-
         mActionsTabViewModel = ViewModelProviders.of(this).get(ActionTabViewModel.class);
         mActionsTabViewModel.setActionRepeatCategory(mActionTabCategory);
 

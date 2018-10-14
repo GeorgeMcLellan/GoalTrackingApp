@@ -50,21 +50,19 @@ public class GoalRecyclerViewAdapter extends RecyclerView.Adapter<GoalRecyclerVi
             @Override
             public void onClick(View v) {
                 mGoalSelectedListener.onGoalSelected(goal.getId());
-//                Intent intent = new Intent(mContext, ViewGoalActivity.class);
-//                intent.putExtra(Constants.KEY_PARENT_GOAL_ID, goal.getId());
-//                mContext.startActivity(intent);
             }
         });
     }
 
+    /**
+     * Updates the list with new goals
+     * @param goals
+     */
     public void setGoals(List<Goal> goals) {
         mGoals = goals;
         notifyDataSetChanged();
     }
 
-    public void setOnGoalSelectedListener(OnGoalSelectedListener listener) {
-        mGoalSelectedListener = listener;
-    }
 
     @Override
     public int getItemCount() {
