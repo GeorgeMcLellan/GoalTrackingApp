@@ -10,6 +10,9 @@ import com.development.georgemcl.goaltracker.model.Action;
 
 import java.util.List;
 
+import io.reactivex.Completable;
+import io.reactivex.Single;
+
 /**
  * ViewModel class for each action tab
  */
@@ -41,7 +44,7 @@ public class ActionTabViewModel extends AndroidViewModel {
         return mActionsForRepeatCategory;
     }
 
-    public void editAction(Action action) { mActionRepository.edit(action); }
+    public Completable editAction(Action action) { return mActionRepository.edit(action); }
 
-    public void deleteAction(Action action){ mActionRepository.delete(action);}
+    public Completable deleteAction(Action action){ return mActionRepository.delete(action);}
 }

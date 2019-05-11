@@ -9,6 +9,8 @@ import com.development.georgemcl.goaltracker.model.Goal;
 
 import java.util.List;
 
+import io.reactivex.Completable;
+
 /**
  * ViewModel pattern for showing goals on the main screen
  */
@@ -27,7 +29,7 @@ public class MainGoalViewModel extends AndroidViewModel {
         return mMainGoals;
     }
 
-    public void insert(Goal goal) {
-        mRepository.insert(goal);
+    public Completable insert(Goal goal) {
+        return mRepository.insert(goal);
     }
 }

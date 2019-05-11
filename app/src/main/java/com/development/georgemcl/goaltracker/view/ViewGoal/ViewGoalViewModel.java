@@ -12,6 +12,9 @@ import com.development.georgemcl.goaltracker.model.Goal;
 
 import java.util.Collections;
 import java.util.List;
+
+import io.reactivex.Completable;
+
 /**
  * ViewModel pattern for sub-goals and actions that fall under the selected goal (mParentGoalId)
  */
@@ -51,29 +54,36 @@ public class ViewGoalViewModel extends AndroidViewModel {
 
     public LiveData<Goal> getGoalById(int id) { return mGoalRepository.getGoalById(id);}
 
-    public void insertSubGoal(Goal goal) {
-        mGoalRepository.insert(goal);
+    public Completable insertSubGoal(Goal goal) {
+        return mGoalRepository.insert(goal);
     }
 
-    public void insertAction(Action action) {
-        mActionRepository.insert(action);
+    public Completable insertAction(Action action) {
+        return mActionRepository.insert(action);
     }
 
-    public void editAction(Action action) { mActionRepository.edit(action); }
+    public Completable editAction(Action action) { return mActionRepository.edit(action); }
 
-    public void editGoal(Goal goal) { mGoalRepository.edit(goal);}
+    public Completable editGoal(Goal goal) { return mGoalRepository.edit(goal);}
 
-    public void deleteAction(Action action){ mActionRepository.delete(action);}
+    public Completable deleteAction(Action action){ return mActionRepository.delete(action);}
 
-    public void deleteGoal(Goal goal) {mGoalRepository.delete(goal);}
+    public Completable deleteGoal(Goal goal) { return mGoalRepository.delete(goal);}
 
     public boolean deleteGoalAndActions (Goal goal) {
         if (mActions.getValue() != null) {
             for (Action action : mActions.getValue()) {
-                mActionRepository.delete(action);
+                mActionRepository.delete(action)
+                .subscribe(
+                        () -> Log.i(TAG, "deleteAction onComplete: "),
+                        (e) -> Log.e(TAG, "deleteAction error: " + e.getMessage())
+                );
             }
-            mGoalRepository.delete(goal);
-            //deletegoal
+            mGoalRepository.delete(goal)
+                    .subscribe(
+                            () -> Log.i(TAG, "deleteGoal onComplete: "),
+                            (e) -> Log.e(TAG, "deleteGoal error: " + e.getMessage())
+                    );
             return true;
         }
         return false;

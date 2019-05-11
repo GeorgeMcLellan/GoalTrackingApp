@@ -35,6 +35,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.github.yavski.fabspeeddial.FabSpeedDial;
+import io.reactivex.observers.DisposableCompletableObserver;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -86,33 +87,21 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
 
-        mViewGoalViewModel.getActions().observe(this, new Observer<List<Action>>() {
-            @Override
-            public void onChanged(@Nullable List<Action> actions) {
-                mRecyclerViewAdapter.setActions(actions);
+        mViewGoalViewModel.getActions().observe(this, actions -> mRecyclerViewAdapter.setActions(actions));
+
+        mViewGoalViewModel.getSubGoals().observe(this, goals -> {
+            mRecyclerViewAdapter.setSubGoals(goals);
+            if (goals != null) {
+                mSubGoalCount = goals.size();
             }
         });
 
-        mViewGoalViewModel.getSubGoals().observe(this, new Observer<List<Goal>>() {
-            @Override
-            public void onChanged(@Nullable List<Goal> goals) {
-                mRecyclerViewAdapter.setSubGoals(goals);
-                if (goals != null) {
-                    mSubGoalCount = goals.size();
-                }
-            }
-        });
-
-        mViewGoalViewModel.getGoalById(mParentGoalId).observe(this, new Observer<Goal>() {
-            @Override
-            public void onChanged(@Nullable Goal goal) {
-                mGoalInView = goal;
-                if (mGoalInView != null) {
-                    mGoalNameTxt.setText(goal.getGoalName());
-                    mGoalDescriptionTxt.setText(goal.getDescription());
-                    mGoalCompletionDateTxt.setText(goal.getCompletionDate());
-                }
-
+        mViewGoalViewModel.getGoalById(mParentGoalId).observe(this, goal -> {
+            mGoalInView = goal;
+            if (mGoalInView != null) {
+                mGoalNameTxt.setText(goal.getGoalName());
+                mGoalDescriptionTxt.setText(goal.getDescription());
+                mGoalCompletionDateTxt.setText(goal.getCompletionDate());
             }
         });
 
@@ -205,25 +194,41 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
                     Log.d(TAG, "onActivityResult: add");
                     Action action = (Action) data.getSerializableExtra(AddActionActivity.EXTRA_ACTION_TO_ADD);
                     Log.d(TAG, "onActivityResult: action: " +action.toString());
-                    mViewGoalViewModel.insertAction(action);
+                    mViewGoalViewModel.insertAction(action)
+                            .subscribe(
+                                    () -> Log.d(TAG, "insertAction onComplete: "),
+                                    (e) -> Log.e(TAG, "insertAction error: " + e.getMessage() )
+                            );
                     break;
                 }
                 case ADD_SUBGOAL_REQUEST_CODE : {
                     Goal goal = (Goal) data.getSerializableExtra(AddGoalActivity.EXTRA_GOAL_TO_ADD);
                     Log.d(TAG, "onActivityResult: goal: " + goal.toString());
-                    mViewGoalViewModel.insertSubGoal(goal);
+                    mViewGoalViewModel.insertSubGoal(goal)
+                            .subscribe(
+                                    () -> Log.d(TAG, "insertSubGoal onComplete: "),
+                                    (e) -> Log.e(TAG, "insertSubGoal: error" + e.getMessage() )
+                            );
                     break;
                 }
                 case EDIT_ACTION_REQUEST_CODE : {
                     Log.d(TAG, "onActivityResult: edit");
                     Action action = (Action) data.getSerializableExtra(AddActionActivity.EXTRA_ACTION_TO_EDIT);
-                    mViewGoalViewModel.editAction(action);
+                    mViewGoalViewModel.editAction(action)
+                            .subscribe(
+                                    () -> Log.d(TAG, "editAction onComplete: "),
+                                    (e) -> Log.e(TAG, "editAction: error" + e.getMessage() )
+                            );
                     break;
                 }
                 case EDIT_GOAL_REQUEST_CODE : {
                     Goal goal = (Goal) data.getSerializableExtra(AddGoalActivity.EXTRA_GOAL_TO_EDIT);
                     Log.d(TAG, "onActivityResult: new edited goal : " + goal);
-                    mViewGoalViewModel.editGoal(goal);
+                    mViewGoalViewModel.editGoal(goal)
+                            .subscribe(
+                                    () -> Log.d(TAG, "editGoal onComplete: "),
+                                    (e) -> Log.e(TAG, "editGoal: error" + e.getMessage() )
+                            );
                     break;
                 }
 
@@ -268,21 +273,10 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
     private void deleteGoalConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle("Delete Goal")
-                .setMessage("Are you sure you want to delete this goal? \n" + mGoalInView.getGoalName() + "\n This will remove all of its related actions")
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        deleteGoalAndActions();
-                    }
-                })
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                ;
+                .setMessage("Are you sure you want to delete this goal?\nThis will remove all of its related actions")
+                .setPositiveButton(android.R.string.yes, (dialog, which) -> deleteGoalAndActions())
+                .setNegativeButton(android.R.string.cancel, (dialog, which) -> {})
+                .setIcon(android.R.drawable.ic_dialog_alert);
         builder.show();
     }
 
@@ -309,11 +303,18 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
 
     @Override
     public void updateAction(Action action) {
-        mViewGoalViewModel.editAction(action);
+        mViewGoalViewModel.editAction(action).subscribe(
+                () -> Log.i(TAG, "updateAction: onCompelte()"),
+                (e) -> Log.e(TAG, "updateAction: error: " +e.getMessage())
+        );
     }
 
     @Override
     public void deleteAction(Action action) {
-        mViewGoalViewModel.deleteAction(action);
+        mViewGoalViewModel.deleteAction(action)
+                .subscribe(
+                        () -> Log.i(TAG, "deleteAction: onComplete()"),
+                        (e) -> Log.e(TAG, "deleteAction: error: " + e.getMessage())
+                );
     }
 }

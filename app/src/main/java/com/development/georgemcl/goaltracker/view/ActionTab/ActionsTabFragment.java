@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
@@ -24,6 +25,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.observers.DisposableCompletableObserver;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -83,12 +85,18 @@ public class ActionsTabFragment extends Fragment implements ViewGoalRecyclerView
             switch (requestCode) {
                 case EDIT_ACTION_REQUEST_CODE: {
                     Log.d(TAG, "onActivityResult: edit");
-                    Action action = (Action) data.getSerializableExtra(AddActionActivity.EXTRA_ACTION_TO_EDIT);
-                    mActionsTabViewModel.editAction(action);
+                    editAction((Action) data.getSerializableExtra(AddActionActivity.EXTRA_ACTION_TO_EDIT));
                     break;
                 }
             }
         }
+    }
+
+    private void editAction(Action updatedAction) {
+        mActionsTabViewModel.editAction(updatedAction)
+                .subscribe(() -> Toast.makeText(getContext(), "Action updated", Toast.LENGTH_SHORT).show()
+                , e -> Toast.makeText(getContext(), "Failed to update action. Please try again", Toast.LENGTH_SHORT).show());
+
     }
 
 
@@ -110,12 +118,16 @@ public class ActionsTabFragment extends Fragment implements ViewGoalRecyclerView
 
     @Override
     public void updateAction(Action action) {
-        mActionsTabViewModel.editAction(action);
+        mActionsTabViewModel.editAction(action)
+                .subscribe(
+                        () -> Toast.makeText(getContext(), "Action updated", Toast.LENGTH_SHORT).show(),
+                        e -> Toast.makeText(getContext(), "Failed to update action. Please try again", Toast.LENGTH_SHORT).show());
     }
 
     @Override
     public void deleteAction(Action action) {
-        mActionsTabViewModel.deleteAction(action);
-
+        mActionsTabViewModel.deleteAction(action).subscribe(
+                () -> Toast.makeText(getContext(), "Action deleted", Toast.LENGTH_SHORT).show(),
+                e -> Toast.makeText(getContext(), "Failed to delete action. Please try again", Toast.LENGTH_SHORT).show());
     }
 }

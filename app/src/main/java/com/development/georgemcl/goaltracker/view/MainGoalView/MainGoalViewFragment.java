@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,20 +62,12 @@ public class MainGoalViewFragment extends Fragment implements GoalRecyclerViewAd
         mGoalRecyclerView.setAdapter(mRecyclerViewAdapter);
         mGoalRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        mAddGoalFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), AddGoalActivity.class);
-                startActivityForResult(intent, ADD_GOAL_ACTIVITY_REQUEST_CODE);
-            }
+        mAddGoalFab.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), AddGoalActivity.class);
+            startActivityForResult(intent, ADD_GOAL_ACTIVITY_REQUEST_CODE);
         });
 
-        mMainGoalViewModel.getMainGoals().observe(this, new Observer<List<Goal>>() {
-            @Override
-            public void onChanged(@Nullable List<Goal> goals) {
-                mRecyclerViewAdapter.setGoals(goals);
-            }
-        });
+        mMainGoalViewModel.getMainGoals().observe(this, goals -> mRecyclerViewAdapter.setGoals(goals));
 
         return view;
     }
@@ -86,7 +79,11 @@ public class MainGoalViewFragment extends Fragment implements GoalRecyclerViewAd
 
         if (requestCode == ADD_GOAL_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK){
             Goal goal = (Goal) data.getSerializableExtra(AddGoalActivity.EXTRA_GOAL_TO_ADD);
-            mMainGoalViewModel.insert(goal);
+            mMainGoalViewModel.insert(goal)
+                    .subscribe(
+                            () -> Log.d(TAG, "insertGoal onComplete: "),
+                            (e) -> Log.e(TAG, "insertGoal: error" + e.getMessage() )
+                    );
         }
     }
 

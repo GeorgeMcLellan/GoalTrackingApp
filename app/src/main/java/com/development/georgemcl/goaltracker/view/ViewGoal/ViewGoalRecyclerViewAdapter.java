@@ -73,9 +73,6 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                 @Override
                 public void onClick(View v) {
                     mOnItemSelectedListener.onSubGoalSelected(goal.getId());
-//                    Intent intent = new Intent(mContext, ViewGoalActivity.class);
-//                    intent.putExtra(Constants.KEY_PARENT_GOAL_ID, goal.getId());
-//                    mContext.startActivity(intent);
                 }
             });
 
@@ -85,48 +82,32 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             final ActionViewHolder actionViewHolder = (ActionViewHolder) holder;
             actionViewHolder.populateFields(action);
 
-            actionViewHolder.doneImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    handleActionDoneSelected(action);
-                }
-            });
+            actionViewHolder.doneImageView.setOnClickListener(v -> handleActionDoneSelected(action));
 
-            actionViewHolder.parentLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mOnItemSelectedListener.onActionSelected(action.getId());
-                }
-            });
+            actionViewHolder.parentLayout.setOnClickListener(v -> mOnItemSelectedListener.onActionSelected(action.getId()));
 
-            actionViewHolder.optionsButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    PopupMenu popupMenu = new PopupMenu(mContext, actionViewHolder.optionsButton);
-                    popupMenu.inflate(R.menu.menu_action_options);
-                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            switch (item.getItemId()) {
-                                case R.id.action_edit_action: {
-                                    mOnItemSelectedListener.onActionEdit(action);
-                                    return true;
-                                }
-                                case R.id.action_delete_action: {
-                                    confirmDeleteAction(action);
-                                    return true;
-                                }
-                                case R.id.action_reset_progress: {
-                                    action.setRepeatProgressAmount(0);
-                                    mOnItemSelectedListener.updateAction(action);
-                                }
-                                default:
-                                    return false;
-                            }
+            actionViewHolder.optionsButton.setOnClickListener(v -> {
+                PopupMenu popupMenu = new PopupMenu(mContext, actionViewHolder.optionsButton);
+                popupMenu.inflate(R.menu.menu_action_options);
+                popupMenu.setOnMenuItemClickListener(item -> {
+                    switch (item.getItemId()) {
+                        case R.id.action_edit_action: {
+                            mOnItemSelectedListener.onActionEdit(action);
+                            return true;
                         }
-                    });
-                    popupMenu.show();
-                }
+                        case R.id.action_delete_action: {
+                            confirmDeleteAction(action);
+                            return true;
+                        }
+                        case R.id.action_reset_progress: {
+                            action.setRepeatProgressAmount(0);
+                            mOnItemSelectedListener.updateAction(action);
+                        }
+                        default:
+                            return false;
+                    }
+                });
+                popupMenu.show();
             });
         }
 
@@ -151,18 +132,8 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle("Delete action")
                 .setMessage("Are you sure you want to delete this action? \n " + action.getActionName())
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mOnItemSelectedListener.deleteAction(action);
-                    }
-                })
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                })
+                .setPositiveButton(android.R.string.yes, (dialog, which) -> mOnItemSelectedListener.deleteAction(action))
+                .setNegativeButton(android.R.string.cancel, (dialog, which) -> { })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 ;
         builder.show();

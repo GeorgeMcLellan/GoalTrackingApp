@@ -10,6 +10,10 @@ import com.development.georgemcl.goaltracker.model.Goal;
 
 import java.util.List;
 
+import io.reactivex.Completable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 /**
  * Clean API to access Goal Data. Mediator between different data sources.
  */
@@ -40,57 +44,22 @@ public class GoalRepository {
         return mGoalDao.getGoalById(id);
     }
 
-    public void insert(Goal goal) {
-        new insertAsyncTask(mGoalDao).execute(goal);
+    public Completable insert(Goal goal) {
+        return Completable.fromAction(() -> mGoalDao.insert(goal))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public void edit(Goal goal) { new EditAsyncTask(mGoalDao).execute(goal);}
-
-    public void delete(Goal goal) { new DeleteAsyncTask(mGoalDao).execute(goal);}
-
-
-    private static class insertAsyncTask extends AsyncTask<Goal, Void, Void> {
-
-        private GoalDao mAsyncTaskDao;
-
-        insertAsyncTask(GoalDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final Goal... params) {
-            mAsyncTaskDao.insert(params[0]);
-            return null;
-        }
+    public Completable edit(Goal goal) {
+        return Completable.fromAction(() -> mGoalDao.updateGoals(goal))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
-    private static class EditAsyncTask extends AsyncTask<Goal, Void, Void> {
-
-        private GoalDao mAsyncTaskDao;
-
-        EditAsyncTask(GoalDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final Goal... params) {
-            mAsyncTaskDao.updateGoals(params[0]);
-            return null;
-        }
+    public Completable delete(Goal goal) {
+        return Completable.fromAction(() -> mGoalDao.deleteGoals(goal))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
-    private static class DeleteAsyncTask extends AsyncTask<Goal, Void, Void> {
-
-        private GoalDao mAsyncTaskDao;
-
-        DeleteAsyncTask(GoalDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final Goal... params) {
-            mAsyncTaskDao.deleteGoals(params[0]);
-            return null;
-        }
-    }
 }

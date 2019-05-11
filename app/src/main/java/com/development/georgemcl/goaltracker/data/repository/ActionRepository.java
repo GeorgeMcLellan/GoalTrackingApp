@@ -2,7 +2,6 @@ package com.development.georgemcl.goaltracker.data.repository;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
-import android.os.AsyncTask;
 
 import com.development.georgemcl.goaltracker.data.db.ActionDao;
 import com.development.georgemcl.goaltracker.data.db.GoalRoomDatabase;
@@ -10,12 +9,18 @@ import com.development.georgemcl.goaltracker.model.Action;
 
 import java.util.List;
 
+import io.reactivex.Completable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
+
 /**
  * Clean API to access Action Data. Mediator between different data sources
  */
 public class ActionRepository {
     private ActionDao mActionDao;
     private LiveData<List<Action>> mAllActions;
+    private static final String TAG = "ActionRepository";
 
     public ActionRepository(Application application) {
         GoalRoomDatabase db = GoalRoomDatabase.getDatabase(application);
@@ -40,56 +45,21 @@ public class ActionRepository {
         return mActionDao.getActionsByRepeatTimePeriod(repeatTimePeriod);
     }
 
-    public void insert(Action action) {
-        new InsertAsyncTask(mActionDao).execute(action);
+    public Completable insert(final Action action) {
+        return Completable.fromAction(() -> mActionDao.insert(action))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public void edit(Action action) { new EditAsyncTask(mActionDao).execute(action);}
-
-    public void delete(Action action) { new DeleteAsyncTask(mActionDao).execute(action);}
-
-    private static class InsertAsyncTask extends AsyncTask<Action, Void, Void> {
-
-        private ActionDao mAsyncTaskDao;
-
-        InsertAsyncTask(ActionDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final Action... params) {
-            mAsyncTaskDao.insert(params[0]);
-            return null;
-        }
+    public Completable edit(final Action action) {
+        return Completable.fromAction(() -> mActionDao.updateActions(action))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
-    private static class EditAsyncTask extends AsyncTask<Action, Void, Void> {
-
-        private ActionDao mAsyncTaskDao;
-
-        EditAsyncTask(ActionDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final Action... params) {
-            mAsyncTaskDao.updateActions(params[0]);
-            return null;
-        }
-    }
-
-    private static class DeleteAsyncTask extends AsyncTask<Action, Void, Void> {
-
-        private ActionDao mAsyncTaskDao;
-
-        DeleteAsyncTask(ActionDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final Action... params) {
-            mAsyncTaskDao.deleteActions(params[0]);
-            return null;
-        }
+    public Completable delete(final Action action) {
+        return Completable.fromAction(() -> mActionDao.deleteActions(action))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }
