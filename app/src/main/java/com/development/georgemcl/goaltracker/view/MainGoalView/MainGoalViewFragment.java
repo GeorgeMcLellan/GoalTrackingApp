@@ -26,6 +26,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.disposables.CompositeDisposable;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -43,6 +44,8 @@ public class MainGoalViewFragment extends Fragment implements GoalRecyclerViewAd
 
     private GoalRecyclerViewAdapter mRecyclerViewAdapter;
     private MainGoalViewModel mMainGoalViewModel;
+
+    private CompositeDisposable disposables = new CompositeDisposable();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,6 +75,11 @@ public class MainGoalViewFragment extends Fragment implements GoalRecyclerViewAd
         return view;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        disposables.clear();
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -79,11 +87,11 @@ public class MainGoalViewFragment extends Fragment implements GoalRecyclerViewAd
 
         if (requestCode == ADD_GOAL_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK){
             Goal goal = (Goal) data.getSerializableExtra(AddGoalActivity.EXTRA_GOAL_TO_ADD);
-            mMainGoalViewModel.insert(goal)
+            disposables.add(mMainGoalViewModel.insert(goal)
                     .subscribe(
                             () -> Log.d(TAG, "insertGoal onComplete: "),
                             (e) -> Log.e(TAG, "insertGoal: error" + e.getMessage() )
-                    );
+                    ));
         }
     }
 

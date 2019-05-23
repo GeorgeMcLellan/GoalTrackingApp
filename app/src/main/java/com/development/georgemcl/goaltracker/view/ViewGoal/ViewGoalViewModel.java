@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Completable;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * ViewModel pattern for sub-goals and actions that fall under the selected goal (mParentGoalId)
@@ -27,6 +28,8 @@ public class ViewGoalViewModel extends AndroidViewModel {
     private LiveData<List<Action>> mActions;
     //The selected goal's goal id
     private int mParentGoalId;
+    private CompositeDisposable disposables = new CompositeDisposable();
+
 
     public ViewGoalViewModel (Application application) {
         super(application);
@@ -42,6 +45,12 @@ public class ViewGoalViewModel extends AndroidViewModel {
         mParentGoalId = parentGoalId;
         mSubGoals = mGoalRepository.getSubGoals(mParentGoalId);
         mActions = mActionRepository.getActions(mParentGoalId);
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        disposables.clear();
     }
 
     public LiveData<List<Goal>> getSubGoals() {
@@ -73,17 +82,17 @@ public class ViewGoalViewModel extends AndroidViewModel {
     public boolean deleteGoalAndActions (Goal goal) {
         if (mActions.getValue() != null) {
             for (Action action : mActions.getValue()) {
-                mActionRepository.delete(action)
-                .subscribe(
-                        () -> Log.i(TAG, "deleteAction onComplete: "),
-                        (e) -> Log.e(TAG, "deleteAction error: " + e.getMessage())
-                );
+                disposables.add(mActionRepository.delete(action)
+                        .subscribe(
+                                () -> Log.i(TAG, "deleteAction onComplete: "),
+                                (e) -> Log.e(TAG, "deleteAction error: " + e.getMessage())
+                        ));
             }
-            mGoalRepository.delete(goal)
+            disposables.add(mGoalRepository.delete(goal)
                     .subscribe(
                             () -> Log.i(TAG, "deleteGoal onComplete: "),
                             (e) -> Log.e(TAG, "deleteGoal error: " + e.getMessage())
-                    );
+                    ));
             return true;
         }
         return false;

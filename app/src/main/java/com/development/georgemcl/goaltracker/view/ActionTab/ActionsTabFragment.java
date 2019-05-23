@@ -25,6 +25,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableCompletableObserver;
 
 import static android.app.Activity.RESULT_OK;
@@ -41,6 +42,7 @@ public class ActionsTabFragment extends Fragment implements ViewGoalRecyclerView
     private String mActionTabCategory;
     private ActionTabViewModel mActionsTabViewModel;
     private ViewGoalRecyclerViewAdapter mRecyclerViewAdapter;
+    private CompositeDisposable disposables = new CompositeDisposable();
 
     @BindView(R.id.actions_tab_recycler_view)
     RecyclerView mRecyclerView;
@@ -79,6 +81,12 @@ public class ActionsTabFragment extends Fragment implements ViewGoalRecyclerView
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        disposables.clear();
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
@@ -93,9 +101,11 @@ public class ActionsTabFragment extends Fragment implements ViewGoalRecyclerView
     }
 
     private void editAction(Action updatedAction) {
-        mActionsTabViewModel.editAction(updatedAction)
-                .subscribe(() -> Toast.makeText(getContext(), "Action updated", Toast.LENGTH_SHORT).show()
-                , e -> Toast.makeText(getContext(), "Failed to update action. Please try again", Toast.LENGTH_SHORT).show());
+        disposables.add(mActionsTabViewModel.editAction(updatedAction)
+                .subscribe(
+                        () -> Toast.makeText(getContext(), "Action updated", Toast.LENGTH_SHORT).show(),
+                        (e) -> Toast.makeText(getContext(), "Failed to update action. Please try again", Toast.LENGTH_SHORT).show()
+                ));
 
     }
 
@@ -118,16 +128,19 @@ public class ActionsTabFragment extends Fragment implements ViewGoalRecyclerView
 
     @Override
     public void updateAction(Action action) {
-        mActionsTabViewModel.editAction(action)
+        disposables.add(mActionsTabViewModel.editAction(action)
                 .subscribe(
                         () -> Toast.makeText(getContext(), "Action updated", Toast.LENGTH_SHORT).show(),
-                        e -> Toast.makeText(getContext(), "Failed to update action. Please try again", Toast.LENGTH_SHORT).show());
+                        e -> Toast.makeText(getContext(), "Failed to update action. Please try again", Toast.LENGTH_SHORT).show()
+                ));
     }
 
     @Override
     public void deleteAction(Action action) {
-        mActionsTabViewModel.deleteAction(action).subscribe(
-                () -> Toast.makeText(getContext(), "Action deleted", Toast.LENGTH_SHORT).show(),
-                e -> Toast.makeText(getContext(), "Failed to delete action. Please try again", Toast.LENGTH_SHORT).show());
+        disposables.add(mActionsTabViewModel.deleteAction(action)
+                .subscribe(
+                        () -> Toast.makeText(getContext(), "Action deleted", Toast.LENGTH_SHORT).show(),
+                        e -> Toast.makeText(getContext(), "Failed to delete action. Please try again", Toast.LENGTH_SHORT).show()
+                ));
     }
 }
