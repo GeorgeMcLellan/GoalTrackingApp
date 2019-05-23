@@ -18,7 +18,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -216,11 +218,7 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
                 case EDIT_ACTION_REQUEST_CODE : {
                     Log.d(TAG, "onActivityResult: edit");
                     Action action = (Action) data.getSerializableExtra(AddActionActivity.EXTRA_ACTION_TO_EDIT);
-                    disposables.add(mViewGoalViewModel.editAction(action)
-                            .subscribe(
-                                    () -> Log.d(TAG, "editAction onComplete: "),
-                                    (e) -> Log.e(TAG, "editAction: error" + e.getMessage() )
-                            ));
+                    updateAction(action);
                     break;
                 }
                 case EDIT_GOAL_REQUEST_CODE : {

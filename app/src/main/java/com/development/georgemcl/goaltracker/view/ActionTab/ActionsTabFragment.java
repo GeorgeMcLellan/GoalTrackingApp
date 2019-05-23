@@ -1,6 +1,7 @@
 package com.development.georgemcl.goaltracker.view.ActionTab;
 
 
+import android.app.AlertDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -13,6 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.development.georgemcl.goaltracker.Constants;
@@ -93,22 +96,12 @@ public class ActionsTabFragment extends Fragment implements ViewGoalRecyclerView
             switch (requestCode) {
                 case EDIT_ACTION_REQUEST_CODE: {
                     Log.d(TAG, "onActivityResult: edit");
-                    editAction((Action) data.getSerializableExtra(AddActionActivity.EXTRA_ACTION_TO_EDIT));
+                    updateAction((Action) data.getSerializableExtra(AddActionActivity.EXTRA_ACTION_TO_EDIT));
                     break;
                 }
             }
         }
     }
-
-    private void editAction(Action updatedAction) {
-        disposables.add(mActionsTabViewModel.editAction(updatedAction)
-                .subscribe(
-                        () -> Toast.makeText(getContext(), "Action updated", Toast.LENGTH_SHORT).show(),
-                        (e) -> Toast.makeText(getContext(), "Failed to update action. Please try again", Toast.LENGTH_SHORT).show()
-                ));
-
-    }
-
 
     //RecyclerView listener
 

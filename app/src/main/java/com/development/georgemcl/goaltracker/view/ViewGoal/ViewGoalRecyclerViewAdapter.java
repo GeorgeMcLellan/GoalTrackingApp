@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -115,11 +116,29 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
     private void handleActionDoneSelected(final Action action) {
         if (action.isRepeatAction()) {
-            action.setRepeatProgressAmount(action.getRepeatProgressAmount() + AMOUNT_TO_INCREMEMNT);
-            mOnItemSelectedListener.updateAction(action);
-            if (action.getRepeatProgressAmount() >= action.getRepeatAmount()){
-                Toast.makeText(mContext, "Action completed, well done!", Toast.LENGTH_SHORT).show();
-            }
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext);
+            dialogBuilder.setTitle("Enter progress " + action.getRepeatUnitOfMeasurement());
+            EditText editText = new EditText(mContext);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT);
+            editText.setLayoutParams(lp);
+            dialogBuilder.setView(editText)
+                    .setPositiveButton("Ok", ((dialog, which) -> {
+                        try {
+                            action.setRepeatProgressAmount(action.getRepeatProgressAmount() + Integer.parseInt(editText.getText().toString()));
+                            if (action.getRepeatProgressAmount() >= action.getRepeatAmount()) {
+                                Toast.makeText(mContext, "Action completed, well done!", Toast.LENGTH_SHORT).show();
+                            }
+                            mOnItemSelectedListener.updateAction(action);
+
+                        } catch (NumberFormatException e) {
+                            Log.e(TAG, "askUserForActionProgress: " + e.getLocalizedMessage());
+                            Toast.makeText(mContext, "Invalid data entered", Toast.LENGTH_SHORT).show();
+                        }
+                    }))
+                    .setNegativeButton("Cancel", ((dialog, which) -> {}));
+            dialogBuilder.show();
         } else {
             ///Might want to rethink this
             Toast.makeText(mContext, "Action completed, well done!", Toast.LENGTH_SHORT).show();
@@ -146,12 +165,6 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
     public void setActions(List<Action> actions) {
         mActions = actions;
-        for (Action action : actions
-                ) {
-            Log.d(TAG, "setActions: " + action.getActionName());
-            Log.d(TAG, "setActions: " + action.getRepeatProgressAmount());
-
-        }
         notifyDataSetChanged();
     }
 

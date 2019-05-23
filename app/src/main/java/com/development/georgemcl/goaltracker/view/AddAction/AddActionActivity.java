@@ -56,14 +56,11 @@ public class AddActionActivity extends AppCompatActivity {
             mParentGoalId = getIntent().getIntExtra(Constants.KEY_PARENT_GOAL_ID, -1);
         }
 
-        mRepeatSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
-                    mRepeatLayout.setVisibility(View.VISIBLE);
-                }else {
-                    mRepeatLayout.setVisibility(View.INVISIBLE);
-                }
+        mRepeatSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked){
+                mRepeatLayout.setVisibility(View.VISIBLE);
+            }else {
+                mRepeatLayout.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -81,34 +78,31 @@ public class AddActionActivity extends AppCompatActivity {
             populateFields((Action) getIntent().getSerializableExtra(Constants.KEY_ACTION_TO_EDIT));
         }
 
-        mSubmitFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String actionName = mActionNameEt.getText().toString();
-                if (!actionName.isEmpty()) {
-                    Action action;
-                    if (mRepeatSwitch.isChecked()) {
-                        if (!mRepeatMeasurementEt.getText().toString().isEmpty()
-                                && Integer.parseInt(mRepeatMeasurementEt.getText().toString()) > 0) {
-                                    action = new Action(actionName, mParentGoalId,
-                                    Integer.parseInt(mRepeatMeasurementEt.getText().toString()),
-                                    mRepeatPerTimePeriodSpn.getSelectedItem().toString(),
-                                    mRepeatUnitOfMeasurementSpn.getSelectedItem().toString());
-                                addOrEditAction(action);
-                        }else {
-                            Toast.makeText(AddActionActivity.this, getString(R.string.invalid_repeat_amount), Toast.LENGTH_SHORT).show();
-                        }
+        mSubmitFab.setOnClickListener(v -> {
+            String actionName = mActionNameEt.getText().toString();
+            if (!actionName.isEmpty()) {
+                Action action;
+                if (mRepeatSwitch.isChecked()) {
+                    if (!mRepeatMeasurementEt.getText().toString().isEmpty()
+                            && Integer.parseInt(mRepeatMeasurementEt.getText().toString()) > 0) {
+                                action = new Action(actionName, mParentGoalId,
+                                Integer.parseInt(mRepeatMeasurementEt.getText().toString()),
+                                mRepeatPerTimePeriodSpn.getSelectedItem().toString(),
+                                mRepeatUnitOfMeasurementSpn.getSelectedItem().toString());
+                            addOrEditAction(action);
                     }else {
-                        action = new Action(actionName, mParentGoalId);
-                        addOrEditAction(action);
+                        Toast.makeText(AddActionActivity.this, getString(R.string.invalid_repeat_amount), Toast.LENGTH_SHORT).show();
                     }
-
-                }
-                else {
-                    Toast.makeText(AddActionActivity.this, getString(R.string.missing_name), Toast.LENGTH_SHORT).show();
+                }else {
+                    action = new Action(actionName, mParentGoalId);
+                    addOrEditAction(action);
                 }
 
             }
+            else {
+                Toast.makeText(AddActionActivity.this, getString(R.string.missing_name), Toast.LENGTH_SHORT).show();
+            }
+
         });
     }
 
