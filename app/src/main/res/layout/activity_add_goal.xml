@@ -32,14 +32,33 @@
         android:layout_marginTop="10dp"
         android:layout_gravity="center_horizontal"
         android:text="@string/to_achieve_by"/>
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/add_goal_date_textview"
-        android:hint="@string/date_hint"
-        android:inputType="date"
-        android:textSize="24sp"
-        android:textAlignment="center"/>
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/add_goal_date_textview"
+            android:hint="@string/date_hint"
+            android:inputType="date"
+            android:layout_centerInParent="true"
+            android:textSize="24sp"
+            android:textAlignment="center"/>
+
+        <ImageView
+            android:id="@+id/add_goal_date_clear"
+            android:visibility="invisible"
+            android:layout_toRightOf="@id/add_goal_date_textview"
+            android:layout_toEndOf="@id/add_goal_date_textview"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_centerInParent="true"
+            android:tint="@color/colorPrimary"
+            android:src="@android:drawable/ic_menu_close_clear_cancel" />
+
+    </RelativeLayout>
+
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/add_goal_submit_fab"
         android:layout_width="match_parent"

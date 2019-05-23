@@ -239,10 +239,12 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
 
     private void completeGoalConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
-                .setTitle("Complete Goal")
-                .setMessage("Has this goal been reached?\n" +
-                        "This will also remove all of its related actions")
-                .setPositiveButton(android.R.string.yes, (dialog, which) -> deleteGoalAndActions())
+                .setTitle("Goal Completed?")
+                .setMessage("This will also remove all of its related actions")
+                .setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                    Toast.makeText(getContext(), "Congratulations on achieving your goal!", Toast.LENGTH_SHORT).show();
+                    deleteGoalAndActions(false);
+                })
                 .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
 
                 })
@@ -250,10 +252,12 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
         builder.show();
     }
 
-    private void deleteGoalAndActions() {
+    private void deleteGoalAndActions(boolean showConfirmationToast) {
         boolean success = mViewGoalViewModel.deleteGoalAndActions(mGoalInView);
         if (success) {
-            Toast.makeText(getContext(), "Goal and Actions deleted", Toast.LENGTH_SHORT).show();
+            if (showConfirmationToast) {
+                Toast.makeText(getContext(), "Goal and Actions deleted", Toast.LENGTH_SHORT).show();
+            }
             getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
             getActivity().getSupportFragmentManager().popBackStack();
         } else {
@@ -266,7 +270,7 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle("Delete Goal")
                 .setMessage("Are you sure you want to delete this goal?\nThis will remove all of its related actions")
-                .setPositiveButton(android.R.string.yes, (dialog, which) -> deleteGoalAndActions())
+                .setPositiveButton(android.R.string.yes, (dialog, which) -> deleteGoalAndActions(true))
                 .setNegativeButton(android.R.string.cancel, (dialog, which) -> {})
                 .setIcon(android.R.drawable.ic_dialog_alert);
         builder.show();

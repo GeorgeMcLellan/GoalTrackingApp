@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +43,8 @@ public class AddGoalActivity extends AppCompatActivity {
     TextView mGoalDateTxt;
     @BindView(R.id.add_goal_submit_fab)
     FloatingActionButton mSubmitFab;
+    @BindView(R.id.add_goal_date_clear)
+    ImageView mClearDateImg;
     private int mParentGoalId;
 
     //If existing goal is being edited
@@ -63,54 +66,51 @@ public class AddGoalActivity extends AppCompatActivity {
             setGoalDateToEndOfYear();
         }
 
-        mGoalDateTxt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Calendar c = Calendar.getInstance();
-                int year = c.get(Calendar.YEAR);
-                int month = c.get(Calendar.MONTH);
-                final int day = c.get(Calendar.DAY_OF_MONTH);
-                DatePickerDialog datePickerDialog = new DatePickerDialog(AddGoalActivity.this,
-                        (new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        Calendar cal = new GregorianCalendar(year, month, dayOfMonth);
+        mGoalDateTxt.setOnClickListener(v -> {
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            final int day = c.get(Calendar.DAY_OF_MONTH);
+            DatePickerDialog datePickerDialog = new DatePickerDialog(AddGoalActivity.this,
+                    ((view, year1, month1, dayOfMonth) -> {
+                        Calendar cal = new GregorianCalendar(year1, month1, dayOfMonth);
                         mGoalDateTxt.setText(mSimpleDateFormat.format(cal.getTime()));
-                    }
-                }), year, month, day );
-                datePickerDialog.show();
-            }
-
+                        mClearDateImg.setVisibility(View.VISIBLE);
+                    }), year, month, day );
+            datePickerDialog.show();
         });
 
-        mSubmitFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String goalName = mGoalNameEt.getText().toString();
-                String description = mGoalDescriptionEt.getText().toString();
-                String dateToAchieve = mGoalDateTxt.getText().toString();
+        mClearDateImg.setOnClickListener(v -> {
+            mGoalDateTxt.setText("");
+            mClearDateImg.setVisibility(View.INVISIBLE);
+        });
+
+        mSubmitFab.setOnClickListener(v -> {
+            String goalName = mGoalNameEt.getText().toString();
+            String description = mGoalDescriptionEt.getText().toString();
+            String dateToAchieve = mGoalDateTxt.getText().toString();
 
 
-                if (!goalName.isEmpty()) {
-                    if (!dateToAchieve.isEmpty()){
-                        try {
-                            Date date = mSimpleDateFormat.parse((mGoalDateTxt.getText().toString()));
-                            Date todaysDate = Calendar.getInstance().getTime();
-                            if (date.getTime() > todaysDate.getTime()) {
-                                Goal goal = new Goal(goalName, description, dateToAchieve, mParentGoalId);
-                                addOrEditGoal(goal);
-                            } else {
-                                Toast.makeText(AddGoalActivity.this, getString(R.string.date_too_early), Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (ParseException e) {
-                            Toast.makeText(AddGoalActivity.this, getString(R.string.invalid_date), Toast.LENGTH_SHORT).show();
+            if (!goalName.isEmpty()) {
+                if (!dateToAchieve.isEmpty()){
+                    try {
+                        Date date = mSimpleDateFormat.parse((mGoalDateTxt.getText().toString()));
+                        Date todaysDate = Calendar.getInstance().getTime();
+                        if (date.getTime() > todaysDate.getTime()) {
+                            Goal goal = new Goal(goalName, description, dateToAchieve, mParentGoalId);
+                            addOrEditGoal(goal);
+                        } else {
+                            Toast.makeText(AddGoalActivity.this, getString(R.string.date_too_early), Toast.LENGTH_SHORT).show();
                         }
-                    } else {
-                        Toast.makeText(AddGoalActivity.this, getString(R.string.missing_date), Toast.LENGTH_SHORT).show();
+                    } catch (ParseException e) {
+                        Toast.makeText(AddGoalActivity.this, getString(R.string.invalid_date), Toast.LENGTH_SHORT).show();
                     }
-                } else{
-                    Toast.makeText(AddGoalActivity.this, getString(R.string.missing_name), Toast.LENGTH_SHORT).show();
+                } else {
+                    Goal goal = new Goal(goalName, description, "", mParentGoalId);
+                    addOrEditGoal(goal);
                 }
+            } else{
+                Toast.makeText(AddGoalActivity.this, getString(R.string.missing_name), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -120,6 +120,7 @@ public class AddGoalActivity extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         calendar.set(calendar.get(Calendar.YEAR), Calendar.DECEMBER, 31);
         mGoalDateTxt.setText(mSimpleDateFormat.format(calendar.getTime()));
+        mClearDateImg.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -144,12 +145,13 @@ public class AddGoalActivity extends AppCompatActivity {
 
 
     /**
-     * If editing an goal - populates fields with existing action data
+     * If editing a goal - populates fields with existing goal data
      */
     private void populateFields(Goal goal) {
         mGoalToEditId = goal.getId();
         mGoalNameEt.setText(goal.getGoalName());
         mGoalDateTxt.setText(goal.getCompletionDate());
         mGoalDescriptionEt.setText(goal.getDescription());
+        mClearDateImg.setVisibility(View.VISIBLE);
     }
 }
