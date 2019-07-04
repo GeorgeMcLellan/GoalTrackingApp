@@ -3,8 +3,11 @@ package com.development.georgemcl.goaltracker.view.AddGoal;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -41,14 +44,12 @@ public class AddGoalActivity extends AppCompatActivity {
     @BindView(R.id.add_goal_description_edittext) EditText mGoalDescriptionEt;
     @BindView(R.id.add_goal_date_textview)
     TextView mGoalDateTxt;
-    @BindView(R.id.add_goal_submit_fab)
-    FloatingActionButton mSubmitFab;
     @BindView(R.id.add_goal_date_clear)
     ImageView mClearDateImg;
     private int mParentGoalId;
 
     //If existing goal is being edited
-    private int mGoalToEditId;
+    private int mGoalToEditId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,14 +57,9 @@ public class AddGoalActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_goal);
         ButterKnife.bind(this);
 
+
         if (getIntent().hasExtra(Constants.KEY_PARENT_GOAL_ID)){
             mParentGoalId = getIntent().getIntExtra(Constants.KEY_PARENT_GOAL_ID, -1);
-        }
-
-        if (getIntent().hasExtra(Constants.KEY_GOAL_TO_EDIT)) {
-            populateFields((Goal) getIntent().getSerializableExtra(Constants.KEY_GOAL_TO_EDIT));
-        } else {
-            setGoalDateToEndOfYear();
         }
 
         mGoalDateTxt.setOnClickListener(v -> {
@@ -85,35 +81,79 @@ public class AddGoalActivity extends AppCompatActivity {
             mClearDateImg.setVisibility(View.INVISIBLE);
         });
 
-        mSubmitFab.setOnClickListener(v -> {
-            String goalName = mGoalNameEt.getText().toString();
-            String description = mGoalDescriptionEt.getText().toString();
-            String dateToAchieve = mGoalDateTxt.getText().toString();
+        if (getIntent().hasExtra(Constants.KEY_GOAL_TO_EDIT)) {
+            populateFields((Goal) getIntent().getSerializableExtra(Constants.KEY_GOAL_TO_EDIT));
+        } else {
+            setGoalDateToEndOfYear();
+        }
 
-
-            if (!goalName.isEmpty()) {
-                if (!dateToAchieve.isEmpty()){
-                    try {
-                        Date date = mSimpleDateFormat.parse((mGoalDateTxt.getText().toString()));
-                        Date todaysDate = Calendar.getInstance().getTime();
-                        if (date.getTime() > todaysDate.getTime()) {
-                            Goal goal = new Goal(goalName, description, dateToAchieve, mParentGoalId);
-                            addOrEditGoal(goal);
-                        } else {
-                            Toast.makeText(AddGoalActivity.this, getString(R.string.date_too_early), Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (ParseException e) {
-                        Toast.makeText(AddGoalActivity.this, getString(R.string.invalid_date), Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Goal goal = new Goal(goalName, description, "", mParentGoalId);
-                    addOrEditGoal(goal);
-                }
-            } else{
-                Toast.makeText(AddGoalActivity.this, getString(R.string.missing_name), Toast.LENGTH_SHORT).show();
+        ActionBar actionbar = getSupportActionBar();
+        if (actionbar != null) {
+            actionbar.setDisplayHomeAsUpEnabled(true);
+            String title;
+            if (isEditingGoal()) {
+                title = "Edit Goal";
+            } else {
+                title = "Add Goal";
             }
-        });
+            actionbar.setTitle(title);
+            actionbar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (isEditingGoal()) {
+            getMenuInflater().inflate(R.menu.menu_action_bar_save, menu);
+        } else {
+            getMenuInflater().inflate(R.menu.menu_action_bar_add, menu);
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_action_bar_add_add ||
+                item.getItemId() == R.id.menu_action_bar_save_save) {
+            validateGoalData();
+            return true;
+        } else if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isEditingGoal() {
+        return mGoalToEditId != -1;
+    }
+    private void validateGoalData() {
+        String goalName = mGoalNameEt.getText().toString();
+        String description = mGoalDescriptionEt.getText().toString();
+        String dateToAchieve = mGoalDateTxt.getText().toString();
+
+
+        if (!goalName.isEmpty()) {
+            if (!dateToAchieve.isEmpty()){
+                try {
+                    Date date = mSimpleDateFormat.parse((mGoalDateTxt.getText().toString()));
+                    Date todaysDate = Calendar.getInstance().getTime();
+                    if (date.getTime() > todaysDate.getTime()) {
+                        Goal goal = new Goal(goalName, description, dateToAchieve, mParentGoalId);
+                        addOrEditGoal(goal);
+                    } else {
+                        Toast.makeText(AddGoalActivity.this, getString(R.string.date_too_early), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (ParseException e) {
+                    Toast.makeText(AddGoalActivity.this, getString(R.string.invalid_date), Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Goal goal = new Goal(goalName, description, "", mParentGoalId);
+                addOrEditGoal(goal);
+            }
+        } else{
+            Toast.makeText(AddGoalActivity.this, getString(R.string.missing_name), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void setGoalDateToEndOfYear() {
@@ -131,7 +171,7 @@ public class AddGoalActivity extends AppCompatActivity {
     private void addOrEditGoal(Goal goal) {
 
         Intent replyIntent = new Intent();
-        if (getIntent().hasExtra(Constants.KEY_GOAL_TO_EDIT)){
+        if (isEditingGoal()){
             goal.setId(mGoalToEditId);
             replyIntent.putExtra(EXTRA_GOAL_TO_EDIT, goal);
         } else {

@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -119,6 +121,8 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext);
             dialogBuilder.setTitle("Enter progress " + action.getRepeatUnitOfMeasurement());
             EditText editText = new EditText(mContext);
+            editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+            editText.setGravity(Gravity.CENTER);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.MATCH_PARENT);

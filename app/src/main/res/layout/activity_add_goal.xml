@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".view.AddGoal.AddGoalActivity">
+    tools:context=".view.AddGoal.AddGoalActivity"
+    android:padding="40dp">
 
     <EditText
         android:id="@+id/add_goal_name_edittext"
@@ -40,7 +41,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/add_goal_date_textview"
             android:hint="@string/date_hint"
-            android:inputType="date"
             android:layout_centerInParent="true"
             android:textSize="24sp"
             android:textAlignment="center"/>
@@ -54,22 +54,9 @@
             android:layout_height="25dp"
             android:layout_centerInParent="true"
             android:tint="@color/colorPrimary"
-            android:src="@android:drawable/ic_menu_close_clear_cancel" />
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:contentDescription="@string/goal_date_clear_button_content_description" />
 
     </RelativeLayout>
-
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/add_goal_submit_fab"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:layout_gravity="right"
-        android:layout_marginRight="5dp"
-        app:fabSize="mini"
-        app:srcCompat="@drawable/baseline_done_24"
-        android:focusable="true"
-        android:layout_marginEnd="5dp" />
-
 
 </LinearLayout>

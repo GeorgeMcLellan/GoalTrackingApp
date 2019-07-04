@@ -2,9 +2,12 @@ package com.development.georgemcl.goaltracker.view.AddAction;
 
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
@@ -37,11 +40,10 @@ public class AddActionActivity extends AppCompatActivity {
     @BindView(R.id.add_action_repeat_per_time_period_spinner) Spinner mRepeatPerTimePeriodSpn;
     @BindView(R.id.add_action_repeat_unit_of_measurement_spinner) Spinner mRepeatUnitOfMeasurementSpn;
     @BindView(R.id.add_action_repeat_measurement_edittext) EditText mRepeatMeasurementEt;
-    @BindView(R.id.add_action_submit_fab) FloatingActionButton mSubmitFab;
 
     private int mParentGoalId;
     //If existing action is being edited
-    private int mActionToEditId;
+    private int mActionToEditId = -1;
 
     private ArrayAdapter<String> mRepeatPerTimePeriodAdapter;
     private ArrayAdapter<String> mRepeatUnitOfMeasurementAdapter;
@@ -52,9 +54,6 @@ public class AddActionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_action);
         ButterKnife.bind(this);
 
-        if (getIntent().hasExtra(Constants.KEY_PARENT_GOAL_ID)){
-            mParentGoalId = getIntent().getIntExtra(Constants.KEY_PARENT_GOAL_ID, -1);
-        }
 
         mRepeatSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked){
@@ -74,36 +73,80 @@ public class AddActionActivity extends AppCompatActivity {
                 getResources().getStringArray(R.array.repeat_units_of_measurements));
         mRepeatUnitOfMeasurementSpn.setAdapter(mRepeatUnitOfMeasurementAdapter);
 
+        if (getIntent().hasExtra(Constants.KEY_PARENT_GOAL_ID)){
+            mParentGoalId = getIntent().getIntExtra(Constants.KEY_PARENT_GOAL_ID, -1);
+        }
+
         if (getIntent().hasExtra(Constants.KEY_ACTION_TO_EDIT)) {
             populateFields((Action) getIntent().getSerializableExtra(Constants.KEY_ACTION_TO_EDIT));
         }
 
-        mSubmitFab.setOnClickListener(v -> {
-            String actionName = mActionNameEt.getText().toString();
-            if (!actionName.isEmpty()) {
-                Action action;
-                if (mRepeatSwitch.isChecked()) {
-                    if (!mRepeatMeasurementEt.getText().toString().isEmpty()
-                            && Integer.parseInt(mRepeatMeasurementEt.getText().toString()) > 0) {
-                                action = new Action(actionName, mParentGoalId,
-                                Integer.parseInt(mRepeatMeasurementEt.getText().toString()),
-                                mRepeatPerTimePeriodSpn.getSelectedItem().toString(),
-                                mRepeatUnitOfMeasurementSpn.getSelectedItem().toString());
-                            addOrEditAction(action);
-                    }else {
-                        Toast.makeText(AddActionActivity.this, getString(R.string.invalid_repeat_amount), Toast.LENGTH_SHORT).show();
-                    }
-                }else {
-                    action = new Action(actionName, mParentGoalId);
+        ActionBar actionbar = getSupportActionBar();
+        if (actionbar != null) {
+            actionbar.setDisplayHomeAsUpEnabled(true);
+            String title;
+            if (isEditingAction()) {
+                title = "Edit Action";
+            } else {
+                title = "Add Action";
+            }
+            actionbar.setTitle(title);
+            actionbar.setDisplayHomeAsUpEnabled(true);
+        }
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (getIntent().hasExtra(Constants.KEY_ACTION_TO_EDIT)) {
+            getMenuInflater().inflate(R.menu.menu_action_bar_save, menu);
+        } else {
+            getMenuInflater().inflate(R.menu.menu_action_bar_add, menu);
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_action_bar_add_add ||
+                item.getItemId() == R.id.menu_action_bar_save_save) {
+            validateActionData();
+            return true;
+        } else if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return false;
+    }
+
+    private void validateActionData(){
+        String actionName = mActionNameEt.getText().toString();
+        if (!actionName.isEmpty()) {
+            Action action;
+            if (mRepeatSwitch.isChecked()) {
+                if (!mRepeatMeasurementEt.getText().toString().isEmpty()
+                        && Integer.parseInt(mRepeatMeasurementEt.getText().toString()) > 0) {
+                    action = new Action(actionName, mParentGoalId,
+                            Integer.parseInt(mRepeatMeasurementEt.getText().toString()),
+                            mRepeatPerTimePeriodSpn.getSelectedItem().toString(),
+                            mRepeatUnitOfMeasurementSpn.getSelectedItem().toString());
                     addOrEditAction(action);
+                }else {
+                    Toast.makeText(AddActionActivity.this, getString(R.string.invalid_repeat_amount), Toast.LENGTH_SHORT).show();
                 }
-
+            }else {
+                action = new Action(actionName, mParentGoalId);
+                addOrEditAction(action);
             }
-            else {
-                Toast.makeText(AddActionActivity.this, getString(R.string.missing_name), Toast.LENGTH_SHORT).show();
-            }
 
-        });
+        }
+        else {
+            Toast.makeText(AddActionActivity.this, getString(R.string.missing_name), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean isEditingAction() {
+        return mActionToEditId != -1;
     }
 
     /**
@@ -113,7 +156,7 @@ public class AddActionActivity extends AppCompatActivity {
      */
     private void addOrEditAction(Action action) {
         Intent replyIntent = new Intent();
-        if (getIntent().hasExtra(Constants.KEY_ACTION_TO_EDIT)){
+        if (isEditingAction()){
             action.setId(mActionToEditId);
             replyIntent.putExtra(EXTRA_ACTION_TO_EDIT, action);
         } else {

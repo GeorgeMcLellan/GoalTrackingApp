@@ -23,6 +23,10 @@
     <string name="per_week">per week</string>
     <string name="per_month">per month</string>
 
+    <string name="goal_date_clear_button_content_description">Clear goal date</string>
+    <string name="save_button_title">save</string>
+    <string name="add_button_title">add</string>
+
     //Add goal error messages
     <string name="date_too_early">Date must be after today\'s date</string>
     <string name="invalid_date">Invalid date</string>
