@@ -19,6 +19,7 @@
             app:srcCompat="@drawable/baseline_done_24"
             android:layout_marginStart="5dp"
             android:id="@+id/view_goal_compelete_imageview"
+            android:background="?android:attr/selectableItemBackground"
             android:contentDescription="@string/done"
             android:layout_marginLeft="5dp" />
         <LinearLayout

@@ -1,6 +1,7 @@
 package com.development.georgemcl.goaltracker.view.MainGoalView;
 
 
+import android.app.ActionBar;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -50,16 +51,22 @@ public class MainGoalViewFragment extends Fragment implements GoalRecyclerViewAd
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main_goal_view, container, false);
         ButterKnife.bind(this, view);
 
+        ActionBar actionbar = getActivity().getActionBar();
+        if (actionbar != null) {
+            actionbar.setTitle("Actions");
+        }
+
         mMainGoalViewModel = ViewModelProviders.of(this).get(MainGoalViewModel.class);
 
-        //Only show the back button if a goal is selected, not in the main goal view
-        if (getActivity() instanceof MainActivity){
-            ((MainActivity) getActivity()).showBackButton(false);
+        MainActivity activity = ((MainActivity) getActivity());
+        if (activity != null) {
+            activity.setActionBarTitle("Goals");
+            activity.showBackButton(false);
         }
+
 
         mRecyclerViewAdapter = new GoalRecyclerViewAdapter(getContext(), this);
         mGoalRecyclerView.setAdapter(mRecyclerViewAdapter);

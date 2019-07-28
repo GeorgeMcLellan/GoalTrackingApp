@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -58,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        getSupportActionBar().setTitle("");
         mNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         //start the MainGoalViewFragment by default
         replaceFragment(new MainGoalViewFragment());
@@ -77,5 +80,12 @@ public class MainActivity extends AppCompatActivity {
      */
     public void replaceFragment(Fragment fragment){
         getSupportFragmentManager().beginTransaction().replace(R.id.main_activity_fragment_container, fragment).addToBackStack(null).commit();
+    }
+
+    public void setActionBarTitle(String title) {
+        ActionBar actionbar = getSupportActionBar();
+        if (actionbar != null) {
+            actionbar.setTitle(title);
+        }
     }
 }

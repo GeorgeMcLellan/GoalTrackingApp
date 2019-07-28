@@ -31,6 +31,7 @@ import com.development.georgemcl.goaltracker.model.Action;
 import com.development.georgemcl.goaltracker.model.Goal;
 import com.development.georgemcl.goaltracker.view.AddAction.AddActionActivity;
 import com.development.georgemcl.goaltracker.view.AddGoal.AddGoalActivity;
+import com.development.georgemcl.goaltracker.view.MainActivity.MainActivity;
 
 import java.util.List;
 
@@ -83,6 +84,12 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
             mParentGoalId = getArguments().getInt(Constants.KEY_PARENT_GOAL_ID);
         }
 
+        MainActivity activity = ((MainActivity) getActivity());
+        if (activity != null) {
+            activity.setActionBarTitle("");
+            activity.showBackButton(true);
+        }
+
         mViewGoalViewModel = ViewModelProviders.of(this).get(ViewGoalViewModel.class);
 
         mViewGoalViewModel.populateLists(mParentGoalId);
@@ -90,7 +97,6 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
         mRecyclerViewAdapter = new ViewGoalRecyclerViewAdapter(getContext(), this);
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
 
         mViewGoalViewModel.getActions().observe(this, actions -> mRecyclerViewAdapter.setActions(actions));
 

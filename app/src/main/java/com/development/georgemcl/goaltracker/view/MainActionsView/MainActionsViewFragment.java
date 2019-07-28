@@ -1,6 +1,7 @@
 package com.development.georgemcl.goaltracker.view.MainActionsView;
 
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -45,8 +46,10 @@ public class MainActionsViewFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main_actions_view, container, false);
         ButterKnife.bind(this, view);
 
-        if (getActivity() instanceof MainActivity){
-            ((MainActivity) getActivity()).showBackButton(false);
+        MainActivity activity = ((MainActivity) getActivity());
+        if (activity != null) {
+            activity.setActionBarTitle("Actions");
+            activity.showBackButton(false);
         }
 
 
