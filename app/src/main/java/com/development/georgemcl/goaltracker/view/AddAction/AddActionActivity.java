@@ -1,5 +1,6 @@
 package com.development.georgemcl.goaltracker.view.AddAction;
 
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
@@ -9,17 +10,22 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.model.Action;
+
+import java.text.ParseException;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,6 +53,7 @@ public class AddActionActivity extends AppCompatActivity {
 
     private ArrayAdapter<String> mRepeatPerTimePeriodAdapter;
     private ArrayAdapter<String> mRepeatUnitOfMeasurementAdapter;
+    private int mRepeatTimeMinutes = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +80,29 @@ public class AddActionActivity extends AppCompatActivity {
                 getResources().getStringArray(R.array.repeat_units_of_measurements));
         mRepeatUnitOfMeasurementSpn.setAdapter(mRepeatUnitOfMeasurementAdapter);
 
+//        mRepeatUnitOfMeasurementSpn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                mRepeatMeasurementEt.setText("");
+//                mRepeatTimeMinutes = -1;
+//            }
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) { }
+//        });
+
+        mRepeatMeasurementEt.setOnClickListener(v -> {
+            if (mRepeatUnitOfMeasurementSpn.getSelectedItem().toString().equals(getString(R.string.repeat_hours_minutes))) {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(AddActionActivity.this, android.R.style.Theme_Holo_Light_Dialog,
+                        (view, hourOfDay, minute) -> {
+                            setRepeatTime(hourOfDay, minute);
+                        }, 0, 0, true);
+                timePickerDialog.show();
+                if (mRepeatTimeMinutes > 0) {
+                    timePickerDialog.updateTime(mRepeatTimeMinutes / 60, mRepeatTimeMinutes % 60);
+                }
+            }
+        });
+
         if (getIntent().hasExtra(Constants.KEY_PARENT_GOAL_ID)){
             mParentGoalId = getIntent().getIntExtra(Constants.KEY_PARENT_GOAL_ID, -1);
         }
@@ -94,6 +124,13 @@ public class AddActionActivity extends AppCompatActivity {
             actionbar.setDisplayHomeAsUpEnabled(true);
         }
 
+    }
+
+    private void setRepeatTime(int hours, int minutes) {
+        Log.d(TAG, "setRepeatTime: ");
+        String timeString = hours + "h " + minutes + "m";
+        mRepeatMeasurementEt.setText(timeString);
+        mRepeatTimeMinutes = (hours * 60) + minutes;
     }
 
     @Override
@@ -124,14 +161,23 @@ public class AddActionActivity extends AppCompatActivity {
         if (!actionName.isEmpty()) {
             Action action;
             if (mRepeatSwitch.isChecked()) {
-                if (!mRepeatMeasurementEt.getText().toString().isEmpty()
-                        && Integer.parseInt(mRepeatMeasurementEt.getText().toString()) > 0) {
-                    action = new Action(actionName, mParentGoalId,
-                            Integer.parseInt(mRepeatMeasurementEt.getText().toString()),
-                            mRepeatPerTimePeriodSpn.getSelectedItem().toString(),
-                            mRepeatUnitOfMeasurementSpn.getSelectedItem().toString());
-                    addOrEditAction(action);
-                }else {
+                try {
+                    if (!mRepeatMeasurementEt.getText().toString().isEmpty()
+                            && ( mRepeatTimeMinutes > 0 || Integer.parseInt(mRepeatMeasurementEt.getText().toString()) > 0)){
+                        int repeatAmount;
+                        if (mRepeatTimeMinutes != -1) {
+                            repeatAmount = mRepeatTimeMinutes;
+                        } else {
+                            repeatAmount = Integer.parseInt(mRepeatMeasurementEt.getText().toString());
+                        }
+                        action = new Action(actionName, mParentGoalId, repeatAmount,
+                                mRepeatPerTimePeriodSpn.getSelectedItem().toString(),
+                                mRepeatUnitOfMeasurementSpn.getSelectedItem().toString());
+                        addOrEditAction(action);
+                    }else {
+                        Toast.makeText(AddActionActivity.this, getString(R.string.invalid_repeat_amount), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (NumberFormatException e) {
                     Toast.makeText(AddActionActivity.this, getString(R.string.invalid_repeat_amount), Toast.LENGTH_SHORT).show();
                 }
             }else {
@@ -175,9 +221,15 @@ public class AddActionActivity extends AppCompatActivity {
         mActionToEditId = action.getId();
         if (action.isRepeatAction()) {
             mRepeatSwitch.setChecked(true);
-            mRepeatMeasurementEt.setText(String.valueOf(action.getRepeatAmount()));
             mRepeatPerTimePeriodSpn.setSelection(mRepeatPerTimePeriodAdapter.getPosition(action.getRepeatTimePeriod()));
             mRepeatUnitOfMeasurementSpn.setSelection(mRepeatUnitOfMeasurementAdapter.getPosition(action.getRepeatUnitOfMeasurement()));
+            if (action.getRepeatUnitOfMeasurement().equals(getString(R.string.repeat_hours_minutes))) {
+                int repeatAmount = action.getRepeatAmount();
+                setRepeatTime(repeatAmount / 60, repeatAmount % 60);
+            } else {
+                mRepeatMeasurementEt.setText(String.valueOf(action.getRepeatAmount()));
+            }
+
         }
     }
 }

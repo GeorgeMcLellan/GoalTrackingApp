@@ -1,6 +1,7 @@
 package com.development.georgemcl.goaltracker.view.ViewGoal;
 
 import android.app.AlertDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
@@ -118,37 +119,51 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
     private void handleActionDoneSelected(final Action action) {
         if (action.isRepeatAction()) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext);
-            dialogBuilder.setTitle("Enter progress " + action.getRepeatUnitOfMeasurement());
-            EditText editText = new EditText(mContext);
-            editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-            editText.setGravity(Gravity.CENTER);
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT);
-            editText.setLayoutParams(lp);
-            dialogBuilder.setView(editText)
-                    .setPositiveButton("Ok", ((dialog, which) -> {
-                        try {
-                            action.setRepeatProgressAmount(action.getRepeatProgressAmount() + Integer.parseInt(editText.getText().toString()));
-                            if (action.getRepeatProgressAmount() >= action.getRepeatAmount()) {
-                                Toast.makeText(mContext, "Action completed, well done!", Toast.LENGTH_SHORT).show();
-                            }
-                            mOnItemSelectedListener.updateAction(action);
+            if (action.getRepeatUnitOfMeasurement().equals(mContext.getString(R.string.repeat_times))) {
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext);
+                dialogBuilder.setTitle("Enter progress " + action.getRepeatUnitOfMeasurement());
+                EditText editText = new EditText(mContext);
+                editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                editText.setGravity(Gravity.CENTER);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT);
+                editText.setLayoutParams(lp);
+                dialogBuilder.setView(editText)
+                        .setPositiveButton("Ok", ((dialog, which) -> {
+                            try {
+                                int progress = Integer.parseInt(editText.getText().toString());
+                                updateActionProgress(action, progress);
 
-                        } catch (NumberFormatException e) {
-                            Log.e(TAG, "askUserForActionProgress: " + e.getLocalizedMessage());
-                            Toast.makeText(mContext, "Invalid data entered", Toast.LENGTH_SHORT).show();
-                        }
-                    }))
-                    .setNegativeButton("Cancel", ((dialog, which) -> {}));
-            dialogBuilder.show();
+                            } catch (NumberFormatException e) {
+                                Log.e(TAG, "askUserForActionProgress: " + e.getLocalizedMessage());
+                                Toast.makeText(mContext, "Invalid data entered", Toast.LENGTH_SHORT).show();
+                            }
+                        }))
+                        .setNegativeButton("Cancel", ((dialog, which) -> { }));
+                dialogBuilder.show();
+            } else {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(mContext, android.R.style.Theme_Holo_Light_Dialog,
+                        (view, hourOfDay, minute) -> {
+                            int totalMinutes = (hourOfDay * 60) + minute;
+                            updateActionProgress(action, totalMinutes);
+                        }, 0, 0, true);
+                timePickerDialog.show();
+            }
         } else {
             ///Might want to rethink this
             Toast.makeText(mContext, "Action completed, well done!", Toast.LENGTH_SHORT).show();
             mOnItemSelectedListener.deleteAction(action);
         }
 
+    }
+
+    private void updateActionProgress(Action action, int progress) {
+        action.setRepeatProgressAmount(action.getRepeatProgressAmount() + progress);
+        if (action.getRepeatProgressAmount() >= action.getRepeatAmount()) {
+            Toast.makeText(mContext, "Action completed, well done!", Toast.LENGTH_SHORT).show();
+        }
+        mOnItemSelectedListener.updateAction(action);
     }
 
     private void confirmDeleteAction(final Action action) {
@@ -219,25 +234,32 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             if (action.isRepeatAction()) {
                 repeatLayout.setVisibility(View.VISIBLE);
                 completionProgressBar.setProgress(calculateProgress(action.getRepeatProgressAmount(), action.getRepeatAmount()));
-                String repeatString = String.valueOf(action.getRepeatAmount()) + " ";
-                String unitOfMeasure = action.getRepeatUnitOfMeasurement();
-                //chop off the last 4 characters " (s)"
-                repeatString += (unitOfMeasure.substring(0, unitOfMeasure.length() - 3));
-                //only append with an 's' if it requires a plural
-                if (action.getRepeatAmount() > 1) {
-                    repeatString += "s ";
-                 } else{
-                    repeatString += " ";
+                StringBuilder repeatString = new StringBuilder();
+                if (action.getRepeatUnitOfMeasurement().equals("time(s)")) {
+                    repeatString.append(action.getRepeatAmount()).append(" ");
+                    repeatString.append("time");
+                    //only append with an 's' if it requires a plural
+                    if (action.getRepeatAmount() > 1) {
+                        repeatString.append("s ");
+                    } else{
+                        repeatString.append(" ");
+                    }
+
+                } else {
+                    int totalTime = action.getRepeatAmount();
+                    int hours = totalTime / 60;
+                    int minutes = totalTime % 60;
+                    repeatString.append(hours).append("h ");
+                    repeatString.append(minutes).append("m ");
                 }
-                repeatString += action.getRepeatTimePeriod();
+
+                repeatString.append(action.getRepeatTimePeriod());
                 repeatTxt.setText(repeatString);
                 doneImageView.setImageResource(android.R.drawable.ic_input_add);
-
             } else {
                 doneImageView.setImageResource(R.drawable.baseline_done_24);
                 repeatLayout.setVisibility(View.GONE);
             }
-
         }
     }
 

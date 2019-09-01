@@ -40,10 +40,12 @@
     <string name="date_hint">Select Date</string>
     <string name="to_achieve_by">To Achieve By</string>
 
+    <string name="repeat_times">times(s)</string>
+    <string name="repeat_hours_minutes">hours:minutes</string>
     <array name="repeat_units_of_measurements">
-        <item>time(s)</item>
-        <item>hour(s)</item>
-        <item>minute(s)</item>
+        <item>@string/repeat_times</item>
+        <item>@string/repeat_hours_minutes</item>
+        <!--<item>day(s)</item>-->
     </array>
     <array name="repeat_time_periods">
         <item>per day</item>

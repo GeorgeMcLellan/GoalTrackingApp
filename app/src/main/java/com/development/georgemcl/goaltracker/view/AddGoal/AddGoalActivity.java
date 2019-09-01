@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,7 +38,7 @@ public class AddGoalActivity extends AppCompatActivity {
     public static final String EXTRA_GOAL_TO_ADD  = "GOAL_TO_ADD";
     public static final String EXTRA_GOAL_TO_EDIT  = "GOAL_TO_EDIT";
 
-    SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("dd MMMM yyyy");
 
     @BindView(R.id.add_goal_name_edittext)
     EditText mGoalNameEt;
@@ -131,8 +132,6 @@ public class AddGoalActivity extends AppCompatActivity {
         String goalName = mGoalNameEt.getText().toString();
         String description = mGoalDescriptionEt.getText().toString();
         String dateToAchieve = mGoalDateTxt.getText().toString();
-
-
         if (!goalName.isEmpty()) {
             if (!dateToAchieve.isEmpty()){
                 try {
@@ -188,9 +187,15 @@ public class AddGoalActivity extends AppCompatActivity {
      * If editing a goal - populates fields with existing goal data
      */
     private void populateFields(Goal goal) {
+        Log.d(TAG, "populateFields: " + goal);
         mGoalToEditId = goal.getId();
         mGoalNameEt.setText(goal.getGoalName());
         mGoalDateTxt.setText(goal.getCompletionDate());
+        if (goal.getCompletionDate().isEmpty()) {
+            mClearDateImg.setVisibility(View.INVISIBLE);
+        } else {
+            mClearDateImg.setVisibility(View.VISIBLE);
+        }
         mGoalDescriptionEt.setText(goal.getDescription());
         mClearDateImg.setVisibility(View.VISIBLE);
     }

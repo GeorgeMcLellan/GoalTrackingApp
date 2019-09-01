@@ -52,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:layout_width="150dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/add_goal_date_textview"
             android:hint="@string/date_hint"
@@ -62,16 +62,19 @@
 
         <ImageView
             android:id="@+id/add_goal_date_clear"
-            android:visibility="invisible"
+            android:visibility="visible"
             android:layout_toRightOf="@id/add_goal_date_textview"
             android:layout_toEndOf="@id/add_goal_date_textview"
             android:layout_width="25dp"
             android:layout_height="25dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:layout_centerInParent="true"
             android:tint="@color/colorPrimary"
             android:src="@android:drawable/ic_menu_close_clear_cancel"
             android:background="?android:attr/selectableItemBackground"
-            android:contentDescription="@string/goal_date_clear_button_content_description" />
+            android:contentDescription="@string/goal_date_clear_button_content_description"
+           />
 
     </RelativeLayout>
 
