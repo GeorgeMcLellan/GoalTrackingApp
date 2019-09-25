@@ -112,7 +112,17 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
             if (mGoalInView != null) {
                 mGoalNameTxt.setText(goal.getGoalName());
                 mGoalDescriptionTxt.setText(goal.getDescription());
+                if (goal.getDescription().isEmpty()) {
+                    mGoalDescriptionTxt.setVisibility(View.GONE);
+                } else {
+                    mGoalDescriptionTxt.setVisibility(View.VISIBLE);
+                }
                 mGoalCompletionDateTxt.setText(goal.getCompletionDate());
+                if (goal.getCompletionDate().isEmpty()) {
+                    mGoalCompletionDateTxt.setVisibility(View.GONE);
+                } else {
+                    mGoalCompletionDateTxt.setVisibility(View.VISIBLE);
+                }
             }
         });
 

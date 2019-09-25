@@ -55,6 +55,8 @@ public class AddActionActivity extends AppCompatActivity {
     private ArrayAdapter<String> mRepeatUnitOfMeasurementAdapter;
     private int mRepeatTimeMinutes = -1;
 
+    private Boolean dontResetMeasurementFlag = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,36 +82,36 @@ public class AddActionActivity extends AppCompatActivity {
                 getResources().getStringArray(R.array.repeat_units_of_measurements));
         mRepeatUnitOfMeasurementSpn.setAdapter(mRepeatUnitOfMeasurementAdapter);
 
-//        mRepeatUnitOfMeasurementSpn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                mRepeatMeasurementEt.setText("");
-//                mRepeatTimeMinutes = -1;
-//            }
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) { }
-//        });
-
-        mRepeatMeasurementEt.setOnClickListener(v -> {
-            if (mRepeatUnitOfMeasurementSpn.getSelectedItem().toString().equals(getString(R.string.repeat_hours_minutes))) {
-                TimePickerDialog timePickerDialog = new TimePickerDialog(AddActionActivity.this, android.R.style.Theme_Holo_Light_Dialog,
-                        (view, hourOfDay, minute) -> {
-                            setRepeatTime(hourOfDay, minute);
-                        }, 0, 0, true);
-                timePickerDialog.show();
-                if (mRepeatTimeMinutes > 0) {
-                    timePickerDialog.updateTime(mRepeatTimeMinutes / 60, mRepeatTimeMinutes % 60);
-                }
-            }
-        });
-
         if (getIntent().hasExtra(Constants.KEY_PARENT_GOAL_ID)){
             mParentGoalId = getIntent().getIntExtra(Constants.KEY_PARENT_GOAL_ID, -1);
         }
 
         if (getIntent().hasExtra(Constants.KEY_ACTION_TO_EDIT)) {
             populateFields((Action) getIntent().getSerializableExtra(Constants.KEY_ACTION_TO_EDIT));
+            dontResetMeasurementFlag = true;
         }
+
+        mRepeatUnitOfMeasurementSpn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (!dontResetMeasurementFlag) {
+                    mRepeatMeasurementEt.setText("");
+                    mRepeatTimeMinutes = -1;
+                }
+                dontResetMeasurementFlag = false;
+                mRepeatMeasurementEt.setFocusableInTouchMode(position == 0);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
+
+        mRepeatMeasurementEt.setOnClickListener(v -> {
+            if (mRepeatUnitOfMeasurementSpn.getSelectedItem().toString().equals(getString(R.string.repeat_hours_minutes))) {
+                showTimePicker();
+            }
+        });
+
+
 
         ActionBar actionbar = getSupportActionBar();
         if (actionbar != null) {
@@ -124,6 +126,17 @@ public class AddActionActivity extends AppCompatActivity {
             actionbar.setDisplayHomeAsUpEnabled(true);
         }
 
+    }
+
+    private void showTimePicker() {
+        TimePickerDialog timePickerDialog = new TimePickerDialog(AddActionActivity.this, android.R.style.Theme_Holo_Light_Dialog,
+                (view, hourOfDay, minute) -> {
+                    setRepeatTime(hourOfDay, minute);
+                }, 0, 0, true);
+        timePickerDialog.show();
+        if (mRepeatTimeMinutes > 0) {
+            timePickerDialog.updateTime(mRepeatTimeMinutes / 60, mRepeatTimeMinutes % 60);
+        }
     }
 
     private void setRepeatTime(int hours, int minutes) {
