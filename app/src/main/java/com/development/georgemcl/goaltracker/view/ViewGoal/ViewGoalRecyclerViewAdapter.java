@@ -93,6 +93,7 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             actionViewHolder.optionsButton.setOnClickListener(v -> {
                 PopupMenu popupMenu = new PopupMenu(mContext, actionViewHolder.optionsButton);
                 popupMenu.inflate(R.menu.menu_action_options);
+                popupMenu.getMenu().findItem(R.id.action_reset_progress).setVisible(action.isRepeatAction());
                 popupMenu.setOnMenuItemClickListener(item -> {
                     switch (item.getItemId()) {
                         case R.id.action_edit_action: {
@@ -235,7 +236,7 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                 repeatLayout.setVisibility(View.VISIBLE);
                 completionProgressBar.setProgress(calculateProgress(action.getRepeatProgressAmount(), action.getRepeatAmount()));
                 StringBuilder repeatString = new StringBuilder();
-                if (action.getRepeatUnitOfMeasurement().equals("time(s)")) {
+                if (action.getRepeatUnitOfMeasurement().equals(mContext.getString(R.string.repeat_times))) {
                     repeatString.append(action.getRepeatAmount()).append(" ");
                     repeatString.append("time");
                     //only append with an 's' if it requires a plural

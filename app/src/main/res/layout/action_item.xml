@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:layout_margin="7dp"
     android:id="@+id/action_item_parent_layout"
-    android:background="@color/colorWhite">
+    android:background="@drawable/rounded_corner_shape">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
             android:layout_marginRight="15dp"
             android:orientation="vertical"
@@ -56,6 +56,7 @@
                 android:orientation="vertical"
                 android:visibility="visible"
                 android:layout_marginTop="5dp"
+                android:paddingBottom="3dp"
                 android:id="@+id/action_item_repeat_layout">
                 <TextView
                     android:layout_width="match_parent"

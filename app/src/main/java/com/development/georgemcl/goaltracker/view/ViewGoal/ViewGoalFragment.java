@@ -115,7 +115,8 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
                 if (goal.getDescription().isEmpty()) {
                     mGoalDescriptionTxt.setVisibility(View.GONE);
                 } else {
-                    mGoalDescriptionTxt.setVisibility(View.VISIBLE);
+                    //temporarily hide while i figure out UI
+//                    mGoalDescriptionTxt.setVisibility(View.VISIBLE);
                 }
                 mGoalCompletionDateTxt.setText(goal.getCompletionDate());
                 if (goal.getCompletionDate().isEmpty()) {

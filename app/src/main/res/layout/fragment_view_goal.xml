@@ -9,9 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/colorAccentLight"
+        android:background="@drawable/rounded_corner_shape"
+        android:backgroundTint="@color/colorAccentLight"
         android:id="@+id/view_goal_header_layout"
         android:layout_margin="7dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
         >
         <ImageView
             android:layout_width="35dp"
@@ -21,12 +24,14 @@
             android:id="@+id/view_goal_compelete_imageview"
             android:background="?android:attr/selectableItemBackground"
             android:contentDescription="@string/done"
+            android:layout_marginTop="5dp"
             android:layout_marginLeft="5dp" />
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="1"
+            android:layout_marginStart="20dp"
             android:layout_marginEnd="25dp"
             android:layout_marginRight="25dp">
             <TextView
@@ -34,23 +39,20 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:textAlignment="center"
                 android:id="@+id/view_goal_name_textview"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:layout_marginTop="5dp"
-                android:textAlignment="center"
+                android:layout_marginBottom="10dp"
                 android:id="@+id/view_goal_completion_date_textview"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"
-                android:textAlignment="center"
+                android:visibility="gone"
                 android:id="@+id/view_goal_description_textview"/>
         </LinearLayout>
 
@@ -58,8 +60,9 @@
             android:id="@+id/view_goal_options_button"
             android:layout_width="30dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginRight="15dp"
+            android:layout_gravity="center_vertical"
             android:background="?android:attr/selectableItemBackground"
             android:text="@string/ellipsis"
             android:textSize="25sp"
