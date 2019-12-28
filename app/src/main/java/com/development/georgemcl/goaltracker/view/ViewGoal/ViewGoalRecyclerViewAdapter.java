@@ -121,30 +121,35 @@ public class ViewGoalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     private void handleActionDoneSelected(final Action action) {
         if (action.isRepeatAction()) {
             if (action.getRepeatUnitOfMeasurement().equals(mContext.getString(R.string.repeat_times))) {
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext);
-                dialogBuilder.setTitle("Enter progress " + action.getRepeatUnitOfMeasurement());
-                EditText editText = new EditText(mContext);
-                editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-                editText.setGravity(Gravity.CENTER);
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT);
-                editText.setLayoutParams(lp);
-                dialogBuilder.setView(editText)
-                        .setPositiveButton("Ok", ((dialog, which) -> {
-                            try {
-                                int progress = Integer.parseInt(editText.getText().toString());
-                                updateActionProgress(action, progress);
+                if (action.getRepeatAmount() == 1) {
+                    updateActionProgress(action, 1);
+                } else {
+                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext);
+                    dialogBuilder.setTitle("Enter progress " + action.getRepeatUnitOfMeasurement());
+                    EditText editText = new EditText(mContext);
+                    editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                    editText.setGravity(Gravity.CENTER);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.MATCH_PARENT);
+                    editText.setLayoutParams(lp);
+                    dialogBuilder.setView(editText)
+                            .setPositiveButton("Ok", ((dialog, which) -> {
+                                try {
+                                    int progress = Integer.parseInt(editText.getText().toString());
+                                    updateActionProgress(action, progress);
 
-                            } catch (NumberFormatException e) {
-                                Log.e(TAG, "askUserForActionProgress: " + e.getLocalizedMessage());
-                                Toast.makeText(mContext, "Invalid data entered", Toast.LENGTH_SHORT).show();
-                            }
-                        }))
-                        .setNegativeButton("Cancel", ((dialog, which) -> { }));
-                dialogBuilder.show();
+                                } catch (NumberFormatException e) {
+                                    Log.e(TAG, "askUserForActionProgress: " + e.getLocalizedMessage());
+                                    Toast.makeText(mContext, "Invalid data entered", Toast.LENGTH_SHORT).show();
+                                }
+                            }))
+                            .setNegativeButton("Cancel", ((dialog, which) -> { }));
+                    dialogBuilder.show();
+                }
+
             } else {
-                TimePickerDialog timePickerDialog = new TimePickerDialog(mContext, android.R.style.Theme_Holo_Light_Dialog,
+                TimePickerDialog timePickerDialog = new TimePickerDialog(mContext,
                         (view, hourOfDay, minute) -> {
                             int totalMinutes = (hourOfDay * 60) + minute;
                             updateActionProgress(action, totalMinutes);

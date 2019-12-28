@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.model.Action;
+import com.development.georgemcl.goaltracker.utils.KeyboardUtils;
 
 import java.text.ParseException;
 import java.util.Calendar;
@@ -97,6 +98,7 @@ public class AddActionActivity extends AppCompatActivity {
                 if (!dontResetMeasurementFlag) {
                     mRepeatMeasurementEt.setText("");
                     mRepeatTimeMinutes = -1;
+                    KeyboardUtils.hideSoftKeyboard(AddActionActivity.this);
                 }
                 dontResetMeasurementFlag = false;
                 mRepeatMeasurementEt.setFocusableInTouchMode(position == 0);
@@ -129,7 +131,7 @@ public class AddActionActivity extends AppCompatActivity {
     }
 
     private void showTimePicker() {
-        TimePickerDialog timePickerDialog = new TimePickerDialog(AddActionActivity.this, android.R.style.Theme_Holo_Light_Dialog,
+        TimePickerDialog timePickerDialog = new TimePickerDialog(AddActionActivity.this,
                 (view, hourOfDay, minute) -> {
                     setRepeatTime(hourOfDay, minute);
                 }, 0, 0, true);
