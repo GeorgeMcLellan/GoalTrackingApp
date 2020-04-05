@@ -32,7 +32,7 @@ public interface GoalDao {
     @Query("DELETE FROM goal_table")
     void deleteAll();
 
-    @Query("SELECT * FROM goal_table WHERE parentGoalId IS 0")
+    @Query("SELECT * FROM goal_table WHERE parentGoalId IS -1")
     LiveData<List<Goal>> getMainGoals();
 
     @Query("SELECT * FROM goal_table WHERE parentGoalId IS :parentGoalId")

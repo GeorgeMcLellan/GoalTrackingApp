@@ -14,7 +14,7 @@ import com.development.georgemcl.goaltracker.model.Goal;
 /**
  * RoomDatabase implementation, making use of the Dao classes to create an SQL database
  */
-@Database(entities = {Goal.class, Action.class}, version = 2, exportSchema = false)
+@Database(entities = {Goal.class, Action.class}, version = 3, exportSchema = false)
 public abstract class GoalRoomDatabase extends RoomDatabase{
 
     public abstract GoalDao goalDao();
