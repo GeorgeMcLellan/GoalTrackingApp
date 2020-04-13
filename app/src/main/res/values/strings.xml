@@ -12,6 +12,7 @@
     <string name="done">done</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
+    <string name="complete">Complete</string>
     <string name="action_name">Action Name</string>
     <string name="repeat">Repeat</string>
     <string name="goal_name">Goal Name</string>

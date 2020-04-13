@@ -15,17 +15,19 @@
         android:layout_margin="7dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
+        android:visibility="gone"
         >
         <ImageView
             android:layout_width="35dp"
             android:layout_height="40dp"
             app:srcCompat="@drawable/baseline_done_24"
             android:layout_marginStart="5dp"
-            android:id="@+id/view_goal_compelete_imageview"
+            android:id="@+id/view_goal_complete_imageview"
             android:background="?android:attr/selectableItemBackground"
             android:contentDescription="@string/done"
             android:layout_marginTop="5dp"
-            android:layout_marginLeft="5dp" />
+            android:layout_marginLeft="5dp"
+            android:visibility="invisible"/>
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -66,7 +68,8 @@
             android:background="?android:attr/selectableItemBackground"
             android:text="@string/ellipsis"
             android:textSize="25sp"
-            android:textAppearance="?android:textAppearanceLarge" />
+            android:textAppearance="?android:textAppearanceLarge"
+            android:visibility="invisible"/>
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -87,4 +90,5 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true" />
+
 </RelativeLayout>

@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +52,7 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
     @BindView(R.id.view_goal_description_textview) TextView mGoalDescriptionTxt;
     @BindView(R.id.view_goal_completion_date_textview) TextView mGoalCompletionDateTxt;
     @BindView(R.id.view_goal_options_button) Button mOptionsBtn;
-    @BindView(R.id.view_goal_compelete_imageview) ImageView mGoalCompletedImageView;
+    @BindView(R.id.view_goal_complete_imageview) ImageView mGoalCompletedImageView;
 
     private static final int ADD_ACTION_REQUEST_CODE = 204;
     private static final int EDIT_ACTION_REQUEST_CODE = 689;
@@ -106,12 +108,13 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
         mViewGoalViewModel.getGoalById(mParentGoalId).observe(getViewLifecycleOwner(), goal -> {
             mGoalInView = goal;
             if (mGoalInView != null) {
+                ((MainActivity) getActivity()).setActionBarTitle(goal.getGoalName());
                 mGoalNameTxt.setText(goal.getGoalName());
                 mGoalDescriptionTxt.setText(goal.getDescription());
                 if (goal.getDescription().isEmpty()) {
                     mGoalDescriptionTxt.setVisibility(View.GONE);
                 } else {
-                    //temporarily hide while i figure out UI
+                    //temporarily hide while figure out UI
 //                    mGoalDescriptionTxt.setVisibility(View.VISIBLE);
                 }
                 mGoalCompletionDateTxt.setText(goal.getCompletionDate());
@@ -154,51 +157,55 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
             public void onMenuClosed() {}
         });
 
-
-        mOptionsBtn.setOnClickListener(v -> {
-            PopupMenu popupMenu = new PopupMenu(getContext(), mOptionsBtn);
-            popupMenu.inflate(R.menu.menu_goal_options);
-            popupMenu.setOnMenuItemClickListener(item -> {
-                switch (item.getItemId()){
-                    case R.id.goal_edit_action : {
-                        Intent intent = new Intent(getContext(), AddGoalActivity.class);
-                        intent.putExtra(Constants.KEY_PARENT_GOAL_ID, mGoalInView.getParentGoalId());
-                        intent.putExtra(Constants.KEY_GOAL_TO_EDIT, mGoalInView);
-                        startActivityForResult(intent, EDIT_GOAL_REQUEST_CODE);
-                        return true;
-                    }
-                    case R.id.goal_delete_action : {
-                        if (mSubGoalCount == 0) {
-                            deleteGoalConfirmationDialog();
-                        } else {
-                            Toast.makeText(getContext(), "You need to delete sub-goals first", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                    default:
-                        return false;
-                }
-            });
-            popupMenu.show();
-        });
-
-        mGoalCompletedImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mSubGoalCount == 0) {
-                    completeGoalConfirmationDialog();
-                } else {
-                    Toast.makeText(getContext(), "You need to complete sub-goals first", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
         return view;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         disposables.clear();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_goal_options, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.goal_edit_action : {
+                Intent intent = new Intent(getContext(), AddGoalActivity.class);
+                intent.putExtra(Constants.KEY_PARENT_GOAL_ID, mGoalInView.getParentGoalId());
+                intent.putExtra(Constants.KEY_GOAL_TO_EDIT, mGoalInView);
+                startActivityForResult(intent, EDIT_GOAL_REQUEST_CODE);
+                return true;
+            }
+            case R.id.goal_delete_action : {
+                if (mSubGoalCount == 0) {
+                    deleteGoalConfirmationDialog();
+                } else {
+                    Toast.makeText(getContext(), "You need to delete sub-goals first", Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            }
+            case R.id.goal_complete_action : {
+                if (mSubGoalCount == 0) {
+                    completeGoalConfirmationDialog();
+                } else {
+                    Toast.makeText(getContext(), "You need to complete sub-goals first", Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -244,10 +251,8 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
                             ));
                     break;
                 }
-
             }
         }
-
     }
 
     private void completeGoalConfirmationDialog() {
