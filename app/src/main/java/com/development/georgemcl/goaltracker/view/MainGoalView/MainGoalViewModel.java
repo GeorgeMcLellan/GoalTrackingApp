@@ -1,8 +1,8 @@
 package com.development.georgemcl.goaltracker.view.MainGoalView;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 
 import com.development.georgemcl.goaltracker.data.repository.GoalRepository;
 import com.development.georgemcl.goaltracker.model.Goal;

@@ -1,26 +1,24 @@
 package com.development.georgemcl.goaltracker.view.ViewGoal;
 
 import android.app.AlertDialog;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
-import android.content.DialogInterface;
+
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.internal.NavigationMenu;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,14 +30,12 @@ import com.development.georgemcl.goaltracker.model.Goal;
 import com.development.georgemcl.goaltracker.view.AddAction.AddActionActivity;
 import com.development.georgemcl.goaltracker.view.AddGoal.AddGoalActivity;
 import com.development.georgemcl.goaltracker.view.MainActivity.MainActivity;
-
-import java.util.List;
+import com.google.android.material.internal.NavigationMenu;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.github.yavski.fabspeeddial.FabSpeedDial;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.observers.DisposableCompletableObserver;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -90,7 +86,7 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
             activity.showBackButton(true);
         }
 
-        mViewGoalViewModel = ViewModelProviders.of(this).get(ViewGoalViewModel.class);
+        mViewGoalViewModel = new ViewModelProvider(this).get(ViewGoalViewModel.class);
 
         mViewGoalViewModel.populateLists(mParentGoalId);
 
@@ -98,16 +94,16 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        mViewGoalViewModel.getActions().observe(this, actions -> mRecyclerViewAdapter.setActions(actions));
+        mViewGoalViewModel.getActions().observe(getViewLifecycleOwner(), actions -> mRecyclerViewAdapter.setActions(actions));
 
-        mViewGoalViewModel.getSubGoals().observe(this, goals -> {
+        mViewGoalViewModel.getSubGoals().observe(getViewLifecycleOwner(), goals -> {
             mRecyclerViewAdapter.setSubGoals(goals);
             if (goals != null) {
                 mSubGoalCount = goals.size();
             }
         });
 
-        mViewGoalViewModel.getGoalById(mParentGoalId).observe(this, goal -> {
+        mViewGoalViewModel.getGoalById(mParentGoalId).observe(getViewLifecycleOwner(), goal -> {
             mGoalInView = goal;
             if (mGoalInView != null) {
                 mGoalNameTxt.setText(goal.getGoalName());

@@ -1,12 +1,12 @@
 package com.development.georgemcl.goaltracker.data.db;
 
-import android.arch.persistence.db.SupportSQLiteDatabase;
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.Room;
-import android.arch.persistence.room.RoomDatabase;
+
 import android.content.Context;
-import android.os.AsyncTask;
-import android.support.annotation.NonNull;
+
+
+import androidx.room.Database;
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
 
 import com.development.georgemcl.goaltracker.model.Action;
 import com.development.georgemcl.goaltracker.model.Goal;
@@ -15,7 +15,7 @@ import com.development.georgemcl.goaltracker.model.Goal;
  * RoomDatabase implementation, making use of the Dao classes to create an SQL database
  */
 @Database(entities = {Goal.class, Action.class}, version = 3, exportSchema = false)
-public abstract class GoalRoomDatabase extends RoomDatabase{
+public abstract class GoalRoomDatabase extends RoomDatabase {
 
     public abstract GoalDao goalDao();
 

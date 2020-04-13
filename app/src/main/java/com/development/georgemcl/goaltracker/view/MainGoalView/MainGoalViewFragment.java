@@ -2,15 +2,16 @@ package com.development.georgemcl.goaltracker.view.MainGoalView;
 
 
 import android.app.ActionBar;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
+
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,8 +23,6 @@ import com.development.georgemcl.goaltracker.model.Goal;
 import com.development.georgemcl.goaltracker.view.AddGoal.AddGoalActivity;
 import com.development.georgemcl.goaltracker.view.MainActivity.MainActivity;
 import com.development.georgemcl.goaltracker.view.ViewGoal.ViewGoalFragment;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,7 +58,7 @@ public class MainGoalViewFragment extends Fragment implements GoalRecyclerViewAd
             actionbar.setTitle("Actions");
         }
 
-        mMainGoalViewModel = ViewModelProviders.of(this).get(MainGoalViewModel.class);
+        mMainGoalViewModel = new ViewModelProvider(this).get(MainGoalViewModel.class);
 
         MainActivity activity = ((MainActivity) getActivity());
         if (activity != null) {
@@ -77,7 +76,7 @@ public class MainGoalViewFragment extends Fragment implements GoalRecyclerViewAd
             startActivityForResult(intent, ADD_GOAL_ACTIVITY_REQUEST_CODE);
         });
 
-        mMainGoalViewModel.getMainGoals().observe(this, goals -> mRecyclerViewAdapter.setGoals(goals));
+        mMainGoalViewModel.getMainGoals().observe(getViewLifecycleOwner(), goals -> mRecyclerViewAdapter.setGoals(goals));
 
         return view;
     }

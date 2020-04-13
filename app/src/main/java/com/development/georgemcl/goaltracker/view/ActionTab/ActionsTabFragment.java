@@ -1,23 +1,20 @@
 package com.development.georgemcl.goaltracker.view.ActionTab;
 
 
-import android.app.AlertDialog;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.Observer;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.model.Action;
@@ -29,7 +26,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.observers.DisposableCompletableObserver;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -70,10 +66,10 @@ public class ActionsTabFragment extends Fragment implements ViewGoalRecyclerView
 
         mActionTabCategory = getArguments().getString(Constants.KEY_TAB_SELECTED);
 
-        mActionsTabViewModel = ViewModelProviders.of(this).get(ActionTabViewModel.class);
+        mActionsTabViewModel = new ViewModelProvider(this).get(ActionTabViewModel.class);
         mActionsTabViewModel.setActionRepeatCategory(mActionTabCategory);
 
-        mActionsTabViewModel.getActionsForRepeatCategory().observe(this, new Observer<List<Action>>() {
+        mActionsTabViewModel.getActionsForRepeatCategory().observe(getViewLifecycleOwner(), new Observer<List<Action>>() {
             @Override
             public void onChanged(@Nullable List<Action> actions) {
                 mRecyclerViewAdapter.setActions(actions);

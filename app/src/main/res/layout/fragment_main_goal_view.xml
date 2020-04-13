@@ -6,12 +6,12 @@
     tools:context=".view.MainGoalView.MainGoalViewFragment"
     android:background="@color/colorLightBackground">
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/main_goal_recycler_view"/>
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/main_goal_add_goal_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -1,8 +1,8 @@
 package com.development.georgemcl.goaltracker.view.ViewGoal;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 import android.util.Log;
 
 import com.development.georgemcl.goaltracker.data.repository.ActionRepository;
@@ -10,7 +10,6 @@ import com.development.georgemcl.goaltracker.data.repository.GoalRepository;
 import com.development.georgemcl.goaltracker.model.Action;
 import com.development.georgemcl.goaltracker.model.Goal;
 
-import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Completable;

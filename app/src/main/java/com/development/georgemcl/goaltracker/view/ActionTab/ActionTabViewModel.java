@@ -1,9 +1,8 @@
 package com.development.georgemcl.goaltracker.view.ActionTab;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
-import android.support.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 
 import com.development.georgemcl.goaltracker.data.repository.ActionRepository;
 import com.development.georgemcl.goaltracker.model.Action;
@@ -11,7 +10,6 @@ import com.development.georgemcl.goaltracker.model.Action;
 import java.util.List;
 
 import io.reactivex.Completable;
-import io.reactivex.Single;
 
 /**
  * ViewModel class for each action tab
