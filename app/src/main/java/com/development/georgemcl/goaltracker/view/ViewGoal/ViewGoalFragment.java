@@ -23,16 +23,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.model.Action;
 import com.development.georgemcl.goaltracker.model.Goal;
+import com.development.georgemcl.goaltracker.utils.SnackbarUtils;
 import com.development.georgemcl.goaltracker.view.AddAction.AddActionActivity;
 import com.development.georgemcl.goaltracker.view.AddGoal.AddGoalActivity;
 import com.development.georgemcl.goaltracker.view.MainActivity.MainActivity;
 import com.google.android.material.internal.NavigationMenu;
+import com.google.android.material.snackbar.Snackbar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -192,7 +193,7 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
                 if (mSubGoalCount == 0) {
                     deleteGoalConfirmationDialog();
                 } else {
-                    Toast.makeText(getContext(), "You need to delete sub-goals first", Toast.LENGTH_SHORT).show();
+                    SnackbarUtils.showErrorSnackbar(R.string.delete_sub_goals_first_message, mAddFab, Snackbar.LENGTH_LONG);
                 }
                 return true;
             }
@@ -200,7 +201,7 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
                 if (mSubGoalCount == 0) {
                     completeGoalConfirmationDialog();
                 } else {
-                    Toast.makeText(getContext(), "You need to complete sub-goals first", Toast.LENGTH_SHORT).show();
+                    SnackbarUtils.showErrorSnackbar(R.string.complete_sub_goals_first_message, mAddFab, Snackbar.LENGTH_LONG);
                 }
                 return true;
             }
@@ -260,7 +261,7 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
                 .setTitle("Goal Completed?")
                 .setMessage("This will also remove all of its related actions")
                 .setPositiveButton(android.R.string.yes, (dialog, which) -> {
-                    Toast.makeText(getContext(), "Congratulations on achieving your goal!", Toast.LENGTH_SHORT).show();
+                    SnackbarUtils.showSnackbar(R.string.completed_goal_congratulations_message, mAddFab, Snackbar.LENGTH_SHORT);
                     deleteGoalAndActions(false);
                 })
                 .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
@@ -270,16 +271,16 @@ public class ViewGoalFragment extends Fragment implements ViewGoalRecyclerViewAd
         builder.show();
     }
 
-    private void deleteGoalAndActions(boolean showConfirmationToast) {
+    private void deleteGoalAndActions(boolean showConfirmationMessage) {
         boolean success = mViewGoalViewModel.deleteGoalAndActions(mGoalInView);
         if (success) {
-            if (showConfirmationToast) {
-                Toast.makeText(getContext(), "Goal and Actions deleted", Toast.LENGTH_SHORT).show();
+            if (showConfirmationMessage) {
+                SnackbarUtils.showSnackbar(R.string.goal_and_actions_deleted_message, mAddFab, Snackbar.LENGTH_SHORT);
             }
             getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
             getActivity().getSupportFragmentManager().popBackStack();
         } else {
-            Toast.makeText(getContext(), "Failed to delete", Toast.LENGTH_SHORT).show();
+            SnackbarUtils.showErrorSnackbar(R.string.goal_and_actions_deleted_error_message, mAddFab, Snackbar.LENGTH_SHORT);
 
         }
     }

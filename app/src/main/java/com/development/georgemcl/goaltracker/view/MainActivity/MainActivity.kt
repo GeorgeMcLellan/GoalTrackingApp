@@ -6,12 +6,9 @@ import androidx.fragment.app.Fragment
 
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
-import android.widget.FrameLayout
-import android.widget.Toast
 
 import com.development.georgemcl.goaltracker.R
 import com.development.georgemcl.goaltracker.view.MainActionsView.MainActionsViewFragment
@@ -20,6 +17,7 @@ import com.development.georgemcl.goaltracker.view.MainGoalView.MainGoalViewFragm
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.development.georgemcl.goaltracker.data.repository.ActionRepository
+import com.google.android.material.snackbar.Snackbar
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
@@ -108,6 +106,7 @@ class MainActivity : AppCompatActivity() {
             Log.d(TAG, "checkActionProgress: different week")
             disposable.add(actionRepo.resetAllWeeklyActionProgress()
                     .subscribe({ completedActions ->
+                        Snackbar.make(main_activity_fragment_container, "You completed $completedActions actions last week. Well Done!", Snackbar.LENGTH_LONG)
                         Log.d(TAG, "resetWeeklyActionProgress: $completedActions")
                     }, { e ->
                         e.printStackTrace()
@@ -118,6 +117,7 @@ class MainActivity : AppCompatActivity() {
             disposable.add(actionRepo.resetAllMonthlyActionProgress()
                     .subscribe({ completedActions ->
                         Log.d(TAG, "resetAllMonthlyActionProgress: $completedActions")
+                        Snackbar.make(main_activity_fragment_container, "You completed $completedActions actions last month. Well Done!", Snackbar.LENGTH_LONG)
                     }, { e ->
                         e.printStackTrace()
                     }))
@@ -129,6 +129,7 @@ class MainActivity : AppCompatActivity() {
             Log.d(TAG, "resetAllDailyActionProgress different day")
             disposable.add(actionRepo.resetAllDailyActionProgress()
                     .subscribe({ completedActions ->
+                        Snackbar.make(main_activity_fragment_container, "You completed $completedActions actions yesterday. Well Done!", Snackbar.LENGTH_LONG)
                         Log.d(TAG, "resetAllDailyActionProgress: $completedActions")
                     }, { e ->
                         e.printStackTrace()
@@ -136,7 +137,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             Log.d(TAG, "checkActionProgress: same day")
         }
-
 
         prefs.edit().putLong(SHARED_PREFS_DATE_LAST_VISITED_KEY, todayCal.timeInMillis).apply()
     }

@@ -37,6 +37,19 @@
 
     //Add action error messages
     <string name="invalid_repeat_amount">Enter valid repeat amount</string>
+    
+    <string name="action_updated_message">Action updated</string>
+    <string name="action_update_error_message">Failed to update action. Please try again</string>
+
+    <string name="action_deleted_message">Action deleted</string>
+    <string name="action_delete_error_message">Failed to delete action. Please try again</string>
+
+    <string name="delete_sub_goals_first_message">You need to delete sub-goals first</string>
+    <string name="complete_sub_goals_first_message">You need to complete sub-goals first</string>
+    <string name="completed_goal_congratulations_message">Congratulations on achieving your goal!</string>
+    <string name="goal_and_actions_deleted_message">Goal and actions deleted</string>
+    <string name="goal_and_actions_deleted_error_message">Failed to delete</string>
+
 
     <string name="ellipsis">⋮</string>
     <string name="date_hint">Select Date</string>

@@ -18,8 +18,10 @@ import android.widget.Toast;
 import com.development.georgemcl.goaltracker.Constants;
 import com.development.georgemcl.goaltracker.R;
 import com.development.georgemcl.goaltracker.model.Action;
+import com.development.georgemcl.goaltracker.utils.SnackbarUtils;
 import com.development.georgemcl.goaltracker.view.AddAction.AddActionActivity;
 import com.development.georgemcl.goaltracker.view.ViewGoal.ViewGoalRecyclerViewAdapter;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
@@ -119,8 +121,8 @@ public class ActionsTabFragment extends Fragment implements ViewGoalRecyclerView
     public void updateAction(Action action) {
         disposables.add(mActionsTabViewModel.editAction(action)
                 .subscribe(
-                        () -> Toast.makeText(getContext(), "Action updated", Toast.LENGTH_SHORT).show(),
-                        e -> Toast.makeText(getContext(), "Failed to update action. Please try again", Toast.LENGTH_SHORT).show()
+                        () -> SnackbarUtils.showSnackbar(R.string.action_updated_message, mRecyclerView, Snackbar.LENGTH_SHORT),
+                        e ->  SnackbarUtils.showErrorSnackbar(R.string.action_update_error_message, mRecyclerView, Snackbar.LENGTH_SHORT)
                 ));
     }
 
@@ -128,8 +130,8 @@ public class ActionsTabFragment extends Fragment implements ViewGoalRecyclerView
     public void deleteAction(Action action) {
         disposables.add(mActionsTabViewModel.deleteAction(action)
                 .subscribe(
-                        () -> Toast.makeText(getContext(), "Action deleted", Toast.LENGTH_SHORT).show(),
-                        e -> Toast.makeText(getContext(), "Failed to delete action. Please try again", Toast.LENGTH_SHORT).show()
+                        () ->  SnackbarUtils.showSnackbar(R.string.action_deleted_message, mRecyclerView, Snackbar.LENGTH_SHORT),
+                        e ->  SnackbarUtils.showErrorSnackbar(R.string.action_delete_error_message, mRecyclerView, Snackbar.LENGTH_SHORT)
                 ));
     }
 }

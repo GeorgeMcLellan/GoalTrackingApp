@@ -10,14 +10,14 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
 
 import com.development.georgemcl.goaltracker.Constants
 import com.development.georgemcl.goaltracker.R
 import com.development.georgemcl.goaltracker.model.Action
 import com.development.georgemcl.goaltracker.utils.KeyboardUtils
+import com.development.georgemcl.goaltracker.utils.SnackbarUtils
+import com.google.android.material.snackbar.Snackbar
 
-import butterknife.ButterKnife
 import kotlinx.android.synthetic.main.activity_add_action.*
 
 /**
@@ -41,8 +41,6 @@ class AddActionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_action)
-        ButterKnife.bind(this)
-
         add_action_repeat_switch.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 add_action_repeat_layout.visibility = View.VISIBLE
@@ -156,10 +154,10 @@ class AddActionActivity : AppCompatActivity() {
                                repeatUnitOfMeasurement = add_action_repeat_unit_of_measurement_spinner.selectedItem.toString())
                         addOrEditAction(action)
                     } else {
-                        Toast.makeText(this@AddActionActivity, getString(R.string.invalid_repeat_amount), Toast.LENGTH_SHORT).show()
+                        SnackbarUtils.showErrorSnackbar(R.string.invalid_repeat_amount, add_action_name_inputlayout, Snackbar.LENGTH_LONG)
                     }
                 } catch (e: NumberFormatException) {
-                    Toast.makeText(this@AddActionActivity,"EXEC $e", Toast.LENGTH_SHORT).show()
+                    SnackbarUtils.showErrorSnackbar(R.string.invalid_repeat_amount, add_action_name_inputlayout, Snackbar.LENGTH_LONG)
                 }
 
             } else {
@@ -168,7 +166,7 @@ class AddActionActivity : AppCompatActivity() {
             }
 
         } else {
-            Toast.makeText(this@AddActionActivity, getString(R.string.missing_name), Toast.LENGTH_SHORT).show()
+            SnackbarUtils.showErrorSnackbar(R.string.missing_name, add_action_name_inputlayout, Snackbar.LENGTH_LONG)
         }
     }
 

@@ -76,6 +76,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/view_goal_header_layout"
+        android:clipToPadding="false"
+        android:paddingBottom="70dp"
         android:id="@+id/view_goal_recycler_view"/>
 
     <io.github.yavski.fabspeeddial.FabSpeedDial

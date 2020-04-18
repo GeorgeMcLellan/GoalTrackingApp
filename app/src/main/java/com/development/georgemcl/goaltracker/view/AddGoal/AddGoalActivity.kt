@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 
 import com.development.georgemcl.goaltracker.Constants
 import com.development.georgemcl.goaltracker.R
@@ -20,6 +19,8 @@ import java.util.Calendar
 import java.util.GregorianCalendar
 
 import butterknife.ButterKnife
+import com.development.georgemcl.goaltracker.utils.SnackbarUtils
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_add_goal.*
 
 /**
@@ -115,10 +116,10 @@ class AddGoalActivity : AppCompatActivity() {
                         val goal = Goal(goalName = goalName, description = description, completionDate = dateToAchieve, parentGoalId = parentGoalId)
                         addOrEditGoal(goal)
                     } else {
-                        Toast.makeText(this@AddGoalActivity, getString(R.string.date_too_early), Toast.LENGTH_SHORT).show()
+                        SnackbarUtils.showErrorSnackbar(R.string.date_too_early, add_goal_name_edittext, Snackbar.LENGTH_LONG)
                     }
                 } catch (e: ParseException) {
-                    Toast.makeText(this@AddGoalActivity, getString(R.string.invalid_date), Toast.LENGTH_SHORT).show()
+                    SnackbarUtils.showErrorSnackbar(R.string.invalid_date, add_goal_name_edittext, Snackbar.LENGTH_LONG)
                 }
 
             } else {
@@ -126,7 +127,7 @@ class AddGoalActivity : AppCompatActivity() {
                 addOrEditGoal(goal)
             }
         } else {
-            Toast.makeText(this@AddGoalActivity, getString(R.string.missing_name), Toast.LENGTH_SHORT).show()
+            SnackbarUtils.showErrorSnackbar(R.string.missing_name, add_goal_name_edittext, Snackbar.LENGTH_LONG)
         }
     }
 
